@@ -158,9 +158,9 @@ type WorkoutSchema = {
 // ***************** UI Types *****************
 
 enum PageType {
-    landing = 'landing',
-    login = 'login',
-    register = 'register',
+    landing = 'landing', // done
+    login = 'login', 
+    register = 'register', // on going
     home_client = 'home_client',
     home_trainer = 'home_trainer',
     appointment_trainer = 'appointment_trainer',
@@ -173,6 +173,8 @@ enum PageAuth {
     public = 'public',
     private = "private"
 }
+
+type Certification = string;
 
 type Page = {
     type: PageType.appointment_trainer;
@@ -229,6 +231,31 @@ type Page = {
     auth: PageAuth.public
 } | {
     type: PageType.register;
+    inputs: {
+        name: string;
+        email: string;
+        phone: string;
+        password: string;
+    } & ({
+        role: Trainer
+        certification?: Certification; // photo url
+        yearsOfExperience?: number;
+    } | {
+        role: Client
+        trainerId?: string;
+        age: number;
+        weight: number;
+        height: number;
+        goals: [string, string, string];
+        gender: 'Female' | 'Male';
+        activityLevel: 'Sedentary' | 'Lightly Active' | 'Moderately Active' | 'Very Active';
+        MedicalCertificate: string; // photo url or file
+        triningExperience: string;
+        idealTrainingFrequency: string;
+        idealTrainingDuration: string;
+        idealTrainingTime: string;
+        injuries: string;
+    })
     auth: PageAuth.public
 } | {
     type: PageType['404'];
