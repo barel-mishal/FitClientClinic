@@ -1,14 +1,13 @@
 import React, { useState } from "react";
-import { StyleSheet, View, TextInput, Button, ScrollView, Text, Alert } from "react-native";
+import { StyleSheet, View, TextInput, Button, ScrollView, Text } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from "../App";
-import { Client, RegisterForm, StringfyValues, activityLevelOptions, genderOptions, initialClientForm } from "../types";
-import RadioButton from "../Components/RadioComponent";
-import CustomSelectInput from "../Components/PickerComponent";
-import FileUpload from "../Components/FileUploadComponent";
+import { RootStackParamList } from "../../App";
+import { Client, RegisterForm, activityLevelOptions, genderOptions, initialClientForm } from "../../types";
+import RadioButton from "../../Components/RadioComponent";
+import CustomSelectInput from "../../Components/PickerComponent";
+import FileUpload from "../../Components/FileUploadComponent";
 import { DocumentPickerResult } from "expo-document-picker";
-import { Link } from "@react-navigation/native";
-import OpenURLButton from "../Components/GoToSite";
+import OpenURLButton from "../../Components/GoToSite";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SignupClient'>;
 

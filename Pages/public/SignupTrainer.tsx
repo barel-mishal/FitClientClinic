@@ -4,10 +4,10 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text, TextInput, Button } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from "../App";
-import { RegisterForm, Trainer, initialTrainerForm } from "../types";
-import FileUpload from "../Components/FileUploadComponent";
-import OpenURLButton from "../Components/GoToSite";
+import { RootStackParamList } from "../../App";
+import { RegisterForm, Trainer, initialTrainerForm } from "../../types";
+import FileUpload from "../../Components/FileUploadComponent";
+import OpenURLButton from "../../Components/GoToSite";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SignupTrainer'>;
 

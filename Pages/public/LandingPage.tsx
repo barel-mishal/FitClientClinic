@@ -2,8 +2,8 @@ import React, { useRef, useState } from 'react';
 import { View, Text, StyleSheet, Button, ScrollView, Dimensions, TouchableOpacity, findNodeHandle, LayoutChangeEvent } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
-import { AccordionSelect } from '../Components/AccordionSelect';
-import { RootStackParamList } from '../App';
+import { AccordionSelect } from '../../Components/AccordionSelect';
+import { RootStackParamList } from '../../App';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 const CONTENT_SECTIONS = [
