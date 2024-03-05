@@ -8,8 +8,8 @@ type pages =
  | 'appointment'
  | 'fitness-program'
  | 'workout'
-type Trainer = 'trainer';
-type Client = 'client';
+export type Trainer = 'trainer';
+export type Client = 'client';
 
 // ***************** Data Types *****************
 // ----------------- Appointment -----------------
@@ -155,8 +155,49 @@ type WorkoutSchema = {
     workoutSummary: WorkoutSummary;
 }
 
-// ***************** UI Types *****************
+// ***************** Form For Clients Data *****************
+type PersonalFitnessInfo = {
+    age: number;
+    weight: number;
+    height: number;
+    goals: [string, string, string];
+    gender: 'Female' | 'Male';
+    activityLevel: 'Sedentary' | 'Lightly Active' | 'Moderately Active' | 'Very Active';
+    MedicalCertificate: string; // photo url or file
+    trainingExperience: string;
+    idealTrainingFrequency: string;
+    idealTrainingDuration: string;
+    idealTrainingTime: string;
+    injuries: string;
+}
 
+type PersonalInfo = {
+    name: string;
+    email: string;
+    phone: string;
+    password: string;
+}
+
+
+type ClientForm = PersonalInfo & PersonalFitnessInfo & {
+    role: Client
+    trainerId?: string;
+};
+
+type TrainerForm = PersonalInfo & {
+    role: Trainer
+    certification?: Certification; // photo url
+    yearsOfExperience?: number;
+}
+
+export type RegisterForm = {
+    client: ClientForm;
+    trainer: TrainerForm;
+}
+
+
+
+// ***************** UI Types *****************
 enum PageType {
     landing = 'landing', // done
     login = 'login', 
@@ -231,33 +272,44 @@ type Page = {
     auth: PageAuth.public
 } | {
     type: PageType.register;
-    inputs: {
-        name: string;
-        email: string;
-        phone: string;
-        password: string;
-    } & ({
-        role: Trainer
-        certification?: Certification; // photo url
-        yearsOfExperience?: number;
-    } | {
-        role: Client
-        trainerId?: string;
-        age: number;
-        weight: number;
-        height: number;
-        goals: [string, string, string];
-        gender: 'Female' | 'Male';
-        activityLevel: 'Sedentary' | 'Lightly Active' | 'Moderately Active' | 'Very Active';
-        MedicalCertificate: string; // photo url or file
-        triningExperience: string;
-        idealTrainingFrequency: string;
-        idealTrainingDuration: string;
-        idealTrainingTime: string;
-        injuries: string;
-    })
+    inputs: RegisterForm;
     auth: PageAuth.public
 } | {
     type: PageType['404'];
     auth: PageAuth.public
 }
+
+
+// ***************** Util *****************
+export type StringfyValues<T> = {
+    [P in keyof T]: string;
+}
+
+export const maybeString = <T,>(value: T) => {
+    return value ? value : '';
+}
+
+export const maybeNumber = (value: string) => {
+    return value ? parseInt(value) : 0;
+}
+
+export const maybeUndefined = <T,>(value: T) => {
+    return value ? value : undefined;
+}
+
+export const convertUndefined = <T,>(action: (value: T) => string) => (value: T) => {
+    return value ? value : action(value);
+}
+
+
+export const genderOptions = [
+    { label: 'Female', value: 'female' },
+    { label: 'Male', value: 'male' },
+]
+
+export const activityLevelOptions = [
+    { label: 'Sedentary', value: 'sedentary' },
+    { label: 'Lightly Active', value: 'lightlyActive' },
+    { label: 'Moderately Active', value: 'moderatelyActive' },
+    { label: 'Very Active', value: 'veryActive' },
+]
