@@ -5,6 +5,10 @@ import { RootStackParamList } from "../App";
 import { Client, RegisterForm, StringfyValues, activityLevelOptions, genderOptions } from "../types";
 import RadioButton from "../Components/RadioComponent";
 import CustomSelectInput from "../Components/PickerComponent";
+import FileUpload from "../Components/FileUploadComponent";
+import { DocumentPickerResult } from "expo-document-picker";
+import { Link } from "@react-navigation/native";
+import OpenURLButton from "../Components/GoToSite";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SignupClient'>;
 
@@ -16,9 +20,9 @@ const SignupClient = ({ navigation }: Props) => {
     password: '',
     role: 'client',
     trainerId: '',
-    age: undefined,
-    weight: undefined,
-    height: undefined,
+    age: 0,
+    weight: 0,
+    height: 0,
     goals: ['', '', ''],
     gender: undefined,
     activityLevel: undefined,
@@ -31,33 +35,42 @@ const SignupClient = ({ navigation }: Props) => {
   });
 
   // Function to handle input change
-  const handleChange = (name: string, value: string | [string, string, string]) => {
+  const handleChange = (name: string, value: string | [string, string, string] | number) => {
     setClientInfo(prev => ({ ...prev, [name]: value }));
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <TextInput style={styles.input} placeholder="Name" onChangeText={text => handleChange('name', text)} />
-      <TextInput style={styles.input} placeholder="Email" onChangeText={text => handleChange('email', text)} />
-      <TextInput style={styles.input} placeholder="Phone" onChangeText={text => handleChange('phone', text)} />
-      <TextInput style={styles.input} placeholder="Password" secureTextEntry={true} onChangeText={text => handleChange('password', text)} />
-      <TextInput style={styles.input} placeholder="Trainer ID (if any)" onChangeText={text => handleChange('trainerId', text)} />
-      <TextInput style={styles.input} placeholder="Age" onChangeText={text => handleChange('age', text)} keyboardType="numeric" />
-      <TextInput style={styles.input} placeholder="Weight (kg)" onChangeText={text => handleChange('weight', text)} keyboardType="numeric" />
-      <TextInput style={styles.input} placeholder="Height (cm)" onChangeText={text => handleChange('height', text)} keyboardType="numeric" />
-      <TextInput style={styles.input} placeholder="Goal 1" onChangeText={text => handleChange('goals', [text, clientInfo.goals![1], clientInfo.goals![2]])} />
-      <TextInput style={styles.input} placeholder="Goal 2" onChangeText={text => handleChange('goals', [clientInfo.goals![0], text, clientInfo.goals![2]])} />
-      <TextInput style={styles.input} placeholder="Goal 3" onChangeText={text => handleChange('goals', [clientInfo.goals![0], clientInfo.goals![1], text])} />
+      <TextInput style={styles.input} placeholder="Name" onChangeText={text => handleChange('name', text)} value={clientInfo.name}/>
+      <TextInput style={styles.input} placeholder="Email" onChangeText={text => handleChange('email', text)}  value={clientInfo.email}/>
+      <TextInput style={styles.input} placeholder="Phone" onChangeText={text => handleChange('phone', text)} value={clientInfo.phone}/>
+      <TextInput style={styles.input} placeholder="Password" secureTextEntry={true} onChangeText={text => handleChange('password', text)} value={clientInfo.password}/>
+      <TextInput style={styles.input} placeholder="Trainer ID (if any)" onChangeText={text => handleChange('trainerId', text)} value={clientInfo.trainerId}/>
+      <TextInput style={styles.input} placeholder="Age" onChangeText={text => handleChange('age', parseFloat(text))} keyboardType="numeric" value={clientInfo.age?.toString()}/>
+      <TextInput style={styles.input} placeholder="Weight (kg)" onChangeText={text => handleChange('weight', parseFloat(text))} keyboardType="numeric" value={clientInfo.weight?.toString()}/>
+      <TextInput style={styles.input} placeholder="Height (cm)" onChangeText={text => handleChange('height', parseFloat(text))} keyboardType="numeric" value={clientInfo.height?.toString()}/>
+      <TextInput style={styles.input} placeholder="Goal 1" onChangeText={text => handleChange('goals', [text, clientInfo.goals![1], clientInfo.goals![2]])} value={clientInfo.goals![0]}/>
+      <TextInput style={styles.input} placeholder="Goal 2" onChangeText={text => handleChange('goals', [clientInfo.goals![0], text, clientInfo.goals![2]])} value={clientInfo.goals![1]}/>
+      <TextInput style={styles.input} placeholder="Goal 3" onChangeText={text => handleChange('goals', [clientInfo.goals![0], clientInfo.goals![1], text])} value={clientInfo.goals![2]}/>
       <RadioButton onPress={(value) => handleChange("gender", value)} options={genderOptions} />
       <View>
         <CustomSelectInput onSelect={(value) => handleChange("activityLevel", value.value)} options={activityLevelOptions}/>
       </View>
         {/* <TextInput style={styles.input} placeholder="Medical Certificate URL" onChangeText={text => handleChange('MedicalCertificate', text)} /> */}
-      <TextInput style={styles.input} placeholder="Training Experience" onChangeText={text => handleChange('trainingExperience', text)} />
-      <TextInput style={styles.input} placeholder="Ideal Training Frequency" onChangeText={text => handleChange('idealTrainingFrequency', text)} />
-      <TextInput style={styles.input} placeholder="Ideal Training Duration" onChangeText={text => handleChange('idealTrainingDuration', text)} />
-      <TextInput style={styles.input} placeholder="Ideal Training Time" onChangeText={text => handleChange('idealTrainingTime', text)} />
-      <TextInput style={styles.input} placeholder="Injuries" onChangeText={text => handleChange('injuries', text)} />
+      <View>
+        <Text>Medical Certificate</Text>
+          <FileUpload onFileUpload={function (file: DocumentPickerResult): void {
+            throw new Error("Function not implemented.");
+          } } label={"Upload Medical Certificat"} 
+          />
+        <Text>Please upload your medical certificate if you do not have one please go to this link to create one </Text>
+        <OpenURLButton url={"https://google.com"} children={"Please go to this site"}  />
+      </View>
+      <TextInput style={styles.input} placeholder="Training Experience" onChangeText={text => handleChange('trainingExperience', text)} value={clientInfo.trainingExperience}/>
+      <TextInput style={styles.input} placeholder="Ideal Training Frequency" onChangeText={text => handleChange('idealTrainingFrequency', text)} value={clientInfo.idealTrainingFrequency}/>
+      <TextInput style={styles.input} placeholder="Ideal Training Duration" onChangeText={text => handleChange('idealTrainingDuration', text)} value={clientInfo.idealTrainingDuration}/>
+      <TextInput style={styles.input} placeholder="Ideal Training Time" onChangeText={text => handleChange('idealTrainingTime', text)} value={clientInfo.idealTrainingTime}/>
+      <TextInput style={styles.input} placeholder="Injuries" onChangeText={text => handleChange('injuries', text)} value={clientInfo.injuries}/>
       
       <Button title="Submit" onPress={() => console.log(clientInfo)} />
     </ScrollView>
