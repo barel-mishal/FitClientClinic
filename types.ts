@@ -302,6 +302,7 @@ export const convertUndefined = <T,>(action: (value: T) => string) => (value: T)
 }
 
 
+// ***************** Constants *****************
 export const genderOptions = [
     { label: 'Female', value: 'female' },
     { label: 'Male', value: 'male' },
@@ -313,3 +314,34 @@ export const activityLevelOptions = [
     { label: 'Moderately Active', value: 'moderatelyActive' },
     { label: 'Very Active', value: 'veryActive' },
 ]
+
+export const initialClientForm: Partial<RegisterForm[Client]> = {
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
+    role: 'client',
+    trainerId: '',
+    age: 0,
+    weight: 0,
+    height: 0,
+    goals: ['', '', ''],
+    gender: undefined,
+    activityLevel: undefined,
+    MedicalCertificate: '',
+    trainingExperience: '',
+    idealTrainingFrequency: '',
+    idealTrainingDuration: '',
+    idealTrainingTime: '',
+    injuries: '',
+  }
+
+export const initialTrainerForm: Partial<RegisterForm[Trainer]> = {
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
+    role: 'trainer',
+    certification: '',
+    yearsOfExperience: 0,
+  }

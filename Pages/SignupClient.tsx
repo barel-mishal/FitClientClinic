@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, View, TextInput, Button, ScrollView, Text, Alert } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../App";
-import { Client, RegisterForm, StringfyValues, activityLevelOptions, genderOptions } from "../types";
+import { Client, RegisterForm, StringfyValues, activityLevelOptions, genderOptions, initialClientForm } from "../types";
 import RadioButton from "../Components/RadioComponent";
 import CustomSelectInput from "../Components/PickerComponent";
 import FileUpload from "../Components/FileUploadComponent";
@@ -13,26 +13,7 @@ import OpenURLButton from "../Components/GoToSite";
 type Props = NativeStackScreenProps<RootStackParamList, 'SignupClient'>;
 
 const SignupClient = ({ navigation }: Props) => {
-  const [clientInfo, setClientInfo] = useState<Partial<RegisterForm[Client]>>({
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    role: 'client',
-    trainerId: '',
-    age: 0,
-    weight: 0,
-    height: 0,
-    goals: ['', '', ''],
-    gender: undefined,
-    activityLevel: undefined,
-    MedicalCertificate: '',
-    trainingExperience: '',
-    idealTrainingFrequency: '',
-    idealTrainingDuration: '',
-    idealTrainingTime: '',
-    injuries: '',
-  });
+  const [clientInfo, setClientInfo] = useState<Partial<RegisterForm[Client]>>(initialClientForm);
 
   // Function to handle input change
   const handleChange = (name: string, value: string | [string, string, string] | number) => {
@@ -41,6 +22,7 @@ const SignupClient = ({ navigation }: Props) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      <Text>Signup Client</Text>
       <TextInput style={styles.input} placeholder="Name" onChangeText={text => handleChange('name', text)} value={clientInfo.name}/>
       <TextInput style={styles.input} placeholder="Email" onChangeText={text => handleChange('email', text)}  value={clientInfo.email}/>
       <TextInput style={styles.input} placeholder="Phone" onChangeText={text => handleChange('phone', text)} value={clientInfo.phone}/>
