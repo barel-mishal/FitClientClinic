@@ -46,10 +46,10 @@ const CONTENT_SECTIONS = [
 ] as const; 
 type Section = typeof CONTENT_SECTIONS[number];
 
-type Props = NativeStackScreenProps<RootStackParamList, 'FitClientClinic'>;
+export type PropsLandingPage = NativeStackScreenProps<RootStackParamList, 'FitClientClinic'>;
 
 
-const LandingPage = ({ navigation }: Props) => {
+const LandingPage = ({ navigation }: PropsLandingPage) => {
 
     return (
       <ScrollView style={styles.rootContainer} stickyHeaderIndices={[2]}>
