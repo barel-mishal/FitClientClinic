@@ -1,4 +1,3 @@
-import { StyleSheet, View } from 'react-native';
 import LandingPage from './Pages/public/LandingPage';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
@@ -14,17 +13,21 @@ export type RootStackParamList = {
   SignupClient: undefined;
   SignupTrainer: undefined;
 };
+// דפנה ואלינה באסף ברופא
+// כליל קפלו
+// אסותה אשדוד קטן 
+// npx expo prebuild --platform ios - this is to prebuild the app for ios
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function MyNavigator() {
   return (
-    <Stack.Navigator>
-      <Stack.Screen name={"FitClientClinic"} component={LandingPage} options={{}} />
-      <Stack.Screen name={"GetStarted"} component={OnBoarding} options={{}} />
-      <Stack.Screen name={"SignupClient"} component={SignupClient} options={{}} />
-      <Stack.Screen name={"SignupTrainer"} component={SignupTrainer} options={{}} />
-    </Stack.Navigator>
+      <Stack.Navigator>
+        <Stack.Screen name={"FitClientClinic"} component={LandingPage} options={{}} />
+        <Stack.Screen name={"GetStarted"} component={OnBoarding} options={{}} />
+        <Stack.Screen name={"SignupClient"} component={SignupClient} options={{}} />
+        <Stack.Screen name={"SignupTrainer"} component={SignupTrainer} options={{}} />
+      </Stack.Navigator>
   );
 }
 

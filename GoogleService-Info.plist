@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>330068400689-of1f8s9mrrptnu4oj23n5vgu9muishvm.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.330068400689-of1f8s9mrrptnu4oj23n5vgu9muishvm</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDFseg7EyTDoYblacx1C9a-ubD60TJBlTk</string>
+	<key>GCM_SENDER_ID</key>
+	<string>330068400689</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.barel.FitClientClinic</string>
+	<key>PROJECT_ID</key>
+	<string>fitclientclinic-90532</string>
+	<key>STORAGE_BUCKET</key>
+	<string>fitclientclinic-90532.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:330068400689:ios:fde327c7735b8c124c1310</string>
+</dict>
+</plist>
