@@ -23,7 +23,6 @@ export type RootStackParamList = {
 
 function MyNavigator() {
   const authUser = useAuth();
-  console.log(authUser.user);
   return (
       <>
         {

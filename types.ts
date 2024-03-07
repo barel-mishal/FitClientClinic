@@ -119,7 +119,7 @@ export type UserSchema = {
 }
 
 // ----------------- Firestore -----------------
-type DatabaseMethods = {
+export type DatabaseMethods = {
     getUsers: (role: Trainer, id: string) => User[]
     register: (form: RegisterForm) => void;
     login: (email: string, password: string) => void;
