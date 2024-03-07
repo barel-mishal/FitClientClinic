@@ -239,6 +239,12 @@ export const convertUndefined = <T,>(action: (value: T) => string) => (value: T)
     return value ? value : action(value);
 }
 
+export const makeIssue = (issues: v.SchemaIssues) => {
+    const issue = issues?.at(0);
+    return `${issue?.path?.at(0)?.key} ${issue?.message}`
+
+}
+
 
 // ***************** Constants *****************
 export const GENDER_OPTIONS = [

@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { StyleSheet, TextInput, Button, ScrollView, Text } from "react-native";
+import { StyleSheet, TextInput, Button, ScrollView, Text, TextInputBase } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../App";
-import { ClientRegisterForm, TypeClientRegisterData, ClientRegisterData } from "../../types";
+import { ClientRegisterForm, TypeClientRegisterData, ClientRegisterData, makeIssue } from "../../types";
 import databaseMethods from "../../services/databaseMethods";
 import * as v from "valibot";
 
@@ -10,14 +10,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'SignupClient'>;
 
 const SignupClient = ({ navigation }: Props) => {
   const [message, setMessage] = useState<string | undefined>(undefined);
-  const [form, setForm] = useState<Partial<TypeClientRegisterData>>({
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    role: 'client',
-    trainerId: '',
-  });
+  const [form, setForm] = useState<Partial<TypeClientRegisterData>>();
 
   // Function to handle input change
   const handleChange = (name: string, value: string | [string, string, string] | number) => {
@@ -27,17 +20,21 @@ const SignupClient = ({ navigation }: Props) => {
   const handleSubmit = () => {
     const form2 = v.safeParse(ClientRegisterData, form);
     if (form2.success) databaseMethods.register(form2.output);
-    const issue = form2.issues?.at(0);
-    setMessage(`${issue?.path?.at(0)?.key} ${issue?.message}`);
+    else setMessage(makeIssue(form2.issues));
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text>Signup Client</Text>
+      <Text style={styles.title}>Signup Client</Text>
+      <Text style={styles.inputTitle}>Your name</Text>
       <TextInput style={styles.input} placeholder="Name" onChangeText={text => handleChange('name', text)} value={form?.name}/>
-      <TextInput style={styles.input} placeholder="Email" onChangeText={text => handleChange('email', text)}  value={form?.email}/>
+      <Text style={styles.inputTitle}>Email</Text>
+      <TextInput style={styles.input} placeholder="Email" secureTextEntry={false} onChangeText={text => handleChange('email', text)}  value={form?.email}/>
+      <Text style={styles.inputTitle}>Phone</Text>
       <TextInput style={styles.input} placeholder="Phone" onChangeText={text => handleChange('phone', text)} value={form?.phone}/>
+      <Text style={styles.inputTitle}>Password</Text>
       <TextInput style={styles.input} placeholder="Password" secureTextEntry={true} onChangeText={text => handleChange('password', text)} value={form?.password}/>
+      <Text style={styles.inputTitle}>Trainer ID (Phone Number)</Text>
       <TextInput style={styles.input} placeholder="Trainer ID (if any)" onChangeText={text => handleChange('trainerId', text)} value={form?.trainerId}/>
       <Text style={styles.errorMessage}>{message}</Text>
       {/* <TextInput style={styles.input} placeholder="Age" onChangeText={text => handleChange('age', parseFloat(text))} keyboardType="numeric" value={form.age?.toString()}/>
@@ -105,7 +102,15 @@ const styles = StyleSheet.create({
   errorMessage: {
     color: 'red',
     height: 17,
-  }
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  inputTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
 });
 
 export default SignupClient;
