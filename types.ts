@@ -106,7 +106,7 @@ export type UserAction = {
     updateUser: (id: string, User: User) => void;
     addUser: (user: User) => void;
     getUser: (id: string) => User;
-    login: (email: string, password: string) => void;
+    getUserProfile: (id: string) => Profile;
     logout: () => void;
 }
 
@@ -119,9 +119,10 @@ export type UserSchema = {
 }
 
 // ----------------- Firestore -----------------
-type FireStoreMethods = {
-    getUsers: () => User[]
+type DatabaseMethods = {
+    getUsers: (role: Trainer, id: string) => User[]
     register: (form: RegisterForm) => void;
+    login: (email: string, password: string) => void;
 };
 
 // ----------------- Workout -----------------

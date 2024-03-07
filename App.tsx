@@ -1,14 +1,20 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import AuthProvider, { useAuth } from './Components/ContextComopnents/AuthContext';
-import { PublicNavigator } from './Routes';
+import { PrivateNavigator, PublicNavigator } from './Routes';
 
 export type RootStackParamList = {
+  // Public
   FitClientClinic: undefined;
   GetStarted: undefined;
   SignupClient: undefined;
   SignupTrainer: undefined;
   Login: undefined;
+  // Private
+  ClientHome: undefined;
+  ClientWorkouts: undefined;
+  TrainerHome: undefined;
+  TrainerAppointments: undefined;
 };
 // דפנה ואלינה באסף ברופא
 // כליל קפלו
@@ -17,11 +23,11 @@ export type RootStackParamList = {
 
 function MyNavigator() {
   const authUser = useAuth();
-
+  console.log(authUser.user);
   return (
       <>
         {
-          authUser.user ? <PublicNavigator /> : <PublicNavigator />
+          authUser.user ? <PrivateNavigator role={authUser.profile.role} /> : <PublicNavigator />
         }
       </>
   );

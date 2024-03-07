@@ -12,7 +12,7 @@ const Login: React.FC = () => {
             <Text> Login </Text>
             <TextInput value={email} onChangeText={(t) => setEmail(t)} />
             <TextInput value={password} onChangeText={(t) => setPassword(t)} />
-            <TouchableOpacity onPress={() => console.log("login")}>
+            <TouchableOpacity onPress={() => console.log(email + password)}>
                 <Text>Login</Text>
             </TouchableOpacity>
         </View>

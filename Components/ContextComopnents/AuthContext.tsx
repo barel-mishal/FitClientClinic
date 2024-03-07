@@ -23,15 +23,6 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
         return unsubscribe;
     }, []);
 
-    const userAction: UserAction = {
-        deleteUser: (id: string) => { },
-        updateUser: (id: string, user: UserSchema['user']) => { },
-        addUser: (user: UserSchema['user']) => { },
-        getUser: (id: string) => currentUser!,
-        login: (email: string, password: string) => { },
-        logout: () => auth().signOut(),
-    }
-
     const profile: Profile = {
         id: '',
         name: '',
@@ -41,6 +32,17 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
         password: '',
         trainerId: ''
     }
+
+    const userAction: UserAction = {
+        deleteUser: (id: string) => { },
+        updateUser: (id: string, user: UserSchema['user']) => { },
+        addUser: (user: UserSchema['user']) => { },
+        getUser: (id: string) => currentUser!,
+        getUserProfile: (id: string) => profile,
+        logout: () => auth().signOut(),
+    }
+
+
 
 
     return (
