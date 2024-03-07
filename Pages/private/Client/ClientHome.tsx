@@ -1,16 +1,34 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import auth from "@react-native-firebase/auth";
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { RootStackParamList } from "../../../App";
+import databaseMethods from "../../../services/databaseMethods";
+import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
+import { isUserLoggedIn } from "../../../types";
 
-const HomeClient = () => {
+type Props = NativeStackScreenProps<RootStackParamList, 'ClientHome'>;
+
+const HomeClient: React.FC<Props> = ({ navigation }) => {
+    const userSchema = useAuth();
+
+    if (!isUserLoggedIn(userSchema)) {
+        return <Text>User is not logged in</Text>;
+    }
+
+    // From this point on, TypeScript knows that userSchema is of type { user: User; profile: Profile }
+    const { profile } = userSchema;
+
+
     return (
         <View style={styles.container}>
-            <Text>HomeClient</Text>
-            <TouchableOpacity onPress={async () => {
-                await auth()?.signOut()
-            }}>
+            <Text>HomeClient {profile.name}</Text>
+            <TouchableOpacity onPress={databaseMethods.logout}>
                 <Text>Log Out</Text>
+            </TouchableOpacity>
+            
+            <TouchableOpacity onPress={() => navigation.navigate('ClientProperties')}>
+                <Text>Client Properties</Text>
             </TouchableOpacity>
         </View>
     );

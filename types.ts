@@ -231,6 +231,10 @@ export const makeIssue = (issues: v.SchemaIssues) => {
 
 }
 
+export function isUserLoggedIn(userSchema: UserSchema): userSchema is { user: User; profile: Profile } {
+    return userSchema.user !== null;
+}
+
 
 // ***************** Constants *****************
 export const GENDER_OPTIONS = [

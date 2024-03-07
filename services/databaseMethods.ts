@@ -9,16 +9,21 @@ const databaseMethods = {
   getUsers: async (role: string, id: string) => {
 
   },
-  getUserProfile
+  getUserProfile,
+  logout: userSignOut,
 }
 
 async function login(email: string, password: string) {
   try {
     await auth().signInWithEmailAndPassword(email, password);
-    console.log("User logged in successfully");
+    return "User logged in successfully";
     // Navigate app main screen here
   } catch (error) {
     console.error("Login error: ", error);
+    return `
+Make sure you entered the correct email and password.
+Error logging in. Please try again. Did you sign up?
+  `
     // Handle errors here, such as showing a notification to the user
   }
 }
@@ -95,6 +100,15 @@ async function getUserProfile(uid: FirebaseAuthTypes.User["uid"]): Promise<Profi
   } catch (error) {
       console.error("Error fetching user profile: ", error);
       throw error; // Re-throw the error if needed or handle it as per your app's error handling policy
+  }
+}
+
+async function userSignOut() {
+  try {
+      await auth()?.signOut();
+      console.log("User signed out");
+  } catch (error) {
+      console.error("Error signing out: ", error);
   }
 }
 
