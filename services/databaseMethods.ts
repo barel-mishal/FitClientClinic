@@ -1,4 +1,4 @@
-import { Client, ClientForm, ClientRegisterForm, Profile, UserSchema } from '../types';
+import { Client, ClientData, ClientRegisterForm, Profile, UserSchema } from '../types';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 

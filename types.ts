@@ -1,14 +1,8 @@
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
-type pages = 
-'home'
- | 'landing'
- | 'login'
- | 'register'
- | '404'
- | 'profile'
- | 'appointment'
- | 'fitness-program'
- | 'workout'
+
+
+
+// ***************** Roles *****************
 export type Trainer = 'trainer';
 export type Client = 'client';
 
@@ -119,7 +113,7 @@ export type UserSchema = {
 // ----------------- Firestore -----------------
 export type DatabaseMethods = {
     getUsers: (role: Trainer, id: string) => User[]
-    register: (form: ClientForm | Trainer) => void;
+    register: (form: ClientData | Trainer) => void;
     login: (email: string, password: string) => void;
     addUser: (user: User) => void;
 };
@@ -190,11 +184,11 @@ type PersonalInfo = {
     password: string;
 }
 
-
-export type ClientForm = PersonalInfo & Partial<PersonalFitnessInfo> & {
+export type ClientData = PersonalInfo & Partial<PersonalFitnessInfo> & {
     role: Client
     trainerId?: string;
 }
+
 export type ClientRegisterForm = PersonalInfo & {
     role: Client
     trainerId?: string;
@@ -205,94 +199,9 @@ type TrainerForm = PersonalInfo & {
     certification?: Certification; // photo url
     yearsOfExperience?: number;
 }
-
-
-
-
-
-// ***************** UI Types *****************
-enum PageType {
-    landing = 'landing', // done
-    login = 'login', 
-    register = 'register', // on going
-    home_client = 'home_client',
-    home_trainer = 'home_trainer',
-    appointment_trainer = 'appointment_trainer',
-    program_trainer = 'program_trainer',
-    workout_client = 'workout_client',
-    workout_summary = 'workout_summary',
-    not_found = '404',
-}
-
-enum PageAuth {
-    public = 'public',
-    private = "private"
-}
-
 type Certification = string;
 
-type Page = {
-    type: PageType.appointment_trainer;
-    data: {
-        appointment: Appointment;
-        user: User;
-    },
-    auth: PageAuth.private
-} | {
-    type: PageType.program_trainer;
-    data: {
-        fitnessProgram: FitnessProgram;
-        user: User;
-    },
-    auth: PageAuth.private
-} | {
-    type: PageType.workout_client;
-    data: {
-        workout: Workout;
-        user: User;
-    },
-    auth: PageAuth.private
-} | {
-    type: PageType.workout_summary;
-    data: {
-        workoutSummary: WorkoutSummary;
-        user: User;
-    },
-    auth: PageAuth.private
-} | {
-    type: PageType.home_client;
-    data: {
-        user: User;
-        lastFitnessProgram: FitnessProgram;
-        nextAppointment: Appointment;
-        trainerDetails: ProfileDetail;
-    },
-    auth: PageAuth.private
-} | {
-    type: PageType.home_trainer;
-    data: {
-        user: User;
-        clients: User[];
-        appointments: Appointments;
-        createFitnessProgram: () => void;
-        createAppointment: () => void;
-    },
-    auth: PageAuth.private
-} | {
-    type: PageType.landing;
-    auth: PageAuth.public
-} | {
-    type: PageType.login;
-    auth: PageAuth.public
-} | {
-    type: PageType.register;
-    inputs: ClientForm | TrainerForm;
-    auth: PageAuth.public
-} | {
-    type: PageType['404'];
-    auth: PageAuth.public
-}
-
+// ***************** User Flow Types *****************
 
 // ***************** Util *****************
 export type StringfyValues<T> = {
@@ -317,19 +226,19 @@ export const convertUndefined = <T,>(action: (value: T) => string) => (value: T)
 
 
 // ***************** Constants *****************
-export const genderOptions = [
+export const GENDER_OPTIONS = [
     { label: 'Female', value: 'female' },
     { label: 'Male', value: 'male' },
 ]
 
-export const activityLevelOptions = [
+export const ACTIVITY_LEVEL_OPTIONS = [
     { label: 'Sedentary', value: 'sedentary' },
     { label: 'Lightly Active', value: 'lightlyActive' },
     { label: 'Moderately Active', value: 'moderatelyActive' },
     { label: 'Very Active', value: 'veryActive' },
 ]
 
-export const initialClientForm: Partial<ClientForm> = {
+export const initialClientForm: Partial<ClientData> = {
     name: '',
     email: '',
     phone: '',
