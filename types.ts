@@ -102,12 +102,10 @@ export type Profile = (ProfileDetail & {
 type User = FirebaseAuthTypes.User;
 
 export type UserAction = {
-    deleteUser: (id: string) => void;
-    updateUser: (id: string, User: User) => void;
-    addUser: (user: User) => void;
     getUser: (id: string) => User;
     getUserProfile: (id: string) => Profile;
     logout: () => void;
+    deleteUser: (id: string) => void;
 }
 
 export type UserSchema = {
@@ -121,8 +119,9 @@ export type UserSchema = {
 // ----------------- Firestore -----------------
 export type DatabaseMethods = {
     getUsers: (role: Trainer, id: string) => User[]
-    register: (form: RegisterForm) => void;
+    register: (form: ClientForm | Trainer) => void;
     login: (email: string, password: string) => void;
+    addUser: (user: User) => void;
 };
 
 // ----------------- Workout -----------------
@@ -192,10 +191,14 @@ type PersonalInfo = {
 }
 
 
-type ClientForm = PersonalInfo & PersonalFitnessInfo & {
+export type ClientForm = PersonalInfo & Partial<PersonalFitnessInfo> & {
     role: Client
     trainerId?: string;
-};
+}
+export type ClientRegisterForm = PersonalInfo & {
+    role: Client
+    trainerId?: string;
+}
 
 type TrainerForm = PersonalInfo & {
     role: Trainer
@@ -203,10 +206,7 @@ type TrainerForm = PersonalInfo & {
     yearsOfExperience?: number;
 }
 
-export type RegisterForm = {
-    client: ClientForm;
-    trainer: TrainerForm;
-}
+
 
 
 
@@ -223,6 +223,7 @@ enum PageType {
     workout_summary = 'workout_summary',
     not_found = '404',
 }
+
 enum PageAuth {
     public = 'public',
     private = "private"
@@ -285,7 +286,7 @@ type Page = {
     auth: PageAuth.public
 } | {
     type: PageType.register;
-    inputs: RegisterForm;
+    inputs: ClientForm | TrainerForm;
     auth: PageAuth.public
 } | {
     type: PageType['404'];
@@ -328,7 +329,7 @@ export const activityLevelOptions = [
     { label: 'Very Active', value: 'veryActive' },
 ]
 
-export const initialClientForm: Partial<RegisterForm[Client]> = {
+export const initialClientForm: Partial<ClientForm> = {
     name: '',
     email: '',
     phone: '',
@@ -349,7 +350,7 @@ export const initialClientForm: Partial<RegisterForm[Client]> = {
     injuries: '',
   }
 
-export const initialTrainerForm: Partial<RegisterForm[Trainer]> = {
+export const initialTrainerForm: Partial<TrainerForm> = {
     name: '',
     email: '',
     phone: '',

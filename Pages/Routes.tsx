@@ -1,11 +1,11 @@
-import { RootStackParamList } from "./App";
-import LandingPage from "./Pages/public/LandingPage";
-import OnBoarding from "./Pages/public/OnBoarding";
-import SignupClient from "./Pages/public/SignupClient";
-import SignupTrainer from "./Pages/public/SignupTrainer";
-import Login from "./Pages/public/Login";
-import Header from "./Components/Header";
-import HomeClient from "./Pages/private/Client/HomeClient";
+import { RootStackParamList } from "../App";
+import LandingPage from "./public/LandingPage";
+import OnBoarding from "./public/OnBoarding";
+import SignupClient from "./public/SignupClient";
+import SignupTrainer from "./public/SignupTrainer";
+import Login from "./public/Login";
+import Header from "../Components/Header";
+import HomeClient from "./private/Client/HomeClient";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
