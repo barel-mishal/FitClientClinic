@@ -9,19 +9,26 @@ import * as v from "valibot";
 type Props = NativeStackScreenProps<RootStackParamList, 'SignupClient'>;
 
 const SignupClient = ({ navigation }: Props) => {
-  const init = v.getDefaults(ClientRegisterData);
-  const [form, setForm] = useState<Partial<TypeClientRegisterData>>();
+  const [message, setMessage] = useState<string | undefined>(undefined);
+  const [form, setForm] = useState<Partial<TypeClientRegisterData>>({
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
+    role: 'client',
+    trainerId: '',
+  });
 
   // Function to handle input change
   const handleChange = (name: string, value: string | [string, string, string] | number) => {
-    setForm(prev => ({ ...prev, [name]: value }));
+    setForm(prev => ({ ...(prev ?? {}), [name]: value }));
   };
 
   const handleSubmit = () => {
     const form2 = v.safeParse(ClientRegisterData, form);
     if (form2.success) databaseMethods.register(form2.output);
-    console.log(form2);
-    return form2.issues
+    const issue = form2.issues?.at(0);
+    setMessage(`${issue?.path?.at(0)?.key} ${issue?.message}`);
   };
 
   return (
@@ -32,7 +39,7 @@ const SignupClient = ({ navigation }: Props) => {
       <TextInput style={styles.input} placeholder="Phone" onChangeText={text => handleChange('phone', text)} value={form?.phone}/>
       <TextInput style={styles.input} placeholder="Password" secureTextEntry={true} onChangeText={text => handleChange('password', text)} value={form?.password}/>
       <TextInput style={styles.input} placeholder="Trainer ID (if any)" onChangeText={text => handleChange('trainerId', text)} value={form?.trainerId}/>
-      
+      <Text style={styles.errorMessage}>{message}</Text>
       {/* <TextInput style={styles.input} placeholder="Age" onChangeText={text => handleChange('age', parseFloat(text))} keyboardType="numeric" value={form.age?.toString()}/>
       <TextInput style={styles.input} placeholder="Weight (kg)" onChangeText={text => handleChange('weight', parseFloat(text))} keyboardType="numeric" value={form.weight?.toString()}/>
       <TextInput style={styles.input} placeholder="Height (cm)" onChangeText={text => handleChange('height', parseFloat(text))} keyboardType="numeric" value={form.height?.toString()}/> */}
@@ -59,7 +66,7 @@ const SignupClient = ({ navigation }: Props) => {
       <TextInput style={styles.input} placeholder="Ideal Training Time" onChangeText={text => handleChange('idealTrainingTime', text)} value={form.idealTrainingTime}/> */}
       {/* <TextInput style={styles.input} placeholder="Injuries" onChangeText={text => handleChange('injuries', text)} value={form.injuries}/> */}
       
-      <Button title="Submit" onPress={handleSubmit} />
+      <Button title="Signup" onPress={handleSubmit} />
     </ScrollView>
   );
 };
@@ -94,6 +101,10 @@ const styles = StyleSheet.create({
   inputSearchStyle: {
     height: 40,
     fontSize: 16,
+  },
+  errorMessage: {
+    color: 'red',
+    height: 17,
   }
 });
 
