@@ -2,44 +2,36 @@ import React, { useState } from "react";
 import { StyleSheet, TextInput, Button, ScrollView, Text } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../App";
-import { ClientRegisterForm, initialClientRegisterForm } from "../../types";
+import { ClientRegisterForm, TypeClientRegisterData, ClientRegisterData } from "../../types";
 import databaseMethods from "../../services/databaseMethods";
+import * as v from "valibot";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SignupClient'>;
 
 const SignupClient = ({ navigation }: Props) => {
-  const [message, setMessage] = useState<string>('');
-  const [form, setForm] = useState<Partial<ClientRegisterForm>>(initialClientRegisterForm);
+  const init = v.getDefaults(ClientRegisterData);
+  const [form, setForm] = useState<Partial<TypeClientRegisterData>>();
 
   // Function to handle input change
   const handleChange = (name: string, value: string | [string, string, string] | number) => {
     setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const validateForm = (): ClientRegisterForm | undefined => {
-    if (form.name && form.email && form.phone && form.password && form.role) {
-      return form as ClientRegisterForm;
-    }
-    return undefined;
-  }
   const handleSubmit = () => {
-    const form = validateForm();
-    if (form) {
-      const result = databaseMethods.register(form);
-
-    } else {
-      console.error('Invalid form');
-    }
+    const form2 = v.safeParse(ClientRegisterData, form);
+    if (form2.success) databaseMethods.register(form2.output);
+    console.log(form2);
+    return form2.issues
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text>Signup Client</Text>
-      <TextInput style={styles.input} placeholder="Name" onChangeText={text => handleChange('name', text)} value={form.name}/>
-      <TextInput style={styles.input} placeholder="Email" onChangeText={text => handleChange('email', text)}  value={form.email}/>
-      <TextInput style={styles.input} placeholder="Phone" onChangeText={text => handleChange('phone', text)} value={form.phone}/>
-      <TextInput style={styles.input} placeholder="Password" secureTextEntry={true} onChangeText={text => handleChange('password', text)} value={form.password}/>
-      <TextInput style={styles.input} placeholder="Trainer ID (if any)" onChangeText={text => handleChange('trainerId', text)} value={form.trainerId}/>
+      <TextInput style={styles.input} placeholder="Name" onChangeText={text => handleChange('name', text)} value={form?.name}/>
+      <TextInput style={styles.input} placeholder="Email" onChangeText={text => handleChange('email', text)}  value={form?.email}/>
+      <TextInput style={styles.input} placeholder="Phone" onChangeText={text => handleChange('phone', text)} value={form?.phone}/>
+      <TextInput style={styles.input} placeholder="Password" secureTextEntry={true} onChangeText={text => handleChange('password', text)} value={form?.password}/>
+      <TextInput style={styles.input} placeholder="Trainer ID (if any)" onChangeText={text => handleChange('trainerId', text)} value={form?.trainerId}/>
       
       {/* <TextInput style={styles.input} placeholder="Age" onChangeText={text => handleChange('age', parseFloat(text))} keyboardType="numeric" value={form.age?.toString()}/>
       <TextInput style={styles.input} placeholder="Weight (kg)" onChangeText={text => handleChange('weight', parseFloat(text))} keyboardType="numeric" value={form.weight?.toString()}/>

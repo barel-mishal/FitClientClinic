@@ -1,4 +1,5 @@
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
+import * as v from "valibot";
 
 
 
@@ -201,7 +202,21 @@ type TrainerForm = PersonalInfo & {
 }
 type Certification = string;
 
+
+
 // ***************** User Flow Types *****************
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ***************** Util *****************
 export type StringfyValues<T> = {
@@ -259,14 +274,18 @@ export const initialClientForm: Partial<ClientData> = {
     injuries: '',
   }
 
-export const initialClientRegisterForm: Partial<ClientRegisterForm> = {
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    role: 'client',
-    trainerId: '',
-}
+export const ClientRegisterData = v.object({
+    name: v.string([v.minLength(2)]),
+    email: v.string([v.email()]),
+    phone: v.string([v.minLength(7)]),
+    password: v.string([v.minLength(6)]),
+    role: v.literal('client'),
+    trainerId: v.optional(v.string([v.minLength(2)])),
+});
+
+
+export type TypeClientRegisterData = v.Input<typeof ClientRegisterData>
+
 
 export const initialTrainerForm: Partial<TrainerForm> = {
     name: '',
