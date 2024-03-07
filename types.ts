@@ -6,6 +6,7 @@ import * as v from "valibot";
 // ***************** Roles *****************
 export type Trainer = 'trainer';
 export type Client = 'client';
+export type Role = Trainer | Client;
 
 // ***************** Data Types *****************
 // ----------------- Appointment -----------------
@@ -204,20 +205,6 @@ type Certification = string;
 
 
 
-// ***************** User Flow Types *****************
-
-
-
-
-
-
-
-
-
-
-
-
-
 // ***************** Util *****************
 export type StringfyValues<T> = {
     [P in keyof T]: string;
@@ -259,27 +246,6 @@ export const ACTIVITY_LEVEL_OPTIONS = [
     { label: 'Very Active', value: 'veryActive' },
 ]
 
-export const initialClientForm: Partial<ClientData> = {
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    role: 'client',
-    trainerId: '',
-    age: 0,
-    weight: 0,
-    height: 0,
-    goals: ['', '', ''],
-    gender: undefined,
-    activityLevel: undefined,
-    MedicalCertificate: '',
-    trainingExperience: '',
-    idealTrainingFrequency: '',
-    idealTrainingDuration: '',
-    idealTrainingTime: '',
-    injuries: '',
-  }
-
 export const ClientRegisterData = v.object({
     name: v.string([v.minLength(2)]),
     email: v.string([v.email()]),
@@ -289,8 +255,34 @@ export const ClientRegisterData = v.object({
     trainerId: v.optional(v.string([v.minLength(2)])),
 });
 
-
 export type TypeClientRegisterData = v.Input<typeof ClientRegisterData>
+
+export const ClientPersonalFitnessInfo = v.object({
+    age: v.number(),
+    weight: v.number(),
+    height: v.number(),
+    goals: v.tuple([v.string(), v.string(), v.string()]),
+    gender: v.literal('Female', 'Male'),
+    activityLevel: v.union([
+        v.literal('Sedentary'),
+        v.literal('Lightly Active'),
+        v.literal('Moderately Active'),
+        v.literal('Very Active'),
+    ]),
+    MedicalCertificate: v.string(), // photo url or file
+    trainingExperience: v.string(),
+    idealTrainingFrequency: v.string(),
+    idealTrainingDuration: v.string(),
+    idealTrainingTime: v.string(),
+    injuries: v.string(),
+});
+
+export type TypeClientPersonalFitnessInfo = v.Input<typeof ClientPersonalFitnessInfo>
+
+export const ClientProperties = v.merge([ClientRegisterData, ClientPersonalFitnessInfo]);
+
+export type TypeClientProperties = v.Input<typeof ClientProperties>
+
 
 
 export const initialTrainerForm: Partial<TrainerForm> = {
