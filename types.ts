@@ -350,6 +350,15 @@ export const initialClientForm: Partial<ClientForm> = {
     injuries: '',
   }
 
+export const initialClientRegisterForm: Partial<ClientRegisterForm> = {
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
+    role: 'client',
+    trainerId: '',
+}
+
 export const initialTrainerForm: Partial<TrainerForm> = {
     name: '',
     email: '',

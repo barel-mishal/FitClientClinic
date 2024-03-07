@@ -26,8 +26,16 @@ const databaseMethods = {
             phone: form.phone,
             trainerId: form?.trainerId,
             userId: user.uid,
-        }).then(() => {}).catch((error) => {
+        })
+        .then(() => {})
+        .catch((error) => {
             console.error("Error adding profile: ", error);
+            auth().signOut();
+            auth().currentUser?.delete().then(() => {
+                console.log("User deleted");
+            }).catch((error) => {
+                console.error("Error deleting user: ", error);
+            });
             user = null;
         });
         return user;
