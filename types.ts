@@ -106,7 +106,6 @@ export type UserAction = {
 
 export type UserSchema = {
     user: User;
-    userAction: UserAction;
     profile: Profile
 } | {
     user: null

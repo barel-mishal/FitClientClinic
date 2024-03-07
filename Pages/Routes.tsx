@@ -5,8 +5,12 @@ import SignupClient from "./public/SignupClient";
 import SignupTrainer from "./public/SignupTrainer";
 import Login from "./public/Login";
 import Header from "../Components/Header";
-import HomeClient from "./private/Client/HomeClient";
+import ClientHome from "./private/Client/ClientHome";
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import ClientWorkouts from "./private/Client/ClientWorkouts";
+import TrainerAppointment from "./private/Trainer/TrainerAppointment";
+import TrainerHome from "./private/Trainer/TrainerHome";
+import ClientProperties from "./private/Client/ClientProperties";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -31,13 +35,14 @@ export const PrivateNavigator: React.FC<PrivateNavigatorProps> = ({ role })  =>{
     console.log(role);
     if (role === 'client') {
         return <Stack.Navigator>
-            <Stack.Screen name={"ClientHome"} component={HomeClient} options={{}} />
-            <Stack.Screen name={"ClientWorkouts"} component={HomeClient} options={{}} />
+            <Stack.Screen name={"ClientHome"} component={ClientHome} options={{}} />
+            <Stack.Screen name={"ClientWorkouts"} component={ClientWorkouts} options={{}} />
+            <Stack.Screen name={"ClientProperties"} component={ClientProperties} options={{}} />
         </Stack.Navigator>
     } else if (role === 'trainer') {
         return <Stack.Navigator>
-            <Stack.Screen name={"TrainerHome"} component={HomeClient} options={{}} />
-            <Stack.Screen name={"TrainerAppointments"} component={HomeClient} options={{}} />
+            <Stack.Screen name={"TrainerHome"} component={TrainerHome} options={{}} />
+            <Stack.Screen name={"TrainerAppointments"} component={TrainerAppointment} options={{}} />
         </Stack.Navigator>
     } else {
         return <PublicNavigator />

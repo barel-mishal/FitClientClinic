@@ -2,52 +2,43 @@ import { Client, ClientData, ClientRegisterForm, Profile, Role, UserSchema } fro
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
+
 const databaseMethods = {
-  login: async (email: string, password: string) => {
-    try {
-      await auth().signInWithEmailAndPassword(email, password);
-      console.log("User logged in successfully");
-      // Navigate app main screen here
-    } catch (error) {
-      console.error("Login error: ", error);
-      // Handle errors here, such as showing a notification to the user
-    }
-  },
-
-  register: async (form: ClientRegisterForm) => {
-    try {
-        const userCredential = await auth().createUserWithEmailAndPassword(form.email, form.password);
-        const user = userCredential.user;
-        
-        // Separate profile creation into its own function for clarity.
-        await createProfile(user, form);
-
-        return user;
-    } catch (error) {
-        // Consolidate error handling
-        handleRegistrationError(error);
-        return null;
-    }
-},
-
+  login,
+  register: registerClient,
   getUsers: async (role: string, id: string) => {
-    // try {
-    //   const querySnapshot = await firestore.collection('users').where('role', '==', role).get();
-    //   const users = [];
-    //   querySnapshot.forEach((doc) => {
-    //     if (doc.id === id) {
-    //       users.push({ id: doc.id, ...doc.data() });
-    //     }
-    //   });
-    //   console.log(users);
-    //   return users;
-    // } catch (error) {
-    //   console.error("Error getting users: ", error);
-    //   return [];
-    // }
+
   },
+  getUserProfile
 }
 
+async function login(email: string, password: string) {
+  try {
+    await auth().signInWithEmailAndPassword(email, password);
+    console.log("User logged in successfully");
+    // Navigate app main screen here
+  } catch (error) {
+    console.error("Login error: ", error);
+    // Handle errors here, such as showing a notification to the user
+  }
+}
+
+
+async function registerClient(form: ClientRegisterForm) {
+  try {
+      const userCredential = await auth().createUserWithEmailAndPassword(form.email, form.password);
+      const user = userCredential.user;
+      
+      // Separate profile creation into its own function for clarity.
+      await createProfile(user, form);
+
+      return user;
+  } catch (error) {
+      // Consolidate error handling
+      handleRegistrationError(error);
+      return null;
+  }
+}
 
 async function createProfile(user: FirebaseAuthTypes.User, form: ClientRegisterForm) {
   try {
@@ -84,5 +75,30 @@ function handleRegistrationError(error: any) {
       console.error(error);
   }
 }
+
+
+async function getUserProfile(uid: FirebaseAuthTypes.User["uid"]): Promise<Profile | null> {
+  try {
+      // Reference to the user's profile document
+      const docRef = firestore().collection('profile').doc(uid);
+      const doc = await docRef.get();
+
+      if (doc.exists) {
+          // The document data will be returned here if a document with the given UID exists
+          const data = doc.data();
+          return data as Profile;
+      } else {
+          // Handle the case where there is no document for the given UID
+          console.log("No user profile found for this UID");
+          return null;
+      }
+  } catch (error) {
+      console.error("Error fetching user profile: ", error);
+      throw error; // Re-throw the error if needed or handle it as per your app's error handling policy
+  }
+}
+
+
+
 
 export default databaseMethods;

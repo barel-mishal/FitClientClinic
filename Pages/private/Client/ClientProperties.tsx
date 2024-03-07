@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { StyleSheet, TextInput, Button, ScrollView, Text, TextInputBase, View } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { RootStackParamList } from "../../App";
-import { ClientRegisterForm, TypeClientRegisterData, ClientRegisterData, makeIssue, GENDER_OPTIONS, ACTIVITY_LEVEL_OPTIONS, TypeClientProperties } from "../../types";
-import databaseMethods from "../../services/databaseMethods";
+import { RootStackParamList } from "../../../App";
+import { ClientRegisterForm, TypeClientRegisterData, ClientRegisterData, makeIssue, GENDER_OPTIONS, ACTIVITY_LEVEL_OPTIONS, TypeClientProperties } from "../../../types";
+import databaseMethods from "../../../services/databaseMethods";
 import * as v from "valibot";
-import RadioButton from "../../Components/RadioComponent";
+import RadioButton from "../../../Components/RadioComponent";
 import { DocumentPickerResult } from "expo-document-picker";
-import FileUpload from "../../Components/FileUploadComponent";
-import OpenURLButton from "../../Components/GoToSite";
-import CustomSelectInput from "../../Components/PickerComponent";
+import FileUpload from "../../../Components/FileUploadComponent";
+import OpenURLButton from "../../../Components/GoToSite";
+import CustomSelectInput from "../../../Components/PickerComponent";
 
-type Props = NativeStackScreenProps<RootStackParamList, 'SignupClient'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'ClientProperties'>;
 
 const SignupClient = ({ navigation }: Props) => {
   const [message, setMessage] = useState<string | undefined>(undefined);
@@ -38,13 +38,11 @@ const SignupClient = ({ navigation }: Props) => {
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Signup Client</Text>
       <Text style={styles.inputTitle}>Your name</Text>
-      <TextInput style={styles.input} placeholder="Name" onChangeText={text => handleChange('name', text)} value={form?.name}/>
+      <TextInput style={styles.input} placeholder="Shalom" onChangeText={text => handleChange('name', text)} value={form?.name}/>
       <Text style={styles.inputTitle}>Email</Text>
-      <TextInput style={styles.input} placeholder="Email" secureTextEntry={false} onChangeText={text => handleChange('email', text)}  value={form?.email}/>
+      <TextInput style={styles.input} placeholder="shalom@mail.co.il" secureTextEntry={false} onChangeText={text => handleChange('email', text)}  value={form?.email}/>
       <Text style={styles.inputTitle}>Phone</Text>
-      <TextInput style={styles.input} placeholder="Phone" onChangeText={text => handleChange('phone', text)} value={form?.phone}/>
-      <Text style={styles.inputTitle}>Password</Text>
-      <TextInput style={styles.input} placeholder="Password" secureTextEntry={true} onChangeText={text => handleChange('password', text)} value={form?.password}/>
+      <TextInput style={styles.input} placeholder="0509041212" onChangeText={text => handleChange('phone', text)} value={form?.phone}/>
       <Text style={styles.inputTitle}>Trainer ID (Phone Number)</Text>
       <TextInput style={styles.input} placeholder="Trainer ID (if any)" onChangeText={text => handleChange('trainerId', text)} value={form?.trainerId}/>
       <Text style={styles.errorMessage}>{message}</Text>

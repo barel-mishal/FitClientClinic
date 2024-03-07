@@ -13,8 +13,10 @@ export type RootStackParamList = {
   // Private
   ClientHome: undefined;
   ClientWorkouts: undefined;
+  ClientProperties: undefined;
   TrainerHome: undefined;
   TrainerAppointments: undefined;
+
 };
 // דפנה ואלינה באסף ברופא
 // כליל קפלו
@@ -23,6 +25,7 @@ export type RootStackParamList = {
 
 function MyNavigator() {
   const authUser = useAuth();
+  console.log(JSON.stringify(authUser, null, 2));
   return (
       <>
         {
