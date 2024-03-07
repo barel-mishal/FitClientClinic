@@ -1,4 +1,3 @@
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { RootStackParamList } from "./App";
 import LandingPage from "./Pages/public/LandingPage";
 import OnBoarding from "./Pages/public/OnBoarding";
@@ -7,6 +6,7 @@ import SignupTrainer from "./Pages/public/SignupTrainer";
 import Login from "./Pages/public/Login";
 import Header from "./Components/Header";
 import HomeClient from "./Pages/private/Client/HomeClient";
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
