@@ -1,14 +1,7 @@
-import LandingPage from './Pages/public/LandingPage';
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import OnBoarding from './Pages/public/OnBoarding';
-import SignupClient from './Pages/public/SignupClient';
-import SignupTrainer from './Pages/public/SignupTrainer';
-import Login from './Pages/public/Login';
-import Header from './Components/Header';
-
-
+import AuthProvider, { useAuth } from './Components/ContextComopnents/AuthContext';
+import { PublicNavigator } from './Routes';
 
 export type RootStackParamList = {
   FitClientClinic: undefined;
@@ -22,27 +15,25 @@ export type RootStackParamList = {
 // אסותה אשדוד קטן 
 // npx expo prebuild --platform ios - this is to prebuild the app for ios
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
-
 function MyNavigator() {
+  const authUser = useAuth();
+
   return (
-      <Stack.Navigator>
-        <Stack.Screen name={"FitClientClinic"} component={LandingPage} options={{
-          header: () => <Header />
-        }} />
-        <Stack.Screen name={"GetStarted"} component={OnBoarding} options={{}} />
-        <Stack.Screen name={"SignupClient"} component={SignupClient} options={{}} />
-        <Stack.Screen name={"SignupTrainer"} component={SignupTrainer} options={{}} />
-        <Stack.Screen name={"Login"} component={Login} options={{}} />
-      </Stack.Navigator>
+      <>
+        {
+          authUser.user ? <PublicNavigator /> : <PublicNavigator />
+        }
+      </>
   );
 }
 
 export default function App() {
   
   return (
-    <NavigationContainer>
-      <MyNavigator />
-    </NavigationContainer>
+    <AuthProvider>
+      <NavigationContainer>
+        <MyNavigator />
+      </NavigationContainer>
+    </AuthProvider>
     );
 }

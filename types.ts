@@ -1,3 +1,4 @@
+import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 type pages = 
 'home'
  | 'landing'
@@ -81,13 +82,13 @@ type FitnessProgramSchema = {
     FitnessPrograms: FitnessPrograms;
 }
 
-// ----------------- User -----------------
-type UserDetail = {
+// ----------------- Profile -----------------
+type ProfileDetail = {
     name: string;
     email: string;
     phone: string;
 }
-type User = (UserDetail & {
+export type Profile = (ProfileDetail & {
     id: string;
     password: string;
 }) & ({
@@ -97,20 +98,31 @@ type User = (UserDetail & {
     trainerId: string | undefined;
 });
 
-type UserState = User | undefined;
+// ----------------- User -----------------
+type User = FirebaseAuthTypes.User;
 
-type UserAction = {
+export type UserAction = {
     deleteUser: (id: string) => void;
-    updateUser: (id: string, user: User) => void;
+    updateUser: (id: string, User: User) => void;
     addUser: (user: User) => void;
     getUser: (id: string) => User;
-    getUsers: () => User[];
+    login: (email: string, password: string) => void;
+    logout: () => void;
 }
 
-type UserSchema = {
-    user: UserState;
+export type UserSchema = {
+    user: User;
     userAction: UserAction;
+    profile: Profile
+} | {
+    user: null
 }
+
+// ----------------- Firestore -----------------
+type FireStoreMethods = {
+    getUsers: () => User[]
+    register: (form: RegisterForm) => void;
+};
 
 // ----------------- Workout -----------------
 type Workout = {
@@ -251,7 +263,7 @@ type Page = {
         user: User;
         lastFitnessProgram: FitnessProgram;
         nextAppointment: Appointment;
-        trainerDetails: UserDetail;
+        trainerDetails: ProfileDetail;
     },
     auth: PageAuth.private
 } | {
