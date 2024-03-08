@@ -11,7 +11,6 @@ interface CustomSelectInputProps {
     onSelect: (option: Option) => void;
 }
 
-
 const CustomSelectInput: React.FC<CustomSelectInputProps> = ({ options, onSelect }) => {
   const [visible, setVisible] = useState(false);
   const [selected, setSelected] = useState<string | null>(null);
@@ -23,7 +22,7 @@ const CustomSelectInput: React.FC<CustomSelectInputProps> = ({ options, onSelect
   };
 
   return (
-    <View>
+    <>
       <TouchableOpacity onPress={() => setVisible(true)} style={styles.button}>
         <Text>{selected || 'Select an option'}</Text>
       </TouchableOpacity>
@@ -41,7 +40,7 @@ const CustomSelectInput: React.FC<CustomSelectInputProps> = ({ options, onSelect
           </View>
         </TouchableOpacity>
       </Modal>
-    </View>
+    </>
   );
 };
 

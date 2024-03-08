@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, {  } from "react";
 
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";

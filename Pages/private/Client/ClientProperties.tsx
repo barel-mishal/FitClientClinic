@@ -37,61 +37,102 @@ const SignupClient = ({ navigation }: Props) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Signup Client</Text>
-      <Text style={styles.inputTitle}>Your name</Text>
-      <TextInput style={styles.input} placeholder="Shalom" onChangeText={text => handleChange('name', text)} value={form?.name}/>
-      <Text style={styles.inputTitle}>Email</Text>
-      <TextInput style={styles.input} placeholder="shalom@mail.co.il" secureTextEntry={false} onChangeText={text => handleChange('email', text)}  value={form?.email}/>
-      <Text style={styles.inputTitle}>Phone</Text>
-      <TextInput style={styles.input} placeholder="0509041212" onChangeText={text => handleChange('phone', text)} value={form?.phone}/>
+      <View style={{ marginTop: 16, display: 'flex', gap: 20 }}>
+      <View style={styles.space2}>
+        <Text style={styles.inputTitle}>Your name</Text>
+        <TextInput style={styles.input} placeholder="Shalom" onChangeText={text => handleChange('name', text)} value={form?.name}/>
+      </View>
+      <View style={styles.space2}>
+        <Text style={styles.inputTitle}>Email</Text>
+        <TextInput style={styles.input} placeholder="shalom@mail.co.il" secureTextEntry={false} onChangeText={text => handleChange('email', text)}  value={form?.email}/>
+      </View>
+      <View style={styles.space2}>
+        <Text style={styles.inputTitle}>Phone</Text>
+        <TextInput style={styles.input} placeholder="0509041212" onChangeText={text => handleChange('phone', text)} value={form?.phone}/>
+      </View>
+      <View style={styles.space2}>
       <Text style={styles.inputTitle}>Trainer ID (Phone Number)</Text>
-      <TextInput style={styles.input} placeholder="Trainer ID (if any)" onChangeText={text => handleChange('trainerId', text)} value={form?.trainerId}/>
-      <Text style={styles.errorMessage}>{message}</Text>
-      <Text>Weight (kg)</Text>
-      <TextInput style={styles.input} placeholder="78" onChangeText={text => handleChange('weight', parseFloat(text))} keyboardType="numeric" value={form?.weight?.toString()}/>
-      <Text>Age</Text>
-      <TextInput style={styles.input} placeholder="24" onChangeText={text => handleChange('age', parseFloat(text))} keyboardType="numeric" value={form?.age?.toString()}/>
-      <Text>Height (cm)</Text>
-      <TextInput style={styles.input} placeholder="170" onChangeText={text => handleChange('height', parseFloat(text))} keyboardType="numeric" value={form?.height?.toString()}/>
-      <Text>Define Your Goals</Text>
-      <TextInput
-        style={styles.input}
-        placeholder="Goal 1"
-        onChangeText={(text) => updateGoal(0, text)}
-        value={form?.goals ? form.goals[0] : ""}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Goal 2"
-        onChangeText={(text) => updateGoal(1, text)}
-        value={form?.goals ? form.goals[1] : ""}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Goal 3"
-        onChangeText={(text) => updateGoal(2, text)}
-        value={form?.goals ? form.goals[2] : ""}
-      />
-      <RadioButton onPress={(value) => handleChange("gender", value)} options={GENDER_OPTIONS} />
-      <View>
+        <TextInput style={styles.input} placeholder="Trainer ID (if any)" onChangeText={text => handleChange('trainerId', text)} value={form?.trainerId}/>
+        <Text style={styles.errorMessage}>{message}</Text>
+      </View>
+      <View style={styles.space2}>
+        <Text style={styles.inputTitle}>Weight (kg)</Text>
+        <TextInput style={styles.input} placeholder="78" onChangeText={text => handleChange('weight', parseFloat(text))} keyboardType="numeric" value={form?.weight?.toString()}/>
+      </View>
+      <View style={styles.space2}>
+        <Text style={styles.inputTitle}>Age</Text>
+        <TextInput style={styles.input} placeholder="24" onChangeText={text => handleChange('age', parseFloat(text))} keyboardType="numeric" value={form?.age?.toString()}/>
+      </View>
+      <View style={styles.space2}>
+        <Text style={styles.inputTitle}>Height (cm)</Text>
+        <TextInput style={styles.input} placeholder="170" onChangeText={text => handleChange('height', parseFloat(text))} keyboardType="numeric" value={form?.height?.toString()}/>
+      </View>
+      <View style={styles.space2}>
+        <Text style={styles.inputTitle}>Define Your Goals</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Goal 1"
+          onChangeText={(text) => updateGoal(0, text)}
+          value={form?.goals ? form.goals[0] : ""}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Goal 2"
+          onChangeText={(text) => updateGoal(1, text)}
+          value={form?.goals ? form.goals[1] : ""}
+        />
+        <TextInput
+          style={styles.input}
+          placeholder="Goal 3"
+          onChangeText={(text) => updateGoal(2, text)}
+          value={form?.goals ? form.goals[2] : ""}
+        />
+      </View>
+      <View style={styles.space2}>
+        <Text style={styles.inputTitle}>Gender</Text>
+        <View style={styles.columnsDisplay}>
+          <RadioButton onPress={(value) => handleChange("gender", value)} options={GENDER_OPTIONS} />
+        </View>
+      </View>
+      <View style={styles.space2}>
+        <Text style={styles.inputTitle}>Activity Level</Text>
         <CustomSelectInput onSelect={(value) => handleChange("activityLevel", value.value)} options={ACTIVITY_LEVEL_OPTIONS}/>
       </View>
-        <TextInput style={styles.input} placeholder="Medical Certificate URL" onChangeText={text => handleChange('MedicalCertificate', text)} />
-      <View>
+      <View style={styles.space2}>
+        <Text style={styles.inputTitle}>Medical Certificate</Text>    
+      <View style={styles.space2}>
         <Text>Medical Certificate</Text>
           <FileUpload onFileUpload={function (file: DocumentPickerResult): void {
-            throw new Error("Function not implemented.");
-          } } label={"Upload Medical Certificat"} 
-          />
-        <Text>Please upload your medical certificate if you do not have one please go to this link to create one </Text>
-        <OpenURLButton url={"https://google.com"} children={"Please go to this site"}  />
-      </View>
-      <TextInput style={styles.input} placeholder="Training Experience" onChangeText={text => handleChange('trainingExperience', text)} value={form?.trainingExperience}/>
-      <TextInput style={styles.input} placeholder="Ideal Training Frequency" onChangeText={text => handleChange('idealTrainingFrequency', text)} value={form?.idealTrainingFrequency}/>
-      <TextInput style={styles.input} placeholder="Ideal Training Duration" onChangeText={text => handleChange('idealTrainingDuration', text)} value={form?.idealTrainingDuration}/>
-      <TextInput style={styles.input} placeholder="Ideal Training Time" onChangeText={text => handleChange('idealTrainingTime', text)} value={form?.idealTrainingTime}/>
-      <TextInput style={styles.input} placeholder="Injuries" onChangeText={text => handleChange('injuries', text)} value={form?.injuries}/>
+              throw new Error("Function not implemented.");
+            } } label={"Upload Medical Certificat"} 
+            />
+          <Text>Please upload your medical certificate if you do not have one please go to this link to create one </Text>
+          <OpenURLButton url={"https://google.com"} children={"Please go to this site"}  />
+        </View>
+        </View>
+        <View style={styles.space2}>
+          <Text style={styles.inputTitle}>Training Experience</Text>
+          <TextInput style={styles.input} placeholder="Training Experience" onChangeText={text => handleChange('trainingExperience', text)} value={form?.trainingExperience}/>
+        </View>
+        <View style={styles.space2}>
+          <Text style={styles.inputTitle}>Ideal Training Frequency</Text>
+          <TextInput style={styles.input} placeholder="Ideal Training Frequency" onChangeText={text => handleChange('idealTrainingFrequency', text)} value={form?.idealTrainingFrequency}/>
+        </View>
+        <View style={styles.space2}>
+          <Text style={styles.inputTitle}>Ideal Training Duration</Text>
+          <TextInput style={styles.input} placeholder="Ideal Training Duration" onChangeText={text => handleChange('idealTrainingDuration', text)} value={form?.idealTrainingDuration}/>
+        </View>
+        <View style={styles.space2}>
+          <Text style={styles.inputTitle}>Ideal Training Time</Text>
+          <TextInput style={styles.input} placeholder="Ideal Training Time" onChangeText={text => handleChange('idealTrainingTime', text)} value={form?.idealTrainingTime}/>
+        </View>
+        <View style={styles.space2}>
+          <Text style={styles.inputTitle}>Injuries</Text>
+          <TextInput style={styles.input} placeholder="Injuries" onChangeText={text => handleChange('injuries', text)} value={form?.injuries}/>
+        </View >
       
-      <Button title="Signup" onPress={handleSubmit} />
+        <Button title="Signup" onPress={handleSubmit} />
+      </View>
     </ScrollView>
   );
 };
@@ -139,6 +180,16 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  columnsDisplay: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 10,
+  },
+  space2: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 8,
+  }
 });
 
 export default SignupClient;

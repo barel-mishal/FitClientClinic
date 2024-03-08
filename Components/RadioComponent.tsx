@@ -15,7 +15,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({ options, onPress }) => {
   const [value, setValue] = useState<string | null>(null);
 
   return (
-    <View>
+    <>
       {options.map((item) => (
         <TouchableOpacity
           key={item.value}
@@ -31,7 +31,7 @@ const RadioButton: React.FC<RadioButtonProps> = ({ options, onPress }) => {
           <Text style={styles.label}>{item.label}</Text>
         </TouchableOpacity>
       ))}
-    </View>
+    </>
   );
 };
 
