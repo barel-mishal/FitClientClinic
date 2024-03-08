@@ -1,4 +1,4 @@
-import { Client, ClientData, ClientRegisterForm, Profile, Role, UserSchema } from '../types';
+import { Client, ClientData, ClientRegisterForm, Profile, Role, TypeClientPersonalFitnessInfo, UserSchema } from '../types';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
@@ -11,6 +11,7 @@ const databaseMethods = {
   },
   getUserProfile,
   logout: userSignOut,
+  addOrUpdateClientFitnessInfo,
 }
 
 async function login(email: string, password: string) {
@@ -34,12 +35,10 @@ async function registerClient(form: ClientRegisterForm) {
       const userCredential = await auth().createUserWithEmailAndPassword(form.email, form.password);
       const user = userCredential.user;
       
-      // Separate profile creation into its own function for clarity.
       await createProfile(user, form);
 
       return user;
   } catch (error) {
-      // Consolidate error handling
       handleRegistrationError(error);
       return null;
   }
@@ -99,7 +98,7 @@ async function getUserProfile(uid: FirebaseAuthTypes.User["uid"]): Promise<Profi
       }
   } catch (error) {
       console.error("Error fetching user profile: ", error);
-      throw error; // Re-throw the error if needed or handle it as per your app's error handling policy
+      throw error; // Re-throw the error if needed or handle it as per app's error handling policy
   }
 }
 
@@ -112,6 +111,27 @@ async function userSignOut() {
   }
 }
 
+// Function to add/update client fitness information
+async function addOrUpdateClientFitnessInfo(fitnessInfo: TypeClientPersonalFitnessInfo) {
+  const user = auth().currentUser;
+
+  if (!user) {
+    console.log('No authenticated user found');
+    return;
+  }
+
+  try {
+    // Use the user's UID as the document ID to ensure one fitness profile per user
+    await firestore()
+      .collection('ClientFitnessInfo')
+      .doc(user.uid)
+      .set(fitnessInfo);
+      
+    console.log('Fitness info added/updated successfully');
+  } catch (error) {
+    console.error('Error adding/updating fitness info:', error);
+  }
+};
 
 
 

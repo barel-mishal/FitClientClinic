@@ -92,6 +92,7 @@ export type Profile = (ProfileDetail & {
 } | {
     role: Client
     trainerId: string | undefined;
+    fitness: PersonalFitnessInfo;
 });
 
 // ----------------- User -----------------
@@ -106,11 +107,10 @@ export type UserAction = {
 
 export type UserSchema = {
     user: User;
-    profile: Profile
+    profile: Profile,
 } | {
     user: null
 }
-
 // ----------------- Firestore -----------------
 export type DatabaseMethods = {
     getUsers: (role: Trainer, id: string) => User[]
@@ -168,8 +168,8 @@ type PersonalFitnessInfo = {
     weight: number;
     height: number;
     goals: [string, string, string];
-    gender: 'Female' | 'Male';
-    activityLevel: 'Sedentary' | 'Lightly Active' | 'Moderately Active' | 'Very Active';
+    gender: 'female' | 'male';
+    activityLevel: 'sedentary' | 'lightly_active' | 'moderately_active' | 'very_active';
     MedicalCertificate: string; // photo url or file
     trainingExperience: string;
     idealTrainingFrequency: string;
@@ -244,9 +244,9 @@ export const GENDER_OPTIONS = [
 
 export const ACTIVITY_LEVEL_OPTIONS = [
     { label: 'Sedentary', value: 'sedentary' },
-    { label: 'Lightly Active', value: 'lightlyActive' },
-    { label: 'Moderately Active', value: 'moderatelyActive' },
-    { label: 'Very Active', value: 'veryActive' },
+    { label: 'Lightly Active', value: 'lightly_active' },
+    { label: 'Moderately Active', value: 'moderately_active' },
+    { label: 'Very Active', value: 'very_active' },
 ]
 
 export const ClientRegisterData = v.object({
@@ -265,12 +265,12 @@ export const ClientPersonalFitnessInfo = v.object({
     weight: v.number(),
     height: v.number(),
     goals: v.tuple([v.string(), v.string(), v.string()]),
-    gender: v.literal('Female', 'Male'),
+    gender: v.union([v.literal('female'), v.literal('male')]),
     activityLevel: v.union([
-        v.literal('Sedentary'),
-        v.literal('Lightly Active'),
-        v.literal('Moderately Active'),
-        v.literal('Very Active'),
+        v.literal('sedentary'),
+        v.literal('lightly_active'),
+        v.literal('moderately_active'),
+        v.literal('very_active'),
     ]),
     MedicalCertificate: v.string(), // photo url or file
     trainingExperience: v.string(),
@@ -282,7 +282,10 @@ export const ClientPersonalFitnessInfo = v.object({
 
 export type TypeClientPersonalFitnessInfo = v.Input<typeof ClientPersonalFitnessInfo>
 
-export const ClientProperties = v.merge([ClientRegisterData, ClientPersonalFitnessInfo]);
+export const ClientProperties = v.merge([
+    v.omit(ClientRegisterData, ["password"]), 
+    ClientPersonalFitnessInfo
+]);
 
 export type TypeClientProperties = v.Input<typeof ClientProperties>
 
