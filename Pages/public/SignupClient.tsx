@@ -18,9 +18,9 @@ const SignupClient = ({ navigation }: Props) => {
   };
 
   const handleSubmit = () => {
-    const form2 = v.safeParse(ClientRegisterData, form);
-    if (form2.success) databaseMethods.register(form2.output);
-    else setMessage(makeIssue(form2.issues));
+    const parsed = v.safeParse(ClientRegisterData, form);
+    if (parsed.success) databaseMethods.register(parsed.output);
+    else setMessage(makeIssue(parsed.issues));
   };
 
   return (
@@ -37,7 +37,7 @@ const SignupClient = ({ navigation }: Props) => {
       <Text style={styles.inputTitle}>Trainer ID (Phone Number)</Text>
       <TextInput style={styles.input} placeholder="Trainer ID (if any)" onChangeText={text => handleChange('trainerId', text)} value={form?.trainerId}/>
       <Text style={styles.errorMessage}>{message}</Text>
-      
+
       <Button title="Signup" onPress={handleSubmit} />
     </ScrollView>
   );
