@@ -5,25 +5,29 @@ import React, { useState } from "react";
 import { StyleSheet, View, Text, TextInput, Button } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../App";
-import { Trainer, TypeTrainerRegisterData, initialTrainerForm } from "../../types";
+import { StringfyValues, TrainerRegisterData, TypeTrainerRegisterData, initialTrainerForm, makeIssue } from "../../types";
 import FileUpload from "../../Components/FileUploadComponent";
 import OpenURLButton from "../../Components/GoToSite";
+import databaseMethods from "../../services/databaseMethods";
+import * as v from "valibot";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SignupTrainer'>;
 
 const SignupTrainer = ({navigation}: Props) => {
-  const [trainerInfo, setTrainerInfo] = useState<Partial<TypeTrainerRegisterData>>(initialTrainerForm);
+  const [message, setMessage] = useState<string | undefined>(undefined);
+  const [form, setForm] = useState<Partial<TypeTrainerRegisterData>>(initialTrainerForm);
 
   // Function to handle input change
-  const handleChange = (name: string, value: string | [string, string, string] | number) => {
-    setTrainerInfo(prev => ({ ...prev, [name]: value }));
+  const handleChange = (name: string, value: string | [string, string, string]) => {
+    setForm(prev => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = () => {
-    console.log(trainerInfo);
-    
-  }
 
+  const handleSubmit = () => {
+    const parsed = v.safeParse(v.omit(TrainerRegisterData, ["certification"]), form);
+    if (parsed.success) databaseMethods.register(parsed.output);
+    else setMessage(makeIssue(parsed.issues));
+  };
   
   return (
     <View style={styles.container}>
@@ -31,25 +35,25 @@ const SignupTrainer = ({navigation}: Props) => {
       <TextInput
         placeholder="Name"
         style={styles.input}
-        value={trainerInfo.name}
+        value={form.name}
         onChangeText={(value) => handleChange('name', value)}
       />
       <TextInput
         placeholder="Email"
         style={styles.input}
-        value={trainerInfo.email}
+        value={form.email}
         onChangeText={(value) => handleChange('email', value)}
       />
       <TextInput
         placeholder="Phone"
         style={styles.input}
-        value={trainerInfo.phone}
+        value={form.phone}
         onChangeText={(value) => handleChange('phone', value)}
       />
       <TextInput
         placeholder="Password"
         style={styles.input}
-        value={trainerInfo.password}
+        value={form.password}
         onChangeText={(value) => handleChange('password', value)}
       />
       <View>
@@ -64,11 +68,12 @@ const SignupTrainer = ({navigation}: Props) => {
       <TextInput
         placeholder="Years of Experience"
         style={styles.input}
-        value={trainerInfo.yearsOfExperience?.toString()}
-        onChangeText={(value) => handleChange('yearsOfExperience', parseFloat(value))}
+        value={form.yearsOfExperience?.toString()}
+        onChangeText={(value) => handleChange('yearsOfExperience', value)}
       />
+      <Text style={styles.errorMessage}>{message}</Text>
 
-       <Button title="Submit" onPress={() => console.log(trainerInfo)} />
+       <Button title="Submit" onPress={handleSubmit} />
     </View>
 
   );
@@ -104,7 +109,13 @@ const styles = StyleSheet.create({
   inputSearchStyle: {
     height: 40,
     fontSize: 16,
-  }
+  },
+  errorMessage: {
+    color: 'red',
+    height: 40,
+    flexWrap: 'wrap',
+    display: 'flex',
+  },
   });
   
 

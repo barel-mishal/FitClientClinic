@@ -1,4 +1,4 @@
-import { ClientProperties, TypeCientProfile, TypeClientPersonalFitnessInfo, TypeClientRegisterData, TypeTrainerRegisterData } from '../types';
+import { ClientProperties, ResultTypeClientRegisterSchema, ResultTypeTrainerRegister, TypeCientProfile, TypeClientPersonalFitnessInfo, TypeClientRegisterData, TypeTrainerRegisterData } from '../types';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import * as v from 'valibot';
@@ -6,7 +6,7 @@ import * as v from 'valibot';
 
 const databaseMethods = {
   login,
-  register: registerClient,
+  register,
   getUsers: async (role: string, id: string) => {
 
   },
@@ -32,7 +32,7 @@ Error logging in. Please try again. Did you sign up?
 }
 
 
-async function registerClient(form: TypeClientRegisterData) {
+async function register(form: ResultTypeClientRegisterSchema | ResultTypeTrainerRegister) {
   try {
       const userCredential = await auth().createUserWithEmailAndPassword(form.email, form.password);
       const user = userCredential.user;
@@ -46,7 +46,7 @@ async function registerClient(form: TypeClientRegisterData) {
   }
 }
 
-async function createClienrProfile(user: FirebaseAuthTypes.User, form: TypeClientRegisterData) {
+async function createClientProfile(user: FirebaseAuthTypes.User, form: ResultTypeClientRegisterSchema) {
   try {
       await firestore().collection('profile').doc(user.uid).set({
           name: form.name,
@@ -63,7 +63,7 @@ async function createClienrProfile(user: FirebaseAuthTypes.User, form: TypeClien
   }
 }
 
-async function createTrainerProfile(user: FirebaseAuthTypes.User, form: TypeTrainerRegisterData) {
+async function createTrainerProfile(user: FirebaseAuthTypes.User, form: ResultTypeTrainerRegister) {
   try {
       await firestore().collection('profile').doc(user.uid).set({
           name: form.name,
@@ -79,13 +79,13 @@ async function createTrainerProfile(user: FirebaseAuthTypes.User, form: TypeTrai
   }
 }
 
-function createProfile(user: FirebaseAuthTypes.User, form: TypeClientRegisterData | TypeTrainerRegisterData) {
+async function createProfile(user: FirebaseAuthTypes.User, form: ResultTypeTrainerRegister | ResultTypeClientRegisterSchema) {
   switch (form.role) {
       case "client":
-          createClienrProfile(user, form);
+          await createClientProfile(user, form);
           break;
       case "trainer":
-          createTrainerProfile(user, form);
+          await createTrainerProfile(user, form);
           break;
       default:
           console.error("Invalid role");

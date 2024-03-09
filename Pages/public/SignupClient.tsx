@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { StyleSheet, TextInput, Button, ScrollView, Text, TextInputBase } from "react-native";
+import { StyleSheet, TextInput, Button, ScrollView, Text } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../App";
-import { ClientRegisterForm, TypeClientRegisterData, ClientRegisterData, makeIssue } from "../../types";
+import { TypeClientRegisterData, ClientRegisterData, makeIssue } from "../../types";
 import databaseMethods from "../../services/databaseMethods";
 import * as v from "valibot";
 

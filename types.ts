@@ -190,6 +190,10 @@ type Certification = string;
 
 
 // ***************** Util *****************
+const NumberSchema = v.transform(v.string([v.toTrimmed(), v.decimal()]), (input) => {
+    return parseInt(input);
+  });
+
 export type StringfyValues<T> = {
     [P in keyof T]: string;
 }
@@ -238,9 +242,9 @@ export const ACTIVITY_LEVEL_OPTIONS = [
 export const CientProfile = v.object({
     name: v.string(),
     email: v.string(),
-    phone: v.string(),
+    phone: NumberSchema,
     role: v.literal('client'),
-    trainerId: v.optional(v.string())
+    trainerId: v.optional(NumberSchema)
 });
 
 export type TypeCientProfile = v.Input<typeof CientProfile>
@@ -250,7 +254,9 @@ export const ClientRegisterData = v.merge([
     CientProfile
 ]);
 
-export type TypeClientRegisterData = v.Input<typeof ClientRegisterData>
+export type TypeClientRegisterData = v.Input<typeof ClientRegisterData>;
+export type ResultTypeClientRegisterSchema = v.Output<typeof ClientRegisterData>;
+// export type ResultTypeClientRegisterSchema = v.TypedSchemaResult<typeof ClientRegisterData>;
 
 export const ClientPersonalFitnessInfo = v.object({
     age: v.number(),
@@ -299,32 +305,31 @@ export type UserSchema = {
 }
 
 // ***************** Initial Values *****************
-
-
-export const initialTrainerForm: Partial<TrainerForm> = {
-    name: '',
-    email: '',
-    phone: '',
-    password: '',
-    role: 'trainer',
-    certification: '',
-    yearsOfExperience: 0,
-  }
-
 export const TrainerProfile = v.object({
-    name: v.string(),
-    email: v.string(),
-    phone: v.string(),
+    name: v.string([v.minLength(2)]),
+    email: v.string([v.email()]),
+    phone: NumberSchema,
     role: v.literal('trainer'),
-    certification: v.string(),
-    yearsOfExperience: v.number(),
-});
+    certification: v.string([v.minLength(1)]),
+    yearsOfExperience: NumberSchema,
+})
 
 export type TypeTrainerProfile = v.Input<typeof TrainerProfile>
 
 export const TrainerRegisterData = v.merge([
-    v.object({password: v.string([v.minLength(6)])}),
-    TrainerProfile
+    TrainerProfile,
+    v.object({ password: v.string([v.minLength(6)]) }),
 ]);
 
-export type TypeTrainerRegisterData = v.Input<typeof TrainerRegisterData>
+export type TypeTrainerRegisterData = v.Input<typeof TrainerRegisterData>;
+export type ResultTypeTrainerRegister = v.Output<typeof TrainerRegisterData>;
+
+export const initialTrainerForm: Partial<TypeTrainerRegisterData> = {
+    name: 'barel',
+    email: 'barel.trianer@mail.com',
+    phone: '0509042020',
+    password: 'sgslkfj',
+    role: 'trainer',
+    certification: '',
+    yearsOfExperience: "8",
+  }
