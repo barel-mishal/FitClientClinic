@@ -17,12 +17,12 @@ const HomeClient: React.FC<Props> = ({ navigation }) => {
     }
 
     // From this point on, TypeScript knows that userSchema is of type { user: User; profile: Profile }
-    const { profile } = userSchema;
+    const { data } = userSchema;
 
 
     return (
         <View style={styles.container}>
-            <Text>HomeClient {profile.name}</Text>
+            <Text>HomeClient {data?.name}</Text>
             <TouchableOpacity onPress={databaseMethods.logout}>
                 <Text>Log Out</Text>
             </TouchableOpacity>

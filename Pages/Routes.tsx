@@ -28,7 +28,7 @@ export function PublicNavigator() {
 }
 
 interface PrivateNavigatorProps {
-    role: 'client' | 'trainer';
+    role: 'client' | 'trainer' | undefined;
 }
 
 export const PrivateNavigator: React.FC<PrivateNavigatorProps> = ({ role })  =>{

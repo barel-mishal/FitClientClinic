@@ -28,7 +28,7 @@ function MyNavigator() {
   return (
       <>
         {
-          authUser.user ? <PrivateNavigator role={authUser.profile.role} /> : <PublicNavigator />
+          authUser.user ? <PrivateNavigator role={authUser?.data?.role} /> : <PublicNavigator />
         }
       </>
   );

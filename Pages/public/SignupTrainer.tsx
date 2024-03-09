@@ -5,19 +5,24 @@ import React, { useState } from "react";
 import { StyleSheet, View, Text, TextInput, Button } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../App";
-import { RegisterForm, Trainer, initialTrainerForm } from "../../types";
+import { Trainer, TypeTrainerRegisterData, initialTrainerForm } from "../../types";
 import FileUpload from "../../Components/FileUploadComponent";
 import OpenURLButton from "../../Components/GoToSite";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SignupTrainer'>;
 
 const SignupTrainer = ({navigation}: Props) => {
-  const [trainerInfo, setTrainerInfo] = useState<Partial<RegisterForm[Trainer]>>(initialTrainerForm);
+  const [trainerInfo, setTrainerInfo] = useState<Partial<TypeTrainerRegisterData>>(initialTrainerForm);
 
   // Function to handle input change
   const handleChange = (name: string, value: string | [string, string, string] | number) => {
     setTrainerInfo(prev => ({ ...prev, [name]: value }));
   };
+
+  const handleSubmit = () => {
+    console.log(trainerInfo);
+    
+  }
 
   
   return (

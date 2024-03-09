@@ -2,10 +2,8 @@ import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 import { useNavigation } from '@react-navigation/native';
 
-
-
 function Header() {
-    const navigation = useNavigation();
+    const navigation = useNavigation() as { navigate: (arg0: string) => void };
     
     return <View style={styles.header}>
         <Text style={styles.headerText}>Fit Client Clinic</Text>

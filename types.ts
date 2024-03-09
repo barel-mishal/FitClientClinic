@@ -95,22 +95,7 @@ export type Profile = (ProfileDetail & {
     fitness: PersonalFitnessInfo;
 });
 
-// ----------------- User -----------------
-type User = FirebaseAuthTypes.User;
 
-export type UserAction = {
-    getUser: (id: string) => User;
-    getUserProfile: (id: string) => Profile;
-    logout: () => void;
-    deleteUser: (id: string) => void;
-}
-
-export type UserSchema = {
-    user: User;
-    profile: Profile,
-} | {
-    user: null
-}
 // ----------------- Firestore -----------------
 export type DatabaseMethods = {
     getUsers: (role: Trainer, id: string) => User[]
@@ -231,7 +216,7 @@ export const makeIssue = (issues: v.SchemaIssues) => {
 
 }
 
-export function isUserLoggedIn(userSchema: UserSchema): userSchema is { user: User; profile: Profile } {
+export function isUserLoggedIn(userSchema: UserSchema): userSchema is { user: FirebaseAuthTypes.User, data: TypeClientProperties } {
     return userSchema.user !== null;
 }
 
@@ -249,14 +234,21 @@ export const ACTIVITY_LEVEL_OPTIONS = [
     { label: 'Very Active', value: 'very_active' },
 ]
 
-export const ClientRegisterData = v.object({
-    name: v.string([v.minLength(2)]),
-    email: v.string([v.email()]),
-    phone: v.string([v.minLength(7)]),
-    password: v.string([v.minLength(6)]),
+// ***************** Schemas *****************
+export const CientProfile = v.object({
+    name: v.string(),
+    email: v.string(),
+    phone: v.string(),
     role: v.literal('client'),
-    trainerId: v.optional(v.string([v.minLength(2)])),
+    trainerId: v.optional(v.string())
 });
+
+export type TypeCientProfile = v.Input<typeof CientProfile>
+
+export const ClientRegisterData = v.merge([
+    v.object({password: v.string([v.minLength(6)])}),
+    CientProfile
+]);
 
 export type TypeClientRegisterData = v.Input<typeof ClientRegisterData>
 
@@ -280,15 +272,33 @@ export const ClientPersonalFitnessInfo = v.object({
     injuries: v.string(),
 });
 
-export type TypeClientPersonalFitnessInfo = v.Input<typeof ClientPersonalFitnessInfo>
+export type TypeClientPersonalFitnessInfo = v.Input<typeof ClientPersonalFitnessInfo>;
 
-export const ClientProperties = v.merge([
-    v.omit(ClientRegisterData, ["password"]), 
-    ClientPersonalFitnessInfo
+export const ClientProperties = v.intersect([
+    v.partial(CientProfile), 
+    v.partial(ClientPersonalFitnessInfo)
 ]);
 
-export type TypeClientProperties = v.Input<typeof ClientProperties>
+export type TypeClientProperties = v.Input<typeof ClientProperties>;
 
+// ----------------- User -----------------
+type User = FirebaseAuthTypes.User;
+
+export type UserAction = {
+    getUser: (id: string) => User;
+    getUserProfile: (id: string) => Profile;
+    logout: () => void;
+    deleteUser: (id: string) => void;
+}
+
+export type UserSchema = {
+    user: User;
+    data: TypeClientProperties,
+} | {
+    user: null
+}
+
+// ***************** Initial Values *****************
 
 
 export const initialTrainerForm: Partial<TrainerForm> = {
@@ -300,3 +310,21 @@ export const initialTrainerForm: Partial<TrainerForm> = {
     certification: '',
     yearsOfExperience: 0,
   }
+
+export const TrainerProfile = v.object({
+    name: v.string(),
+    email: v.string(),
+    phone: v.string(),
+    role: v.literal('trainer'),
+    certification: v.string(),
+    yearsOfExperience: v.number(),
+});
+
+export type TypeTrainerProfile = v.Input<typeof TrainerProfile>
+
+export const TrainerRegisterData = v.merge([
+    v.object({password: v.string([v.minLength(6)])}),
+    TrainerProfile
+]);
+
+export type TypeTrainerRegisterData = v.Input<typeof TrainerRegisterData>

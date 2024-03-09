@@ -1,6 +1,7 @@
-import { Client, ClientData, ClientRegisterForm, Profile, Role, TypeClientPersonalFitnessInfo, UserSchema } from '../types';
+import { ClientProperties, TypeCientProfile, TypeClientPersonalFitnessInfo, TypeClientRegisterData, TypeTrainerRegisterData } from '../types';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import * as v from 'valibot';
 
 
 const databaseMethods = {
@@ -12,6 +13,7 @@ const databaseMethods = {
   getUserProfile,
   logout: userSignOut,
   addOrUpdateClientFitnessInfo,
+  getUserClientProperties,
 }
 
 async function login(email: string, password: string) {
@@ -30,7 +32,7 @@ Error logging in. Please try again. Did you sign up?
 }
 
 
-async function registerClient(form: ClientRegisterForm) {
+async function registerClient(form: TypeClientRegisterData) {
   try {
       const userCredential = await auth().createUserWithEmailAndPassword(form.email, form.password);
       const user = userCredential.user;
@@ -44,7 +46,7 @@ async function registerClient(form: ClientRegisterForm) {
   }
 }
 
-async function createProfile(user: FirebaseAuthTypes.User, form: ClientRegisterForm) {
+async function createClienrProfile(user: FirebaseAuthTypes.User, form: TypeClientRegisterData) {
   try {
       await firestore().collection('profile').doc(user.uid).set({
           name: form.name,
@@ -58,6 +60,35 @@ async function createProfile(user: FirebaseAuthTypes.User, form: ClientRegisterF
       console.error("Error adding profile: ", error);
       // Separating user cleanup into its own function for clarity.
       await cleanupUser(user);
+  }
+}
+
+async function createTrainerProfile(user: FirebaseAuthTypes.User, form: TypeTrainerRegisterData) {
+  try {
+      await firestore().collection('profile').doc(user.uid).set({
+          name: form.name,
+          role: form.role,
+          email: form.email,
+          phone: form.phone,
+          userId: user.uid,
+      });
+  } catch (error) {
+      console.error("Error adding profile: ", error);
+      // Separating user cleanup into its own function for clarity.
+      await cleanupUser(user);
+  }
+}
+
+function createProfile(user: FirebaseAuthTypes.User, form: TypeClientRegisterData | TypeTrainerRegisterData) {
+  switch (form.role) {
+      case "client":
+          createClienrProfile(user, form);
+          break;
+      case "trainer":
+          createTrainerProfile(user, form);
+          break;
+      default:
+          console.error("Invalid role");
   }
 }
 
@@ -81,20 +112,20 @@ function handleRegistrationError(error: any) {
 }
 
 
-async function getUserProfile(uid: FirebaseAuthTypes.User["uid"]): Promise<Profile | null> {
+async function getUserProfile(uid: FirebaseAuthTypes.User["uid"]): Promise<TypeCientProfile | undefined> {
   try {
       // Reference to the user's profile document
-      const docRef = firestore().collection('profile').doc(uid);
+      const docRef = firestore().collection<TypeCientProfile>('profile').doc(uid);
       const doc = await docRef.get();
 
       if (doc.exists) {
           // The document data will be returned here if a document with the given UID exists
           const data = doc.data();
-          return data as Profile;
+          return data;
       } else {
           // Handle the case where there is no document for the given UID
           console.log("No user profile found for this UID");
-          return null;
+          return undefined;
       }
   } catch (error) {
       console.error("Error fetching user profile: ", error);
@@ -112,7 +143,7 @@ async function userSignOut() {
 }
 
 // Function to add/update client fitness information
-async function addOrUpdateClientFitnessInfo(fitnessInfo: TypeClientPersonalFitnessInfo) {
+async function addOrUpdateClientFitnessInfo(fitnessInfo: Omit<TypeClientPersonalFitnessInfo, "MedicalCertificate">) {
   const user = auth().currentUser;
 
   if (!user) {
@@ -133,6 +164,31 @@ async function addOrUpdateClientFitnessInfo(fitnessInfo: TypeClientPersonalFitne
   }
 };
 
+async function getUserClientFitnessInfo(uid: FirebaseAuthTypes.User["uid"]) {
+  try {
+    const docRef = firestore().collection('ClientFitnessInfo').doc(uid);
+    const doc = await docRef.get();
+
+    if (doc.exists) {
+      const data = doc.data();
+      return data;
+    } else {
+      console.log("No fitness info found for this user");
+      return undefined;
+    }
+  } catch (error) {
+    console.error("Error fetching fitness info: ", error);
+    throw error;
+  }
+}
+
+async function getUserClientProperties(id: FirebaseAuthTypes.User["uid"])  {
+  const profile = await getUserProfile(id);
+  const fitness = await getUserClientFitnessInfo(id);
+  const parsed = v.safeParse(ClientProperties, { ...profile, ...fitness });
+  if (parsed.success) return parsed.output;
+  else throw new Error("Error parsing client properties");
+}
 
 
 export default databaseMethods;

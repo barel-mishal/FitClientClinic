@@ -9,10 +9,11 @@ interface Option {
 interface RadioButtonProps {
     options: Option[];
     onPress: (value: string) => void;
+    val?: string | null;
 }
 
-const RadioButton: React.FC<RadioButtonProps> = ({ options, onPress }) => {
-  const [value, setValue] = useState<string | null>(null);
+const RadioButton: React.FC<RadioButtonProps> = ({ options, onPress, val = null }) => {
+  const [value, setValue] = useState<string | null>(val);
 
   return (
     <>

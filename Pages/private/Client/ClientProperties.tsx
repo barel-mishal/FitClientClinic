@@ -16,24 +16,24 @@ type Props = NativeStackScreenProps<RootStackParamList, 'ClientProperties'>;
 
 const SignupClient = ({ navigation }: Props) => {
   const a = useAuth();
-  if (!a.user || a.profile.role !== "client" as Client) return <Text>Not Authenticated</Text>;
+  if (!a.user || a?.data?.role !== "client" as Client) return <Text>Not Authenticated</Text>;
   const [message, setMessage] = useState<string | undefined>(undefined);
   const [form, setForm] = useState<Partial<TypeClientProperties>>({
-    name: a.profile.name,
-    email: a.profile.email,
-    phone: a.profile.phone,
-    trainerId: a.profile?.trainerId,
-    weight: a.profile?.fitness?.weight,
-    age: a.profile?.fitness?.age,
-    height: a.profile?.fitness?.height,
-    goals: a.profile?.fitness?.goals,
-    activityLevel: a.profile?.fitness?.activityLevel,
-    gender: a.profile?.fitness?.gender,
-    trainingExperience: a.profile?.fitness?.trainingExperience,
-    idealTrainingFrequency: a.profile?.fitness?.idealTrainingFrequency,
-    idealTrainingDuration: a.profile?.fitness?.idealTrainingDuration,
-    idealTrainingTime: a.profile?.fitness?.idealTrainingTime,
-    injuries: a.profile?.fitness?.injuries,
+    name: a.data.name,
+    email: a.data.email,
+    phone: a.data.phone,
+    trainerId: a.data?.trainerId,
+    weight: a.data?.weight,
+    age: a.data?.age,
+    height: a.data?.height,
+    goals: a.data?.goals,
+    activityLevel: a.data?.activityLevel,
+    gender: a.data?.gender,
+    trainingExperience: a.data?.trainingExperience,
+    idealTrainingFrequency: a.data?.idealTrainingFrequency,
+    idealTrainingDuration: a.data?.idealTrainingDuration,
+    idealTrainingTime: a.data?.idealTrainingTime,
+    injuries: a.data?.injuries,
   });
 
 
@@ -43,9 +43,8 @@ const SignupClient = ({ navigation }: Props) => {
   };
 
   const handleSubmit = () => {
-    const parsed = v.safeParse(ClientPersonalFitnessInfo, form);
-    if (parsed.success) return console.log(parsed.output);
-    // if (parsed.success) databaseMethods.addOrUpdateClientFitnessInfo(parsed.output);
+    const parsed = v.safeParse(v.omit(ClientPersonalFitnessInfo, ["MedicalCertificate"]), form);
+    if (parsed.success) databaseMethods.addOrUpdateClientFitnessInfo(parsed.output);
     else setMessage(makeIssue(parsed.issues));
   };
 
@@ -111,7 +110,7 @@ const SignupClient = ({ navigation }: Props) => {
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Gender</Text>
           <View style={styles.columnsDisplay}>
-            <RadioButton onPress={(value) => handleChange("gender", value)} options={GENDER_OPTIONS} />
+            <RadioButton onPress={(value) => handleChange("gender", value)} options={GENDER_OPTIONS} val={form.gender} />
           </View>
         </View>
         <View style={styles.space2}>
@@ -126,7 +125,7 @@ const SignupClient = ({ navigation }: Props) => {
               } } label={"Upload Medical Certificat"} 
               />
             <Text>Please upload your medical certificate if you do not have one please go to this link to create one </Text>
-            <OpenURLButton url={"https://google.com"} children={"Please go to this site"}  />
+            <OpenURLButton url={"https://google.com"} children={"Please go to this site"} />
           </View>
         </View>
         <View style={styles.space2}>
