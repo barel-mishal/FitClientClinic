@@ -1,5 +1,6 @@
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import * as v from "valibot";
+import { ReturnUserProerties } from './services/databaseMethods';
 
 
 
@@ -182,8 +183,6 @@ type TrainerForm = PersonalInfo & {
 }
 type Certification = string;
 
-
-
 // ***************** Util *****************
 const NumberSchema = v.transform(v.string([v.toTrimmed(), v.decimal()]), (input) => {
     return parseInt(input);
@@ -215,7 +214,7 @@ export const makeIssue = (issues: v.SchemaIssues) => {
 
 }
 
-export function isUserLoggedIn(userSchema: UserSchema): userSchema is { user: FirebaseAuthTypes.User, data: InputClientProperties } {
+export function isUserLoggedIn(userSchema: UserSchema): userSchema is { user: FirebaseAuthTypes.User, data: ReturnUserProerties } {
     return userSchema.user !== null;
 }
 
@@ -239,10 +238,12 @@ export const CientProfile = v.object({
     email: v.string(),
     phone: NumberSchema,
     role: v.literal('client'),
-    trainerId: v.optional(NumberSchema)
+    trainerId: v.optional(NumberSchema),
+    userId: v.optional(v.string()),
 });
 
-export type TypeCientProfile = v.Input<typeof CientProfile>
+export type TypeCientProfile = v.Input<typeof CientProfile>;
+export type OutputCientProfile = v.Output<typeof CientProfile>;
 
 export const ClientRegisterData = v.merge([
     v.object({password: v.string([v.minLength(6)])}),
@@ -289,6 +290,7 @@ export const TrainerProfile = v.object({
     role: v.literal('trainer'),
     certification: v.string([v.minLength(1)]),
     yearsOfExperience: NumberSchema,
+    userId: v.optional(v.string()),
 })
 
 const ClientWorkout = v.object({})
@@ -297,6 +299,7 @@ export type TypeTrainerProfile = v.Input<typeof TrainerProfile>
 
 export const TrainerRegisterData = v.merge([
     TrainerProfile,
+
     v.object({ password: v.string([v.minLength(6)]) }),
 ]);
 
@@ -309,8 +312,10 @@ const TrainerProgram = v.object({});
 
 export const TrainerProperties = v.intersect([
     TrainerProfile,
-    v.array(v.partial(TrinerClientAppointment)),
-    v.array(v.partial(TrainerProgram)),
+    v.object({
+        appointments: v.array(v.partial(TrinerClientAppointment)),
+        programs: v.array(v.partial(TrainerProgram)),
+    })
 ]);
 
 // ----------------- User -----------------
@@ -325,7 +330,7 @@ export type UserAction = {
 
 export type UserSchema = {
     user: User;
-    data: InputClientProperties,
+    data: ReturnUserProerties,
 } | {
     user: null
 }

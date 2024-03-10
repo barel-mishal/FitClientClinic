@@ -1,7 +1,7 @@
 import React, { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth';
 import { InputClientProperties, UserSchema } from '../../types';
-import databaseMethods from '../../services/databaseMethods';
+import databaseMethods, { ReturnUserProerties } from '../../services/databaseMethods';
 
 
 const AuthContext = createContext<UserSchema>({
@@ -10,21 +10,25 @@ const AuthContext = createContext<UserSchema>({
 
 export const useAuth = () => useContext(AuthContext);
 
-
 const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [currentUser, setCurrentUser] = useState<UserSchema['user'] | null>(null);
-    const [profile, setProfile] = useState<InputClientProperties | undefined>(undefined);
+    const [profile, setProfile] = useState<ReturnUserProerties>();
     const [loading, setLoading] = useState(true);
-    console.log('AuthContext: ', {currentUser}, {profile});
 
     useEffect(() => {
         const unsubscribe = auth().onAuthStateChanged((user) => {
-            setCurrentUser(user);
-            if (user) databaseMethods.getUserClientProperties(user.uid).then((profile) => {
-                setProfile(profile);
+            if (user) databaseMethods
+                .getUserProperties(user.uid)
+                .then((profile) => {
+
+                    setProfile(profile);
+                    setCurrentUser(user);
+                
+                })
+                .finally(() => {
+                    setLoading(false);
             });
             
-            setLoading(false);
         });
 
         return unsubscribe;

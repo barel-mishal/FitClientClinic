@@ -1,4 +1,4 @@
-import { ClientProperties, OutputClientRegister, OutputTrainerRegister, TypeCientProfile, TypeClientPersonalFitnessInfo, InputClientRegister, InputTrainerRegister } from '../types';
+import { ClientProperties, OutputClientRegister, OutputTrainerRegister, TypeCientProfile, TypeClientPersonalFitnessInfo, InputClientRegister, InputTrainerRegister, TrainerProperties, TypeTrainerProfile, OutputCientProfile } from '../types';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import * as v from 'valibot';
@@ -13,7 +13,7 @@ const databaseMethods = {
   getUserProfile,
   logout: userSignOut,
   addOrUpdateClientFitnessInfo,
-  getUserClientProperties,
+  getUserProperties,
 }
 
 async function login(email: string, password: string) {
@@ -37,7 +37,7 @@ async function register(form: OutputClientRegister | OutputTrainerRegister) {
       const userCredential = await auth().createUserWithEmailAndPassword(form.email, form.password);
       const user = userCredential.user;
       
-      await createProfile(user, form);
+      await createProfile(user, form as OutputClientRegister | TypeTrainerProfile);
 
       return user;
   } catch (error) {
@@ -48,7 +48,7 @@ async function register(form: OutputClientRegister | OutputTrainerRegister) {
 
 async function createClientProfile(user: FirebaseAuthTypes.User, form: OutputClientRegister) {
   try {
-      await firestore().collection('profile').doc(user.uid).set({
+      await firestore().collection<OutputCientProfile & { userId: string }>('profile').doc(user.uid).set({
           name: form.name,
           role: form.role,
           email: form.email,
@@ -63,14 +63,16 @@ async function createClientProfile(user: FirebaseAuthTypes.User, form: OutputCli
   }
 }
 
-async function createTrainerProfile(user: FirebaseAuthTypes.User, form: OutputTrainerRegister) {
+async function createTrainerProfile(user: FirebaseAuthTypes.User, form: TypeTrainerProfile) {
   try {
-      await firestore().collection('profile').doc(user.uid).set({
+      await firestore().collection<TypeTrainerProfile & { userId: string }>('profile').doc(user.uid).set({
           name: form.name,
           role: form.role,
           email: form.email,
           phone: form.phone,
           userId: user.uid,
+          certification: form.certification || "",
+          yearsOfExperience: form.yearsOfExperience,
       });
   } catch (error) {
       console.error("Error adding profile: ", error);
@@ -79,7 +81,7 @@ async function createTrainerProfile(user: FirebaseAuthTypes.User, form: OutputTr
   }
 }
 
-async function createProfile(user: FirebaseAuthTypes.User, form: OutputTrainerRegister | OutputClientRegister) {
+async function createProfile(user: FirebaseAuthTypes.User, form: OutputClientRegister | TypeTrainerProfile) {
   switch (form.role) {
       case "client":
           await createClientProfile(user, form);
@@ -182,13 +184,16 @@ async function getUserClientFitnessInfo(uid: FirebaseAuthTypes.User["uid"]) {
   }
 }
 
-async function getUserClientProperties(id: FirebaseAuthTypes.User["uid"])  {
+async function getUserProperties(id: FirebaseAuthTypes.User["uid"])  {
   const profile = await getUserProfile(id);
-  const fitness = await getUserClientFitnessInfo(id);
-  const parsed = v.safeParse(ClientProperties, { ...profile, ...fitness });
-  if (parsed.success) return parsed.output;
+  const isClient = profile?.role === "client";
+  const fitness = isClient ? await getUserClientFitnessInfo(id) : {};
+  const parsed = isClient ?  { ...profile, ...fitness } : { ...profile, appoinments: [], programs: [] };
+  console.log(JSON.stringify(parsed, null, 2))
+  if (parsed) return parsed;
   else throw new Error("Error parsing client properties");
 }
 
+export type ReturnUserProerties = Awaited<ReturnType<typeof getUserProperties>>;
 
 export default databaseMethods;
