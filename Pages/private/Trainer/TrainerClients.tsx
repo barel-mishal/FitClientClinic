@@ -5,15 +5,13 @@ import { View, Text, StyleSheet, Button } from "react-native";
 import { RootStackParamList } from "../../../App";
 
 
-type Props = NativeStackScreenProps<RootStackParamList, 'TrainerHome'>;
+type Props = NativeStackScreenProps<RootStackParamList, 'TrainerClients'>;
 
 const TrainerHome: React.FC<Props> = ({ navigation }) => {
     return (
         <View style={styles.container}>
-            <Text>TrainerHome</Text>
-            <Button title="Appointments" onPress={() => navigation.navigate('TrainerAppointments')} />
+            <Text>TrainerClients</Text>
             <Button title="Clients" onPress={() => navigation.navigate('TrainerClients')} />
-            <Button title="Programs" onPress={() => navigation.navigate('TrainerPrograms')} />
         </View>
     );
 }

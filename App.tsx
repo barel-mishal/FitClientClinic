@@ -16,7 +16,8 @@ export type RootStackParamList = {
   ClientProperties: undefined;
   TrainerHome: undefined;
   TrainerAppointments: undefined;
-
+  TrainerClients: undefined;
+  TrainerPrograms: undefined;
 };
 // דפנה ואלינה באסף ברופא
 // כליל קפלו
