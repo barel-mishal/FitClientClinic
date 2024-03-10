@@ -307,6 +307,12 @@ const TrinerClientAppointment = v.object({});
 
 const TrainerProgram = v.object({});
 
+export const TrainerProperties = v.intersect([
+    TrainerProfile,
+    v.array(v.partial(TrinerClientAppointment)),
+    v.array(v.partial(TrainerProgram)),
+]);
+
 // ----------------- User -----------------
 type User = FirebaseAuthTypes.User;
 
@@ -331,15 +337,15 @@ type PAGES = {
     trainer: {
         appoitments: {
             funcs: {
-                createAppointment: () => {}
-                deleteAppointment: () => {}
-                updateFutureAppointment: () => {}
-                getAllAppointments: () => {}
+                createAppointment: () => {} // bring me to a page form to fill the details
+                deleteAppointment: () => {} // delete the appointment
+                updateFutureAppointment: () => {} // bring me to a page form to fill the details
+                getAllAppointments: () => {} // bring me to a page with all the appointments
             }
             page: {
                 clientId: string,
                 comment: string,
-                program: {},
+                programId: string, // the simpliest program (name, duration, exercises, sets, reps, duration, repetitionType)
                 date: string;   
             }[]
         },
@@ -350,7 +356,6 @@ type PAGES = {
                 appoitments: {}[]
                 workouts: {}[],
                 currentProgramId: string;
-                // בניין א קומה שלישית 38 דירה
             }[]
         };
         proggrames: {
@@ -374,12 +379,31 @@ type PAGES = {
                 updateWorkout: () => {};
                 getAllWorkouts: () => {};
             }, 
+            page: {}[]
+        };
+        heartRateInWorkOuts: {
+            funcs: {
+                syncWithHealthKit: () => {};
+            },
             page: {
-
+                date: string;
+                heartRate: number;
+            }[]
+        }[];
+        appointments: {
+            funcs: {
+                createAppointment: () => {};
+                deleteAppointment: () => {};
+                updateFutureAppointment: () => {};
+                getAllAppointments: () => {};
+            };
+            page: {
+                clientId: string;
+                comment: string;
+                programId: string, // the simpliest program (name, duration, exercises, sets, reps, duration, repetitionType)
+                date: string;   
             }[]
         };
-        heartRateInWorkOuts: {}[];
-        appointments: {}[];
+        }[];
         currentProgramId: string;
-    },
-}
+    }

@@ -15,6 +15,7 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [currentUser, setCurrentUser] = useState<UserSchema['user'] | null>(null);
     const [profile, setProfile] = useState<InputClientProperties | undefined>(undefined);
     const [loading, setLoading] = useState(true);
+    console.log('AuthContext: ', {currentUser}, {profile});
 
     useEffect(() => {
         const unsubscribe = auth().onAuthStateChanged((user) => {
