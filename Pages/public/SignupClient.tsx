@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, TextInput, Button, ScrollView, Text } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../App";
-import { TypeClientRegisterData, ClientRegisterData, makeIssue } from "../../types";
+import { InputClientRegister, ClientRegisterData, makeIssue } from "../../types";
 import databaseMethods from "../../services/databaseMethods";
 import * as v from "valibot";
 
@@ -10,7 +10,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'SignupClient'>;
 
 const SignupClient = ({ navigation }: Props) => {
   const [message, setMessage] = useState<string | undefined>(undefined);
-  const [form, setForm] = useState<Partial<TypeClientRegisterData>>();
+  const [form, setForm] = useState<Partial<InputClientRegister>>();
 
   // Function to handle input change
   const handleChange = (name: string, value: string | [string, string, string] | number) => {

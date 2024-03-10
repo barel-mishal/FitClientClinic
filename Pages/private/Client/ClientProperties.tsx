@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, TextInput, Button, ScrollView, Text, View } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../../App";
-import { makeIssue, GENDER_OPTIONS, ACTIVITY_LEVEL_OPTIONS, TypeClientProperties, Client, ClientProperties, ClientPersonalFitnessInfo } from "../../../types";
+import { makeIssue, GENDER_OPTIONS, ACTIVITY_LEVEL_OPTIONS, InputClientProperties, Client, ClientProperties, ClientPersonalFitnessInfo } from "../../../types";
 import databaseMethods from "../../../services/databaseMethods";
 import * as v from "valibot";
 import RadioButton from "../../../Components/RadioComponent";
@@ -18,7 +18,7 @@ const SignupClient = ({ navigation }: Props) => {
   const a = useAuth();
   if (!a.user || a?.data?.role !== "client" as Client) return <Text>Not Authenticated</Text>;
   const [message, setMessage] = useState<string | undefined>(undefined);
-  const [form, setForm] = useState<Partial<TypeClientProperties>>({
+  const [form, setForm] = useState<Partial<InputClientProperties>>({
     name: a.data.name,
     email: a.data.email,
     phone: a.data.phone,

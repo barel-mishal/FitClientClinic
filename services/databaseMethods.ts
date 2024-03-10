@@ -1,4 +1,4 @@
-import { ClientProperties, ResultTypeClientRegisterSchema, ResultTypeTrainerRegister, TypeCientProfile, TypeClientPersonalFitnessInfo, TypeClientRegisterData, TypeTrainerRegisterData } from '../types';
+import { ClientProperties, OutputClientRegister, OutputTrainerRegister, TypeCientProfile, TypeClientPersonalFitnessInfo, InputClientRegister, InputTrainerRegister } from '../types';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import * as v from 'valibot';
@@ -32,7 +32,7 @@ Error logging in. Please try again. Did you sign up?
 }
 
 
-async function register(form: ResultTypeClientRegisterSchema | ResultTypeTrainerRegister) {
+async function register(form: OutputClientRegister | OutputTrainerRegister) {
   try {
       const userCredential = await auth().createUserWithEmailAndPassword(form.email, form.password);
       const user = userCredential.user;
@@ -46,7 +46,7 @@ async function register(form: ResultTypeClientRegisterSchema | ResultTypeTrainer
   }
 }
 
-async function createClientProfile(user: FirebaseAuthTypes.User, form: ResultTypeClientRegisterSchema) {
+async function createClientProfile(user: FirebaseAuthTypes.User, form: OutputClientRegister) {
   try {
       await firestore().collection('profile').doc(user.uid).set({
           name: form.name,
@@ -63,7 +63,7 @@ async function createClientProfile(user: FirebaseAuthTypes.User, form: ResultTyp
   }
 }
 
-async function createTrainerProfile(user: FirebaseAuthTypes.User, form: ResultTypeTrainerRegister) {
+async function createTrainerProfile(user: FirebaseAuthTypes.User, form: OutputTrainerRegister) {
   try {
       await firestore().collection('profile').doc(user.uid).set({
           name: form.name,
@@ -79,7 +79,7 @@ async function createTrainerProfile(user: FirebaseAuthTypes.User, form: ResultTy
   }
 }
 
-async function createProfile(user: FirebaseAuthTypes.User, form: ResultTypeTrainerRegister | ResultTypeClientRegisterSchema) {
+async function createProfile(user: FirebaseAuthTypes.User, form: OutputTrainerRegister | OutputClientRegister) {
   switch (form.role) {
       case "client":
           await createClientProfile(user, form);

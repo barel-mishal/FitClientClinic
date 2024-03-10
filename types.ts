@@ -73,11 +73,6 @@ type FitnessProgramAction = {
     getFitnessPrograms: () => FitnessPrograms;
 }
 
-type FitnessProgramSchema = {
-    fitnessProgramAction: FitnessProgramAction;
-    FitnessPrograms: FitnessPrograms;
-}
-
 // ----------------- Profile -----------------
 type ProfileDetail = {
     name: string;
@@ -220,7 +215,7 @@ export const makeIssue = (issues: v.SchemaIssues) => {
 
 }
 
-export function isUserLoggedIn(userSchema: UserSchema): userSchema is { user: FirebaseAuthTypes.User, data: TypeClientProperties } {
+export function isUserLoggedIn(userSchema: UserSchema): userSchema is { user: FirebaseAuthTypes.User, data: InputClientProperties } {
     return userSchema.user !== null;
 }
 
@@ -254,8 +249,8 @@ export const ClientRegisterData = v.merge([
     CientProfile
 ]);
 
-export type TypeClientRegisterData = v.Input<typeof ClientRegisterData>;
-export type ResultTypeClientRegisterSchema = v.Output<typeof ClientRegisterData>;
+export type InputClientRegister = v.Input<typeof ClientRegisterData>;
+export type OutputClientRegister = v.Output<typeof ClientRegisterData>;
 // export type ResultTypeClientRegisterSchema = v.TypedSchemaResult<typeof ClientRegisterData>;
 
 export const ClientPersonalFitnessInfo = v.object({
@@ -285,7 +280,32 @@ export const ClientProperties = v.intersect([
     v.partial(ClientPersonalFitnessInfo)
 ]);
 
-export type TypeClientProperties = v.Input<typeof ClientProperties>;
+export type InputClientProperties = v.Input<typeof ClientProperties>;
+
+export const TrainerProfile = v.object({
+    name: v.string([v.minLength(2)]),
+    email: v.string([v.email()]),
+    phone: NumberSchema,
+    role: v.literal('trainer'),
+    certification: v.string([v.minLength(1)]),
+    yearsOfExperience: NumberSchema,
+})
+
+const ClientWorkout = v.object({})
+
+export type TypeTrainerProfile = v.Input<typeof TrainerProfile>
+
+export const TrainerRegisterData = v.merge([
+    TrainerProfile,
+    v.object({ password: v.string([v.minLength(6)]) }),
+]);
+
+export type InputTrainerRegister = v.Input<typeof TrainerRegisterData>;
+export type OutputTrainerRegister = v.Output<typeof TrainerRegisterData>;
+
+const TrinerClientAppointment = v.object({});
+
+const TrainerProgram = v.object({});
 
 // ----------------- User -----------------
 type User = FirebaseAuthTypes.User;
@@ -299,37 +319,67 @@ export type UserAction = {
 
 export type UserSchema = {
     user: User;
-    data: TypeClientProperties,
+    data: InputClientProperties,
 } | {
     user: null
 }
 
-// ***************** Initial Values *****************
-export const TrainerProfile = v.object({
-    name: v.string([v.minLength(2)]),
-    email: v.string([v.email()]),
-    phone: NumberSchema,
-    role: v.literal('trainer'),
-    certification: v.string([v.minLength(1)]),
-    yearsOfExperience: NumberSchema,
-})
 
-export type TypeTrainerProfile = v.Input<typeof TrainerProfile>
+// ^^^^^^^^ JUST HELPFULL SCHEMA TO DESIGN THE APPLICATION ^^^^^^^^
+type PAGES = {
+    public: any;
+    trainer: {
+        appoitments: {
+            funcs: {
+                createAppointment: () => {}
+                deleteAppointment: () => {}
+                updateFutureAppointment: () => {}
+                getAllAppointments: () => {}
+            }
+            page: {
+                clientId: string,
+                comment: string,
+                program: {},
+                date: string;   
+            }[]
+        },
+        trinees: {
+            page: {
+                name: string;
+                email: string;
+                appoitments: {}[]
+                workouts: {}[],
+                currentProgramId: string;
+                // בניין א קומה שלישית 38 דירה
+            }[]
+        };
+        proggrames: {
+            funcs: {
+                createNewProgram: () => {};
+                deleteProgram: () => {};
+                updateProgram: () => {};
+                getAllPrograms: () => {};
+            };
+            page: {
+            exercises: {}[];
+            estimatedDurationMin: number;
+            }[]
+        };
+    },
+    client: {
+        workouts: {
+            funcs: {
+                deleteWorkout: () => {};
+                addWorkout: () => {};
+                updateWorkout: () => {};
+                getAllWorkouts: () => {};
+            }, 
+            page: {
 
-export const TrainerRegisterData = v.merge([
-    TrainerProfile,
-    v.object({ password: v.string([v.minLength(6)]) }),
-]);
-
-export type TypeTrainerRegisterData = v.Input<typeof TrainerRegisterData>;
-export type ResultTypeTrainerRegister = v.Output<typeof TrainerRegisterData>;
-
-export const initialTrainerForm: Partial<TypeTrainerRegisterData> = {
-    name: 'barel',
-    email: 'barel.trianer@mail.com',
-    phone: '0509042020',
-    password: 'sgslkfj',
-    role: 'trainer',
-    certification: '',
-    yearsOfExperience: "8",
-  }
+            }[]
+        };
+        heartRateInWorkOuts: {}[];
+        appointments: {}[];
+        currentProgramId: string;
+    },
+}

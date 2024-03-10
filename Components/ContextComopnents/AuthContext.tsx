@@ -1,6 +1,6 @@
 import React, { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth';
-import { TypeClientProperties, UserSchema } from '../../types';
+import { InputClientProperties, UserSchema } from '../../types';
 import databaseMethods from '../../services/databaseMethods';
 
 
@@ -13,7 +13,7 @@ export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     const [currentUser, setCurrentUser] = useState<UserSchema['user'] | null>(null);
-    const [profile, setProfile] = useState<TypeClientProperties | undefined>(undefined);
+    const [profile, setProfile] = useState<InputClientProperties | undefined>(undefined);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
