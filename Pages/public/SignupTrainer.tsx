@@ -14,6 +14,7 @@ import * as v from "valibot";
 type Props = NativeStackScreenProps<RootStackParamList, 'SignupTrainer'>;
 
 const SignupTrainer = ({navigation}: Props) => {
+  
   const [message, setMessage] = useState<string | undefined>(undefined);
   const [form, setForm] = useState<Partial<InputTrainerRegister>>({
     name: 'barel',

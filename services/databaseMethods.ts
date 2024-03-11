@@ -14,6 +14,18 @@ const databaseMethods = {
   logout: userSignOut,
   addOrUpdateClientFitnessInfo,
   getUserProperties,
+  getTrainerProgram: async (trainerId: string, programId: string) => {
+    const docRef = firestore().collection('TrainerPrograms').doc(trainerId).collection('programs').doc(programId);
+    const doc = await docRef.get();
+
+    if (doc.exists) {
+      const data = doc.data();
+      return data;
+    } else {
+      console.log("No program found for this trainer");
+      return undefined;
+    }
+  }
 }
 
 async function login(email: string, password: string) {
@@ -34,7 +46,7 @@ Error logging in. Please try again. Did you sign up?
 
 async function register(form: OutputClientRegister | OutputTrainerRegister) {
   try {
-      const userCredential = await auth().createUserWithEmailAndPassword(form.email, form.password);
+      const userCredential = await auth().createUserWithEmailAndPassword(form.email, form.password)
       const user = userCredential.user;
       
       await createProfile(user, form as OutputClientRegister | TypeTrainerProfile);

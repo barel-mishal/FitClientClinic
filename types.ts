@@ -43,7 +43,8 @@ type ExerciseStructure = {
     id: string;
     sets: number;
     estimatedDuration: number;
-} & Repetition[];
+    reps: Repetition[]
+};
 
 type Exercise = {
     id: string;
@@ -64,7 +65,7 @@ type FitnessProgram = {
     clientId: string;
 }
 
-type FitnessPrograms = FitnessProgram[];
+export type FitnessPrograms = FitnessProgram[];
 
 type FitnessProgramAction = {
     deleteFitnessProgram: (id: string) => void;

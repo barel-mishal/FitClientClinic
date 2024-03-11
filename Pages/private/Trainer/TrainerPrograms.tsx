@@ -1,17 +1,137 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React from "react";
+import React, { useState } from "react";
 
-import { View, Text, StyleSheet, Button } from "react-native";
+import { View, Text, StyleSheet, Button, TouchableOpacity, ScrollView } from "react-native";
 import { RootStackParamList } from "../../../App";
+import { FitnessPrograms } from "../../../types";
+import { Ionicons } from "@expo/vector-icons";
+import { Entypo } from '@expo/vector-icons';
+import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
+import TrainerProgramCard from "../../../Components/TrainerProgramCard";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerPrograms'>;
 
-const TrainerHome: React.FC<Props> = ({ navigation }) => {
+const newProgram = (): FitnessPrograms[number] => {
+    return  {
+        id: "1",
+        name: "Program 1",
+        clientId: "1",
+        duration: 30,
+        trainerId: "1",
+        description: "This is program 1",
+        exercises: [
+            {
+                id: "1",
+                name: "Exercise 1",
+                description: "This is exercise 1",
+                exerciseStructure: {
+                    sets: 3,
+                    estimatedDuration: 30, 
+                    reps: [{
+                        repetitionType: "time",
+                        duration: 30,
+                        },
+                        {
+                            numberOfReps: 10,
+                            repDuration: 3,
+                            repetitionType: "reps"
+                        }
+                    ],
+                    id: "1",
+                },
+                imgUrl: "https://www.google.com",
+                urlExample: "https://www.google.com",
+            },
+        ],
+    } 
+} 
+
+const TrainerPrograms: React.FC<Props> = ({ navigation }) => {
+    const auth = useAuth()
+    if (!auth.user) return <View></View>
+    
+    const [programs, setPrograms] = useState<FitnessPrograms>([
+        {
+            id: "1",
+            name: "Program 1",
+            clientId: "1",
+            duration: 30,
+            trainerId: "1",
+            description: "This is program 1",
+            exercises: [
+                {
+                    id: "1",
+                    name: "Exercise 1",
+                    description: "This is exercise 1",
+                    exerciseStructure: {
+                        sets: 3,
+                        estimatedDuration: 30, 
+                        reps: [{
+                            repetitionType: "time",
+                            duration: 30,
+                            },
+                            {
+                                numberOfReps: 10,
+                                repDuration: 3,
+                                repetitionType: "reps"
+                            }
+                        ],
+                        id: "1",
+                    },
+                    imgUrl: "https://www.google.com",
+                    urlExample: "https://www.google.com",
+                },
+            ],
+        },
+        {
+            id: "2",
+            name: "Program 2",
+            clientId: "1",
+            duration: 30,
+            trainerId: "1",
+            description: "This is program 2",
+            exercises: [
+                {
+                    id: "1",
+                    name: "Exercise 1",
+                    description: "This is exercise 1",
+                    exerciseStructure: {
+                        sets: 3,
+                        estimatedDuration: 30, 
+                        reps: [{
+                            repetitionType: "time",
+                            duration: 30,
+                            },
+                            {
+                                numberOfReps: 10,
+                                repDuration: 3,
+                                repetitionType: "reps"
+                            }
+                        ],
+                        id: "1",
+                    },
+                    imgUrl: "https://www.google.com",
+                    urlExample: "https://www.google.com",
+                },
+            ],
+        }
+    ]);
+
     return (
-        <View style={styles.container}>
-            <Text>TrainerClients</Text>
-            <Button title="Clients" onPress={() => navigation.navigate('TrainerClients')} />
+        <View>
+            <ScrollView> 
+                <View style={styles.container}>
+                <TouchableOpacity onPress={() => {setPrograms([...programs, newProgram()])}} style={{display: "flex", width: "100%" , flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center", padding: 7, marginTop: 14, borderRadius: 20, backgroundColor: "#7DD3FC", opacity: 50, }}>
+                    <Text style={{ fontSize: 16, fontWeight: "700", color: "#082F49" }}>Add Program</Text>
+                    <Ionicons name="add-circle" size={24} color="#082F49" />
+                </TouchableOpacity>
+                {programs.map((m, index) => {
+                    const program = {...m, trainerName: firstCharUpperCase(auth?.data?.name)}
+                    return <TrainerProgramCard key={index} program={program} navigation={navigation} />
+                })}
+                </View>
+            </ScrollView>
         </View>
     );
 }
@@ -19,9 +139,16 @@ const TrainerHome: React.FC<Props> = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
+        display: "flex",
+        flexDirection: "column",
+        gap: 12,
+        padding: 8,
     },
 });
 
-export default TrainerHome;
+export const firstCharUpperCase = (str: string | undefined) => {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+export default TrainerPrograms;
