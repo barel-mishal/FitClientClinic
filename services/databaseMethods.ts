@@ -1,8 +1,7 @@
-import { ClientProperties, OutputClientRegister, OutputTrainerRegister, TypeCientProfile, TypeClientPersonalFitnessInfo, InputClientRegister, InputTrainerRegister, TrainerProperties, TypeTrainerProfile, OutputCientProfile } from '../types';
+import { OutputClientRegister, OutputTrainerRegister, TypeCientProfile, TypeClientPersonalFitnessInfo, InputClientRegister, InputTrainerRegister, TrainerProperties, TypeTrainerProfile, OutputCientProfile } from '../types';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import * as v from 'valibot';
-
+import { newProgram } from '../Pages/private/Trainer/TrainerPrograms';
 
 const databaseMethods = {
   login,
@@ -14,18 +13,7 @@ const databaseMethods = {
   logout: userSignOut,
   addOrUpdateClientFitnessInfo,
   getUserProperties,
-  getTrainerProgram: async (trainerId: string, programId: string) => {
-    const docRef = firestore().collection('TrainerPrograms').doc(trainerId).collection('programs').doc(programId);
-    const doc = await docRef.get();
-
-    if (doc.exists) {
-      const data = doc.data();
-      return data;
-    } else {
-      console.log("No program found for this trainer");
-      return undefined;
-    }
-  }
+  getTrainerProgram,
 }
 
 async function login(email: string, password: string) {
@@ -207,5 +195,19 @@ async function getUserProperties(id: FirebaseAuthTypes.User["uid"])  {
 }
 
 export type ReturnUserProerties = Awaited<ReturnType<typeof getUserProperties>>;
+
+function getTrainerProgram(trainerId: string, programId: string) {
+  return newProgram()
+  // const docRef = firestore().collection('TrainerPrograms').doc(trainerId).collection('programs').doc(programId);
+  // const doc = await docRef.get();
+
+  // if (doc.exists) {
+  //   const data = doc.data();
+  //   return data;
+  // } else {
+  //   console.log("No program found for this trainer");
+  //   return undefined;
+  // }
+}
 
 export default databaseMethods;

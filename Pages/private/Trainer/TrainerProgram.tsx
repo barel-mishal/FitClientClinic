@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { RootStackParamList } from "../../../App";
 import { Entypo } from '@expo/vector-icons';
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
@@ -13,99 +13,90 @@ const TrainerProgram: React.FC<Props> = ({ navigation, route: { params: {id}} })
     if (!auth.user) return <View></View>;
     const program = databaseMethods.getTrainerProgram(auth.user.uid, id)
     console.log(program)
+
+    const formatDuration = (reps) => {
+        if (reps.repetitionType === 'time') {
+          return `${Math.floor(parseInt(reps.duration) / 60)}:${parseInt(reps.duration) % 60}s`;
+        } else {
+          return `${reps.numberOfReps} reps`;
+        }
+      };
+    
     
     return (
-        <View>
-            <View>
-                <Text>Program {id}</Text>
+        <ScrollView style={styles.container}>
+        {/* Render each exercise */}
+        {program.exercises.map((exercise) => (
+          <View key={exercise.id} style={styles.exerciseContainer}>
+            <Text style={styles.exerciseTitle}>{exercise.name}</Text>
+            <Text style={styles.exerciseDescription}>{exercise.description}</Text>
+  
+            <View style={styles.exerciseDetail}>
+              <Text style={styles.exerciseSet}>{exercise.exerciseStructure.sets} Set</Text>
+              <Text style={styles.exerciseDuration}>{formatDuration(exercise.exerciseStructure.reps[0])}</Text>
             </View>
-            {/* <View style={styles.programCard}>
-                <View style={styles.headerRow}>
-                    <View style={styles.titleContainer}>
-                        <Text style={styles.programName}>{program.name}</Text>
-                        <Text style={styles.trainerName}>Trainer: {program.trainerName}</Text>
-                    </View>
-                    <TouchableOpacity onPress={() => navigation.navigate(program.id)}>
-                        <Entypo name="dots-three-horizontal" size={24} color="#082F49" />
-                    </TouchableOpacity>
-                </View>
-                <View>
-                    <View style={styles.descriptionRow}>
-                        <Text style={styles.descriptionLabel}>Description:</Text>
-                        <View style={styles.durationContainer}>
-                            <Entypo name="time-slot" size={16} color="#082F49" />
-                            <Text style={styles.duration}>~{program.duration}m</Text>
-                        </View>
-                    </View>
-                    <Text style={styles.descriptionText}>{program.description}</Text>
-                </View>
-            </View> */}
+  
+            {/* Exercise Image - Placeholder for now */}
+            {/* <Image source={{ uri: exercise.imgUrl }} style={styles.exerciseImage} /> */}
+          </View>
+        ))}
+  
+        {/* Footer navigation buttons */}
+        <View style={styles.navigation}>
+          <TouchableOpacity onPress={() => { /* handle previous exercise */ }}>
+            <Text style={styles.navText}>Previous</Text>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={() => { /* handle next exercise */ }}>
+            <Text style={styles.navText}>Next</Text>
+          </TouchableOpacity>
         </View>
+      </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
-    programCard: {
-        flexDirection: "column",
-        display: "flex",
-        backgroundColor: "#7DD3FC",
-        opacity: 0.5, // Changed from 50 to 0.5 for correct opacity value
-        padding: 10,
-        borderRadius: 20,
-        minHeight: 150,
-        paddingVertical: 16,
-        gap: 24,
+    container: {
+      flex: 1,
+      backgroundColor: '#fff',
     },
-    headerRow: {
-        flexDirection: "row",
-        display: "flex",
-        justifyContent: "space-between",
+    exerciseContainer: {
+      padding: 20,
+      alignItems: 'center',
     },
-    titleContainer: {
-        display: "flex",
-        alignItems: "flex-start",
-        flexDirection: "column",
-        gap: 2,
+    exerciseTitle: {
+      fontSize: 24,
+      fontWeight: 'bold',
     },
-    programName: {
-        fontSize: 30,
-        fontWeight: "800",
-        color: "#082F49",
+    exerciseDescription: {
+      fontSize: 16,
+      textAlign: 'center',
+      marginBottom: 20,
     },
-    trainerName: {
-        fontSize: 16,
-        fontWeight: "400",
-        color: "#082F49",
+    exerciseDetail: {
+      alignItems: 'center',
+      marginBottom: 20,
     },
-    descriptionRow: {
-        flexDirection: "row",
-        display: "flex",
-        justifyContent: "space-between",
-        paddingBottom: 4,
+    exerciseSet: {
+      fontSize: 18,
+      fontWeight: '600',
     },
-    descriptionLabel: {
-        fontSize: 16,
-        fontWeight: "700",
-        color: "#082F49",
+    exerciseDuration: {
+      fontSize: 32,
+      fontWeight: 'bold',
+      marginVertical: 10,
     },
-    durationContainer: {
-        flexDirection: "row",
-        display: "flex",
-        justifyContent: "space-between",
-        gap: 2,
-        alignItems: "center",
+    // Add styles for exerciseImage if needed
+    navigation: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      padding: 20,
     },
-    duration: {
-        fontSize: 16,
-        fontWeight: "500",
-        color: "#082F49",
+    navText: {
+      fontSize: 18,
+      color: 'blue',
     },
-    descriptionText: {
-        fontSize: 16,
-        fontWeight: "400",
-        color: "#082F49",
-    },
-});
+  });
+  
 
 export default TrainerProgram;
 

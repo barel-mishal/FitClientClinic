@@ -30,19 +30,21 @@ type AppointmentAction = {
 }
 
 // ----------------- Fitness Program -----------------
+type Duration = `${number}m` | `${number}h` | `${number}s`;
+
 type Repetition = ({
     repetitionType: 'time';
-    duration: number;
+    duration: Duration;
 } | {
     repetitionType: 'reps';
     numberOfReps: number;
-    repDuration: number;
+    repDuration: Duration;
 });
 
 type ExerciseStructure = {
     id: string;
     sets: number;
-    estimatedDuration: number;
+    estimatedDuration: Duration;
     reps: Repetition[]
 };
 
@@ -59,10 +61,9 @@ type FitnessProgram = {
     id: string;
     name: string;
     description: string;
-    duration: number;
+    duration: Duration
     exercises: Exercise[];
     trainerId: string;
-    clientId: string;
 }
 
 export type FitnessPrograms = FitnessProgram[];

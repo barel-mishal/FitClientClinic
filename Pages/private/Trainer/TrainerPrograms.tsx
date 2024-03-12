@@ -5,46 +5,113 @@ import { View, Text, StyleSheet, Button, TouchableOpacity, ScrollView } from "re
 import { RootStackParamList } from "../../../App";
 import { FitnessPrograms } from "../../../types";
 import { Ionicons } from "@expo/vector-icons";
-import { Entypo } from '@expo/vector-icons';
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 import TrainerProgramCard from "../../../Components/TrainerProgramCard";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerPrograms'>;
 
-const newProgram = (): FitnessPrograms[number] => {
-    return  {
-        id: "1",
-        name: "Program 1",
-        clientId: "1",
-        duration: 30,
+export const newProgram = (): FitnessPrograms[number] => {
+    const program1: FitnessPrograms[number] = {
+        id: Math.random().toString(36).substring(7),
+        name: "Total Body Workout",
+        duration: '60m', // assuming total duration in minutes
         trainerId: "1",
-        description: "This is program 1",
+        description: "This is a total body workout program designed to cover all major muscle groups.",
         exercises: [
             {
                 id: "1",
-                name: "Exercise 1",
-                description: "This is exercise 1",
+                name: "Warm-up Jog",
+                description: "A light jog to warm up the body.",
                 exerciseStructure: {
-                    sets: 3,
-                    estimatedDuration: 30, 
+                    sets: 1,
+                    estimatedDuration: `${10}m`, // in minutes
                     reps: [{
                         repetitionType: "time",
-                        duration: 30,
-                        },
+                        duration: "600s", // in seconds
+                    }],
+                    id: "ex1",
+                },
+                imgUrl: "https://example.com/warmup-jog.png",
+                urlExample: "https://example.com/warmup-jog-example.mp4",
+            },
+            {
+                id: "2",
+                name: "Push-ups",
+                description: "Standard push-ups to work the chest, shoulders, and triceps.",
+                exerciseStructure: {
+                    sets: 3,
+                    estimatedDuration: "5m",
+                    reps: [{
+                        repetitionType: "reps",
+                        numberOfReps: 15,
+                        repDuration: "2s", // assuming 2 seconds per rep
+                    }],
+                    id: "ex2",
+                },
+                imgUrl: "https://example.com/push-ups.png",
+                urlExample: "https://example.com/push-ups-example.mp4",
+            },            
+            {
+                id: "3",
+                name: "Squats",
+                description: "Bodyweight squats to target the lower body, particularly the quadriceps, hamstrings, and glutes.",
+                exerciseStructure: {
+                    sets: 3,
+                    estimatedDuration: "5m", // in minutes
+                    reps: [
                         {
-                            numberOfReps: 10,
-                            repDuration: 3,
-                            repetitionType: "reps"
+                            repetitionType: "reps",
+                            numberOfReps: 20,
+                            repDuration: "2s", // assuming 2 seconds per rep
                         }
                     ],
-                    id: "1",
+                    id: "ex3",
                 },
-                imgUrl: "https://www.google.com",
-                urlExample: "https://www.google.com",
+                imgUrl: "https://example.com/squats.png",
+                urlExample: "https://example.com/squats-example.mp4",
+            },
+            {
+                id: "4",
+                name: "Plank",
+                description: "Plank exercise to strengthen the core, including the abdominals and lower back.",
+                exerciseStructure: {
+                    sets: 3,
+                    estimatedDuration: "5m", // total duration for all sets in minutes
+                    reps: [
+                        {
+                            repetitionType: "time",
+                            duration: "60s", // holding the plank for 60 seconds
+                        }
+                    ],
+                    id: "ex4",
+                },
+                imgUrl: "https://example.com/plank.png",
+                urlExample: "https://example.com/plank-example.mp4",
+            },
+            {
+                id: "5",
+                name: "Lunges",
+                description: "Forward lunges to work the legs and improve balance.",
+                exerciseStructure: {
+                    sets: 3,
+                    estimatedDuration: "5m", // in minutes
+                    reps: [
+                        {
+                            repetitionType: "reps",
+                            numberOfReps: 12, // per leg
+                            repDuration: "2s", // assuming 2 seconds per rep
+                        }
+                    ],
+                    id: "ex5",
+                },
+                imgUrl: "https://example.com/lunges.png",
+                urlExample: "https://example.com/lunges-example.mp4",
             },
         ],
-    } 
+    };
+    
+    return  program1
 } 
 
 const TrainerPrograms: React.FC<Props> = ({ navigation }) => {
@@ -55,68 +122,11 @@ const TrainerPrograms: React.FC<Props> = ({ navigation }) => {
         {
             id: "1",
             name: "Program 1",
-            clientId: "1",
-            duration: 30,
+            duration: "30m",
             trainerId: "1",
             description: "This is program 1",
-            exercises: [
-                {
-                    id: "1",
-                    name: "Exercise 1",
-                    description: "This is exercise 1",
-                    exerciseStructure: {
-                        sets: 3,
-                        estimatedDuration: 30, 
-                        reps: [{
-                            repetitionType: "time",
-                            duration: 30,
-                            },
-                            {
-                                numberOfReps: 10,
-                                repDuration: 3,
-                                repetitionType: "reps"
-                            }
-                        ],
-                        id: "1",
-                    },
-                    imgUrl: "https://www.google.com",
-                    urlExample: "https://www.google.com",
-                },
-            ],
-        },
-        {
-            id: "2",
-            name: "Program 2",
-            clientId: "1",
-            duration: 30,
-            trainerId: "1",
-            description: "This is program 2",
-            exercises: [
-                {
-                    id: "1",
-                    name: "Exercise 1",
-                    description: "This is exercise 1",
-                    exerciseStructure: {
-                        sets: 3,
-                        estimatedDuration: 30, 
-                        reps: [{
-                            repetitionType: "time",
-                            duration: 30,
-                            },
-                            {
-                                numberOfReps: 10,
-                                repDuration: 3,
-                                repetitionType: "reps"
-                            }
-                        ],
-                        id: "1",
-                    },
-                    imgUrl: "https://www.google.com",
-                    urlExample: "https://www.google.com",
-                },
-            ],
-        }
-    ]);
+            exercises: []
+        }]);
 
     return (
         <View>
