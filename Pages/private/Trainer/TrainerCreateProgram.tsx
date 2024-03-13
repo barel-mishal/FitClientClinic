@@ -11,21 +11,32 @@ type Props = NativeStackScreenProps<RootStackParamList, 'TrainerCreateProgram'>;
 interface ProgramState {
   program: Partial<FitnessProgram>
   currentExerciseIndex: number;
-  updateProgram: (program: FitnessProgram, key: keyof FitnessProgram, value: FitnessProgram[keyof FitnessProgram]) => Partial<FitnessProgram>;
+  updateProgram: (program: Partial<FitnessProgram>, key: keyof FitnessProgram, value: Partial<FitnessProgram[keyof FitnessProgram]>) => Partial<FitnessProgram>;
   currentExercise: Partial<FitnessProgram['exercises'][number]> | undefined;
 }
 
 const initialState: ProgramState = { 
     program: {}, 
     currentExerciseIndex: 0,
-    updateProgram: (program: FitnessProgram, key: keyof FitnessProgram, value: FitnessProgram[keyof FitnessProgram]) => {
+    updateProgram: (program: Partial<FitnessProgram>, key: keyof FitnessProgram, value: Partial<FitnessProgram[keyof FitnessProgram]>) => {
         const newProgram = { ...program, [key]: value };
         return newProgram;
     },
     currentExercise: undefined
 };
 
-function reducer(state: ProgramState, action: { type: string; payload?: any }) {
+type Actions = {
+    type: "UPDATE_EXERCISE";
+    payload: {key: keyof FitnessProgram, value: FitnessProgram[keyof FitnessProgram]};
+} | {
+    type: "NEXT_EXERCISE";
+} | {
+    type: "PREV_EXERCISE";
+} | {
+    type: "ADD_EXERCISE";
+};
+
+function reducer(state: ProgramState, action: Actions) {
   switch (action.type) {
     case 'NEXT_EXERCISE':
       return state;
@@ -35,7 +46,10 @@ function reducer(state: ProgramState, action: { type: string; payload?: any }) {
         return state;
     case 'UPDATE_EXERCISE':
       // TODO: Implement functionality to add a new exercise
-      return state;
+      return {
+        ...state,
+        program: state.updateProgram(state.program , action.payload.key, action.payload.value)
+      };
     default:
       return state;
   }
