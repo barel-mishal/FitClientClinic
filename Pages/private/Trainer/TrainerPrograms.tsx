@@ -1,18 +1,18 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useState } from "react";
 
-import { View, Text, StyleSheet, Button, TouchableOpacity, ScrollView } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { RootStackParamList } from "../../../App";
-import { FitnessPrograms } from "../../../types";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 import TrainerProgramCard from "../../../Components/TrainerProgramCard";
+import { FitnessProgram } from "../../../types";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerPrograms'>;
 
-export const newProgram = (): FitnessPrograms[number] => {
-    const program1: FitnessPrograms[number] = {
+export const newProgram = (): FitnessProgram[] => {
+    const program1: FitnessProgram = {
         id: Math.random().toString(36).substring(7),
         name: "Total Body Workout",
         duration: '60m', // assuming total duration in minutes
@@ -23,15 +23,12 @@ export const newProgram = (): FitnessPrograms[number] => {
                 id: "1",
                 name: "Warm-up Jog",
                 description: "A light jog to warm up the body.",
-                exerciseStructure: {
-                    sets: 1,
-                    estimatedDuration: `${10}m`, // in minutes
-                    reps: [{
-                        repetitionType: "time",
-                        duration: "600s", // in seconds
-                    }],
-                    id: "ex1",
-                },
+                sets: "1",
+                estimatedDuration: `${10}m`, // in minutes
+                reps: [{
+                    repetitionType: "time",
+                    duration: "600s", // in seconds
+                }],
                 imgUrl: "https://example.com/warmup-jog.png",
                 urlExample: "https://example.com/warmup-jog-example.mp4",
             },
@@ -39,16 +36,13 @@ export const newProgram = (): FitnessPrograms[number] => {
                 id: "2",
                 name: "Push-ups",
                 description: "Standard push-ups to work the chest, shoulders, and triceps.",
-                exerciseStructure: {
-                    sets: 3,
-                    estimatedDuration: "5m",
-                    reps: [{
-                        repetitionType: "reps",
-                        numberOfReps: 15,
-                        repDuration: "2s", // assuming 2 seconds per rep
-                    }],
-                    id: "ex2",
-                },
+                sets: "3",
+                estimatedDuration: "5m",
+                reps: [{
+                    repetitionType: "reps",
+                    numberOfReps: 15,
+                    repDuration: "2s", // assuming 2 seconds per rep
+                }],
                 imgUrl: "https://example.com/push-ups.png",
                 urlExample: "https://example.com/push-ups-example.mp4",
             },            
@@ -56,18 +50,15 @@ export const newProgram = (): FitnessPrograms[number] => {
                 id: "3",
                 name: "Squats",
                 description: "Bodyweight squats to target the lower body, particularly the quadriceps, hamstrings, and glutes.",
-                exerciseStructure: {
-                    sets: 3,
-                    estimatedDuration: "5m", // in minutes
-                    reps: [
-                        {
-                            repetitionType: "reps",
-                            numberOfReps: 20,
-                            repDuration: "2s", // assuming 2 seconds per rep
-                        }
-                    ],
-                    id: "ex3",
-                },
+                sets: "3",
+                estimatedDuration: "5m", // in minutes
+                reps: [
+                    {
+                        repetitionType: "reps",
+                        numberOfReps: 20,
+                        repDuration: "2s", // assuming 2 seconds per rep
+                    }
+                ],
                 imgUrl: "https://example.com/squats.png",
                 urlExample: "https://example.com/squats-example.mp4",
             },
@@ -75,17 +66,14 @@ export const newProgram = (): FitnessPrograms[number] => {
                 id: "4",
                 name: "Plank",
                 description: "Plank exercise to strengthen the core, including the abdominals and lower back.",
-                exerciseStructure: {
-                    sets: 3,
-                    estimatedDuration: "5m", // total duration for all sets in minutes
-                    reps: [
-                        {
-                            repetitionType: "time",
-                            duration: "60s", // holding the plank for 60 seconds
-                        }
-                    ],
-                    id: "ex4",
-                },
+                sets: "3",
+                estimatedDuration: "5m", // total duration for all sets in minutes
+                reps: [
+                    {
+                        repetitionType: "time",
+                        duration: "60s", // holding the plank for 60 seconds
+                    }
+                ],
                 imgUrl: "https://example.com/plank.png",
                 urlExample: "https://example.com/plank-example.mp4",
             },
@@ -93,32 +81,29 @@ export const newProgram = (): FitnessPrograms[number] => {
                 id: "5",
                 name: "Lunges",
                 description: "Forward lunges to work the legs and improve balance.",
-                exerciseStructure: {
-                    sets: 3,
-                    estimatedDuration: "5m", // in minutes
-                    reps: [
-                        {
-                            repetitionType: "reps",
-                            numberOfReps: 12, // per leg
-                            repDuration: "2s", // assuming 2 seconds per rep
-                        }
-                    ],
-                    id: "ex5",
-                },
+                sets: "3",
+                estimatedDuration: "5m", // in minutes
+                reps: [
+                    {
+                        repetitionType: "reps",
+                        numberOfReps: 12, // per leg
+                        repDuration: "2s", // assuming 2 seconds per rep
+                    }
+                ],
                 imgUrl: "https://example.com/lunges.png",
                 urlExample: "https://example.com/lunges-example.mp4",
             },
         ],
     };
     
-    return  program1
+    return [program1]
 } 
 
 const TrainerPrograms: React.FC<Props> = ({ navigation }) => {
     const auth = useAuth()
     if (!auth.user) return <View></View>
     
-    const [programs, setPrograms] = useState<FitnessPrograms>([
+    const [programs, setPrograms] = useState<FitnessProgram[]>([
         {
             id: "1",
             name: "Program 1",
@@ -132,7 +117,7 @@ const TrainerPrograms: React.FC<Props> = ({ navigation }) => {
         <View>
             <ScrollView> 
                 <View style={styles.container}>
-                <TouchableOpacity onPress={() => {setPrograms([...programs, newProgram()])}} style={{display: "flex", width: "100%" , flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center", padding: 7, marginTop: 14, borderRadius: 20, backgroundColor: "#7DD3FC", opacity: 50, }}>
+                <TouchableOpacity onPress={() => {setPrograms(newProgram())}} style={{display: "flex", width: "100%" , flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center", padding: 7, marginTop: 14, borderRadius: 20, backgroundColor: "#7DD3FC", opacity: 50, }}>
                     <Text style={{ fontSize: 16, fontWeight: "700", color: "#082F49" }}>Add Program</Text>
                     <Ionicons name="add-circle" size={24} color="#082F49" />
                 </TouchableOpacity>

@@ -1,13 +1,13 @@
 import { useState } from "react";
-import { FitnessPrograms } from "../types";
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from "react-native";
 import { RenderClock } from "./RenderClock";
+import { Duration, FitnessProgram } from "../types";
 
 /*
 This component is used to render the program details for the trainer
 To avoid fetching the program each time it change state 
 */
-const RenderProgram = ({ program }: { program: FitnessPrograms[number] }) => {
+const RenderProgram = ({ program }: { program: FitnessProgram }) => {
 
     const [exerciseIndex, setExerciseIndex] = useState(0);
 
@@ -33,15 +33,15 @@ const RenderProgram = ({ program }: { program: FitnessPrograms[number] }) => {
             <Text style={styles.exerciseTitle}>{exercise.name}</Text>
             <Text style={styles.exerciseDescription}>{exercise.description}</Text>
 
-            {exercise.exerciseStructure.reps[0]?.repetitionType === "time" ? (
+            {exercise?.reps && exercise?.reps[0]?.repetitionType === "time" ? (
                 <View style={styles.exerciseDetail}>
                     <Text style={styles.exerciseSet}>Time</Text>
-                    <RenderClock duration={exercise.exerciseStructure.reps[0].duration} styleText={styles.exerciseDuration} />
+                    <RenderClock duration={exercise?.reps[0].duration as Duration ?? "0s"} styleText={styles.exerciseDuration} />
                 </View>
             ) : (
                 <View style={styles.exerciseDetail}>
-                    <Text style={styles.exerciseSet}>{exercise.exerciseStructure.sets} Set</Text>
-                    <Text style={styles.exerciseDuration}>{exercise.exerciseStructure.reps[0].numberOfReps}</Text>
+                    <Text style={styles.exerciseSet}>{exercise?.sets} Set</Text>
+                    <Text style={styles.exerciseDuration}>{exercise?.reps && exercise?.reps[0]?.repetitionType}</Text>
                 </View>
             )}
         </View>

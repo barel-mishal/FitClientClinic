@@ -12,7 +12,7 @@ const TrainerProgram: React.FC<Props> = ({ navigation, route: { params: {id}} })
     const auth = useAuth();
     if (!auth.user) return <View></View>;
     const program = databaseMethods.getTrainerProgram(auth.user.uid, id);
-    return <RenderProgram program={program} />
+    return <RenderProgram program={program[0]} />
 }
 
 
