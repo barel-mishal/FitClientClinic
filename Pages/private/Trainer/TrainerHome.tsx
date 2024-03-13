@@ -14,6 +14,7 @@ const TrainerHome: React.FC<Props> = ({ navigation }) => {
             <Button title="Appointments" onPress={() => navigation.navigate('TrainerAppointments')} />
             <Button title="Clients" onPress={() => navigation.navigate('TrainerClients')} />
             <Button title="Programs" onPress={() => navigation.navigate('TrainerPrograms')} />
+            <Button title="Create Program" onPress={() => navigation.navigate('TrainerCreateProgram')} />
         </View>
     );
 }

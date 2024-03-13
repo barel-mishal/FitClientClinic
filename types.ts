@@ -29,51 +29,6 @@ type AppointmentAction = {
     getAppointments: () => Appointments;
 }
 
-// ----------------- Fitness Program -----------------
-export type Duration = `${number}m` | `${number}h` | `${number}s`;
-
-const RepetitionByTimeSchema = v.object({
-    repetitionType: v.literal('time'),
-    duration: v.string([v.regex(/^\d{1,2}[m|h|s]$/)]),
-});
-
-const RepetitionByRepsSchema = v.object({
-    repetitionType: v.literal('reps'),
-    numberOfReps: v.number(),
-    repDuration: v.string(),
-});
-
-const RepetitionSchema = v.union([RepetitionByTimeSchema, RepetitionByRepsSchema]);
-
-const ExerciseStructureSchema = v.object({
-    id: v.string(),
-    sets: v.number(),
-    estimatedDuration: v.string(),
-    reps: v.array(RepetitionSchema),
-});
-
-const ExerciseSchema = v.object({
-    id: v.string(),
-    name: v.string(),
-    description: v.string(),
-    exerciseStructure: ExerciseStructureSchema,
-    imgUrl: v.optional(v.string()),
-    urlExample: v.optional(v.string()),
-});
-
-export type Exercise = v.Input<typeof ExerciseSchema>;
-
-export const FitnessProgramSchema = v.object({
-    id: v.string(),
-    name: v.string(),
-    description: v.string(),
-    duration: v.string(),
-    exercises: v.array(v.partial(ExerciseSchema)),
-    trainerId: v.string(),
-});
-
-export type FitnessProgram = v.Input<typeof FitnessProgramSchema>;
-
 // ----------------- Profile -----------------
 type ProfileDetail = {
     name: string;
@@ -182,6 +137,16 @@ type TrainerForm = PersonalInfo & {
     yearsOfExperience?: number;
 }
 type Certification = string;
+
+export type DeepKeys<T> = T extends object 
+  ? { [K in keyof T]-?: K extends string 
+      ? T[K] extends object 
+        ? `${K}` | `${K}.${DeepKeys<T[K]>}` 
+        : `${K}` 
+      : never 
+    }[keyof T] 
+  : never;
+
 
 
 // ***************** Constants *****************
@@ -336,6 +301,50 @@ export const TrainerProperties = v.intersect([
         programs: v.array(v.partial(TrainerProgram)),
     })
 ]);
+
+
+// ----------------- Fitness Program -----------------
+export type Duration = `${number}m` | `${number}h` | `${number}s`;
+
+const RepetitionByTimeSchema = v.object({
+    repetitionType: v.literal('time'),
+    duration: v.string([v.regex(/^\d{1,2}[m|h|s]$/)]),
+});
+
+const RepetitionByRepsSchema = v.object({
+    repetitionType: v.literal('reps'),
+    numberOfReps: v.number(),
+    repDuration: v.string(),
+    weight: v.optional(NumberSchema),
+});
+
+const RepetitionSchema = v.union([RepetitionByTimeSchema, RepetitionByRepsSchema]);
+
+const ExerciseSchema = v.object({
+    id: v.string(),
+    name: v.string(),
+    description: v.string(),
+    imgUrl: v.optional(v.string()),
+    urlExample: v.optional(v.string()),
+    sets: NumberSchema,
+    estimatedDuration: v.string(),
+    reps: v.array(RepetitionSchema),
+    weight: v.optional(NumberSchema),
+});
+
+export type Exercise = v.Input<typeof ExerciseSchema>;
+
+export const FitnessProgramSchema = v.object({
+    id: v.string(),
+    name: v.string(),
+    description: v.string(),
+    duration: v.string(),
+    exercises: v.array(v.partial(ExerciseSchema)),
+    trainerId: v.string(),
+});
+
+export type FitnessProgram = v.Input<typeof FitnessProgramSchema>;
+
 
 
 // ----------------- User -----------------
