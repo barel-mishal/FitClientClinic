@@ -1,11 +1,12 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect, useRef, useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, Dimensions, StyleProp, TextStyle } from "react-native";
 import { RootStackParamList } from "../../../App";
 import { Entypo } from '@expo/vector-icons';
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 import databaseMethods from "../../../services/databaseMethods";
 import { Duration, FitnessPrograms, formatDuration } from "../../../types";
+import { RenderClock } from "../../../Components/RenderClock";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerProgram'>;
 
@@ -49,7 +50,7 @@ export const RenderProgram = ({ program }: { program: FitnessPrograms[number] })
             {exercise.exerciseStructure.reps[0]?.repetitionType === "time" ? (
                 <View style={styles.exerciseDetail}>
                     <Text style={styles.exerciseSet}>Time</Text>
-                    <RenderClock duration={exercise.exerciseStructure.reps[0].duration} />
+                    <RenderClock duration={exercise.exerciseStructure.reps[0].duration} styleText={styles.exerciseDuration} />
                 </View>
             ) : (
                 <View style={styles.exerciseDetail}>
@@ -75,31 +76,6 @@ export const RenderProgram = ({ program }: { program: FitnessPrograms[number] })
     )
 }
 
-export const RenderClock = ({ duration }: { duration: Duration }) => {
-    const oneSecondRef = useRef(1);
-    const [timeLeft, setTimeLeft] = useState<string>(formatDuration(duration));
-    const intervalRef = useRef<NodeJS.Timeout | null>(null);
-  
-    useEffect(() => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
-      }
-      intervalRef.current = setInterval(() => {
-        setTimeLeft(() => {
-            const time = formatDuration(duration, `${oneSecondRef.current}s`);
-            oneSecondRef.current += 1;
-            return time;
-        });
-      }, 1000);
-      return () => {
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current);
-        }
-      };
-    }, [duration, oneSecondRef.current]);
-  
-    return <Text style={styles.exerciseDuration}>{timeLeft}</Text>
-  }
 
 const styles = StyleSheet.create({
     container: {
