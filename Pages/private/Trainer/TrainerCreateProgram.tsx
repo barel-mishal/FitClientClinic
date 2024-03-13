@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useReducer } from "react";
-import { View, Text, StyleSheet, Button } from 'react-native';
+import { View, Text, StyleSheet, Button, TextInput, ScrollView, TouchableOpacity } from 'react-native';
 import { RootStackParamList } from "../../../App";
 import ImageUpload from "../../../Components/ImageUploadComponent";
 import { FitnessProgram } from "../../../types";
@@ -9,10 +9,11 @@ import { FitnessProgram } from "../../../types";
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerCreateProgram'>;
 
 interface ProgramState {
-  program: Partial<FitnessProgram>
-  currentExerciseIndex: number;
-  updateProgram: (program: Partial<FitnessProgram>, key: keyof FitnessProgram, value: Partial<FitnessProgram[keyof FitnessProgram]>) => Partial<FitnessProgram>;
-  currentExercise: Partial<FitnessProgram['exercises'][number]> | undefined;
+    program: Partial<FitnessProgram>
+    currentExerciseIndex: number;
+    updateProgram: (program: Partial<FitnessProgram>, key: keyof FitnessProgram, value: Partial<FitnessProgram[keyof FitnessProgram]>) => Partial<FitnessProgram>;
+    currentExercise: Partial<FitnessProgram['exercises'][number]> | undefined;
+    errorMessage: string;
 }
 
 const initialState: ProgramState = { 
@@ -22,7 +23,8 @@ const initialState: ProgramState = {
         const newProgram = { ...program, [key]: value };
         return newProgram;
     },
-    currentExercise: undefined
+    currentExercise: undefined,
+    errorMessage: ""
 };
 
 type Actions = {
@@ -60,11 +62,45 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
     // if (!auth.user) return <View></View>;
     // const program = databaseMethods.getTrainerProgram(auth.user.uid, id);
   const [state, dispatch] = useReducer(reducer, initialState);
+  
 
   return (
     <View style={styles.container}>
       {/* Display current exercise */}
       {/* <ExerciseDetail exercise={state?.program?.exercises[state.currentExerciseIndex]} /> */}
+      <Text style={styles.title}>Signup Client</Text>
+      <Text style={styles.inputTitle}>Your name</Text>
+      <TextInput style={styles.input} placeholder="Name" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "name", value: text}})} value={state.program?.name}/>
+      <Text style={styles.inputTitle}>Description</Text>
+      <TextInput style={styles.input} placeholder="Email" secureTextEntry={false} onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "description", value: text}})}  value={state.program?.description}/>
+      <Text style={styles.inputTitle}>Duration</Text>
+      <ScrollView>
+        <TouchableOpacity onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "duration", value: "2h"}})}>
+          <Text>Hour +</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "duration", value: "1h"}})}>
+          <Text>Hour</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "duration", value: "45m"}})}>
+          <Text>45 minutes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "duration", value: "30m"}})}>
+          <Text>30 minutes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "duration", value: "20m"}})}>
+          <Text>20 minutes</Text>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "duration", value: "10m"}})}>
+          <Text>10 minutes</Text>
+        </TouchableOpacity>
+      </ScrollView>
+      <Text style={styles.inputTitle}>Password</Text>
+      <TextInput style={styles.input} placeholder="Password" secureTextEntry={true} onChangeText={text => handleChange('password', text)} value={form?.password}/>
+      <Text style={styles.inputTitle}>Trainer ID (Phone Number)</Text>
+      <TextInput style={styles.input} placeholder="Trainer ID (if any)" onChangeText={text => handleChange('trainerId', text)} value={form?.trainerId}/>
+      <Text style={styles.errorMessage}>{state.errorMessage}</Text>
+
+      <Button title="Signup" onPress={handleSubmit} />
 
       {/* Navigation buttons */}
       <View style={styles.navigation}>
@@ -83,6 +119,23 @@ const styles = StyleSheet.create({
   navigation: {
     // styles for your navigation buttons
   },
+    title: {
+        // styles for your title
+    },
+    input: {
+        borderWidth: 1,
+        borderColor: '#ddd',
+        padding: 10,
+        borderRadius: 6,
+    },
+    errorMessage: {
+        color: 'red',
+        height: 17,
+    },
+    inputTitle: {
+        fontSize: 16,
+        fontWeight: 'bold',
+    }
 });
 
 
