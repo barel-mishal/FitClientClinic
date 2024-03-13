@@ -3,7 +3,7 @@ import React, { useReducer } from "react";
 import { View, Text, StyleSheet, Button, TextInput, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { RootStackParamList } from "../../../App";
 import ImageUpload from "../../../Components/ImageUploadComponent";
-import { FitnessProgram } from "../../../types";
+import { FitnessProgram, createRandomId, uniqueId } from "../../../types";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerCreateProgram'>;
@@ -11,18 +11,16 @@ type Props = NativeStackScreenProps<RootStackParamList, 'TrainerCreateProgram'>;
 type Exercise = FitnessProgram['exercises'][number];
 interface ProgramState {
     program: Partial<FitnessProgram>
-    currentExerciseIndex: number;
     currentExercise: Partial<Exercise> | undefined;
     errorMessage: string;
     updateProgram: (program: Partial<FitnessProgram>, key: keyof FitnessProgram, value: Partial<FitnessProgram[keyof FitnessProgram]>) => Partial<FitnessProgram>;
     createNewExercise: (program: Partial<FitnessProgram>, exercise: Partial<Exercise>) => Partial<FitnessProgram>;
-    newExercise: Partial<Exercise>;
+    newExercise: (id: string) => Partial<Exercise>;
     updateExercises: (exercises: Partial<Exercise>[], key: keyof Exercise, value: Partial<Exercise[keyof Exercise]>, index: number) => Partial<Exercise>[];
 }
 
 const initialState: ProgramState = { 
     program: {}, 
-    currentExerciseIndex: 0,
     currentExercise: undefined,
     errorMessage: "",
     updateProgram: (program: Partial<FitnessProgram>, key: keyof FitnessProgram, value: Partial<FitnessProgram[keyof FitnessProgram]>) => {
@@ -43,7 +41,7 @@ const initialState: ProgramState = {
         });
         return newExercises;
     },
-    newExercise: {},
+    newExercise: (id: string) => ({id}),
 };
 
 type Actions = {
@@ -57,7 +55,7 @@ type Actions = {
     type: "ADD_EXERCISE";
 } | {
     type: "UPDATE_EXERCISE";
-    payload: {key: keyof Exercise, value: Exercise[keyof Exercise]};
+    payload: {key: keyof Exercise, value: Exercise[keyof Exercise], index: number};
 };
 function reducer(state: ProgramState, action: Actions) {
   switch (action.type) {
@@ -66,7 +64,14 @@ function reducer(state: ProgramState, action: Actions) {
     case 'PREV_EXERCISE':
       return state;
     case 'ADD_EXERCISE':
-        return state;
+        const isExercises = state.program?.exercises
+        const ids = isExercises ? isExercises.map(e => e.id ?? "") : [];
+        const id = uniqueId(ids);
+        const newExercise = state.newExercise(id);
+        return {
+            ...state,
+            program: state.createNewExercise(state.program, newExercise)
+        };
     case 'UPDATE_PROGRAM':
       // TODO: Implement functionality to add a new exercise
       return {
@@ -79,7 +84,7 @@ function reducer(state: ProgramState, action: Actions) {
         ...state,
         program: {
           ...state.program,
-          exercises: state.updateExercises(newExercises, action.payload.key, action.payload.value, state.currentExerciseIndex)
+          exercises: state.updateExercises(newExercises, action.payload.key, action.payload.value, action.payload.index)
         }
       }
     default:
@@ -93,16 +98,14 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
     // const program = databaseMethods.getTrainerProgram(auth.user.uid, id);
   const [state, dispatch] = useReducer(reducer, initialState);
   const handleSubmit = () => {console.log(state.program)};
-  const isLastExercise = state?.program?.exercises?.length ? (state?.program?.exercises?.length === state.currentExerciseIndex) : true;
   
 
   return (
     <ScrollView style={styles.container}>
       {/* Display current exercise */}
       {/* <ExerciseDetail exercise={state?.program?.exercises[state.currentExerciseIndex]} /> */}
-      <View>
+      <View style={styles.containerGapPaading}>
       <Button title="Submit Program" onPress={handleSubmit} />
-        <Text style={styles.title}>Signup Client</Text>
         <Text style={styles.inputTitle}>Your name</Text>
         <TextInput style={styles.input} placeholder="Name" onChangeText={text => dispatch({type: "UPDATE_PROGRAM", payload: {key: "name", value: text}})} value={state.program?.name}/>
         <Text style={styles.inputTitle}>Description</Text>
@@ -132,26 +135,34 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
       {/* Navigation buttons */}
       <View>
         <View style={styles.navigation}>
-          {!isLastExercise ? <Button title="Back" onPress={() => dispatch({ type: 'PREV_EXERCISE' })} /> : <View></View>}
-          {isLastExercise
-              ? 
+          {state?.program?.exercises?.length ? <Button title="Back" onPress={() => dispatch({ type: 'PREV_EXERCISE' })} /> : <View></View>}
               <Button title="Add New Exercise" onPress={() => dispatch({ type: 'ADD_EXERCISE' })} /> 
-              : <Button title="Next" onPress={() => dispatch({ type: 'NEXT_EXERCISE' })} />}
         </View>
       </View>
-      <View>
+      <View style={styles.containerGapPaading}>
         {state.program?.exercises?.map((exercise, index) => {
           return (
-            <View key={index}>
-              <Text style={styles.title}>{exercise.name}</Text>
-              <Text>{exercise.description}</Text>
-              <ImageUpload /> {/* imageUrl={exercise.imgUrl} />  Utilize your existing ImageUpload component */}
+            <View key={exercise.id} style={styles.containerGapPaading}>
+              <Text style={styles.inputTitle}>Name</Text>
+              <TextInput style={styles.input} placeholder="Jog Warm-up" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "name", value: text, index}})} value={exercise.name?.toString()}/>
+              <Text style={styles.inputTitle}>Description</Text>
+              <TextInput style={styles.input} placeholder="Description" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "description", value: text, index}})} value={exercise.description?.toString()}/>
+              <Text style={styles.inputTitle}>Image</Text>
+              <ImageUpload /> 
               <Text style={styles.inputTitle}>Weight</Text>
-              <TextInput style={styles.input} placeholder="Weight" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "estimatedDuration", value: text}})} value={exercise.weight?.toString()}/>
-              <Text style={styles.inputTitle}>Reps</Text>
-              {/* <TextInput style={styles.input} placeholder="Reps" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "reps", value: text}})} value={exercise.reps}/> */}
+              <TextInput style={styles.input} placeholder="Weight" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "weight", value: text, index}})} value={exercise.weight?.toString()}/>
               <Text style={styles.inputTitle}>Sets</Text>
-              <TextInput style={styles.input} placeholder="Sets" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "sets", value: text}})} value={exercise?.sets ? exercise.sets.toString() : ""}/>
+              <ScrollView horizontal={true} >
+                {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
+                  return (
+                    <TouchableOpacity  key={i} style={{...styles.bigButton, width: 50, height: 50, justifyContent: "center", alignItems: "center"}} onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "sets", value: i.toString(), index}})}>
+                      <Text>{i}</Text>
+                    </TouchableOpacity>
+                  );
+                })}
+              </ScrollView>              
+              <Text style={styles.inputTitle}>Reps</Text>
+              <TextInput style={styles.input} placeholder="Reps" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "reps", value: text, index}})} value={exercise?.reps ? exercise.reps.toString() : ""}/>
             </View>
           );
         })}
@@ -174,6 +185,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     
   },
+  containerGapPaading: {
+    // styles for your container
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 10,
+  },
+
     title: {
         // styles for your title
     },

@@ -169,6 +169,17 @@ const NumberSchema = v.transform(v.string([v.toTrimmed(), v.decimal()]), (input)
     return parseInt(input);
   });
 
+export const createRandomId = () => Math.random().toString(36).substring(7);
+
+export const uniqueId = (ids: string[]) => {
+    let id = createRandomId();
+    while (ids.includes(id)) {
+        id = createRandomId();
+    }
+    return id;
+
+}
+
 export type StringfyValues<T> = {
     [P in keyof T]: string;
 }

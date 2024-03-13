@@ -6,14 +6,14 @@ import { RootStackParamList } from "../../../App";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 import TrainerProgramCard from "../../../Components/TrainerProgramCard";
-import { FitnessProgram } from "../../../types";
+import { FitnessProgram, createRandomId } from "../../../types";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerPrograms'>;
 
 export const newProgram = (): FitnessProgram[] => {
     const program1: FitnessProgram = {
-        id: Math.random().toString(36).substring(7),
+        id: createRandomId(),
         name: "Total Body Workout",
         duration: '60m', // assuming total duration in minutes
         trainerId: "1",
