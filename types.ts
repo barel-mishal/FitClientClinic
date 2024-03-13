@@ -32,53 +32,47 @@ type AppointmentAction = {
 // ----------------- Fitness Program -----------------
 export type Duration = `${number}m` | `${number}h` | `${number}s`;
 
-type RepetitionByTime = {
-    repetitionType: 'time';
-    duration: Duration;
-}
+const RepetitionByTimeSchema = v.object({
+    repetitionType: v.literal('time'),
+    duration: v.string([v.regex(/^\d{1,2}[m|h|s]$/)]),
+});
 
-type RepetitionByReps = {
-    repetitionType: 'reps';
-    numberOfReps: number;
-    repDuration: Duration;
-}
+const RepetitionByRepsSchema = v.object({
+    repetitionType: v.literal('reps'),
+    numberOfReps: v.number(),
+    repDuration: v.string(),
+});
 
-type Repetition = (RepetitionByTime | RepetitionByReps);
+const RepetitionSchema = v.union([RepetitionByTimeSchema, RepetitionByRepsSchema]);
 
-type ExerciseStructure = {
-    id: string;
-    sets: number;
-    estimatedDuration: Duration;
-    reps: Repetition[]
-};
+const ExerciseStructureSchema = v.object({
+    id: v.string(),
+    sets: v.number(),
+    estimatedDuration: v.string(),
+    reps: v.array(RepetitionSchema),
+});
 
-type Exercise = {
-    id: string;
-    name: string;
-    description: string;
-    exerciseStructure: ExerciseStructure;
-    imgUrl?: string;
-    urlExample?: string;
-}
+const ExerciseSchema = v.object({
+    id: v.string(),
+    name: v.string(),
+    description: v.string(),
+    exerciseStructure: ExerciseStructureSchema,
+    imgUrl: v.optional(v.string()),
+    urlExample: v.optional(v.string()),
+});
 
-type FitnessProgram = {
-    id: string;
-    name: string;
-    description: string;
-    duration: Duration
-    exercises: Exercise[];
-    trainerId: string;
-}
+export type Exercise = v.Input<typeof ExerciseSchema>;
 
-export type FitnessPrograms = FitnessProgram[];
+export const FitnessProgramSchema = v.object({
+    id: v.string(),
+    name: v.string(),
+    description: v.string(),
+    duration: v.string(),
+    exercises: v.array(v.partial(ExerciseSchema)),
+    trainerId: v.string(),
+});
 
-type FitnessProgramAction = {
-    deleteFitnessProgram: (id: string) => void;
-    updateFitnessProgram: (id: string, fitnessProgram: FitnessProgram) => void;
-    addFitnessProgram: (fitnessProgram: FitnessProgram) => void;
-    getFitnessProgram: (id: string) => FitnessProgram;
-    getFitnessPrograms: () => FitnessPrograms;
-}
+export type FitnessProgram = v.Input<typeof FitnessProgramSchema>;
 
 // ----------------- Profile -----------------
 type ProfileDetail = {

@@ -2,7 +2,6 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import AuthProvider, { useAuth } from './Components/ContextComopnents/AuthContext';
 import { PrivateNavigator, PublicNavigator } from './Pages/Routes';
-import { FitnessPrograms } from './types';
 
 export type RootStackParamList = {
   // Public
@@ -20,6 +19,7 @@ export type RootStackParamList = {
   TrainerClients: undefined;
   TrainerPrograms: undefined;
   TrainerProgram: { id: string };
+  TrainerCreateProgram: undefined;
 };
 // דפנה ואלינה באסף ברופא
 // כליל קפלו
