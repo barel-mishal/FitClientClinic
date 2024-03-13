@@ -30,16 +30,20 @@ type AppointmentAction = {
 }
 
 // ----------------- Fitness Program -----------------
-type Duration = `${number}m` | `${number}h` | `${number}s`;
+export type Duration = `${number}m` | `${number}h` | `${number}s`;
 
-type Repetition = ({
+type RepetitionByTime = {
     repetitionType: 'time';
     duration: Duration;
-} | {
+}
+
+type RepetitionByReps = {
     repetitionType: 'reps';
     numberOfReps: number;
     repDuration: Duration;
-});
+}
+
+type Repetition = (RepetitionByTime | RepetitionByReps);
 
 type ExerciseStructure = {
     id: string;
@@ -185,6 +189,22 @@ type TrainerForm = PersonalInfo & {
 }
 type Certification = string;
 
+
+// ***************** Constants *****************
+export const GENDER_OPTIONS = [
+    { label: 'Female', value: 'female' },
+    { label: 'Male', value: 'male' },
+]
+
+export const ACTIVITY_LEVEL_OPTIONS = [
+    { label: 'Sedentary', value: 'sedentary' },
+    { label: 'Lightly Active', value: 'lightly_active' },
+    { label: 'Moderately Active', value: 'moderately_active' },
+    { label: 'Very Active', value: 'very_active' },
+]
+
+export const SIXTY = 60;
+
 // ***************** Util *****************
 const NumberSchema = v.transform(v.string([v.toTrimmed(), v.decimal()]), (input) => {
     return parseInt(input);
@@ -220,19 +240,22 @@ export function isUserLoggedIn(userSchema: UserSchema): userSchema is { user: Fi
     return userSchema.user !== null;
 }
 
+/**
+ * @description - format the duration and substruct the substruct from the duration
+ * @param duration - string with the format "mm:ss"
+ * @param substruct - string with the format "mm:ss"
+ * @returns string with the format "hh:mm"
+ * @example
+ * formatDuration("01:30") // "01:30"
+ * // You can use secound argument also
+ * formatDuration("30:00", "3s") // "29:57"
+*/
+export const formatDuration = (duration: Duration, substruct: `${number}s` = "0s"): `${string}:${string}` => {
+    const s = duration.includes('h') ? parseInt(duration) * SIXTY * SIXTY : duration.includes('m') ? parseInt(duration) * SIXTY : parseInt(duration);
+    const currentSecound = s - parseInt(substruct);
+    return `${Math.floor(currentSecound/60).toString().padStart(2, "0")}:${(currentSecound%60).toString().padEnd(2, "0")}`;
+};
 
-// ***************** Constants *****************
-export const GENDER_OPTIONS = [
-    { label: 'Female', value: 'female' },
-    { label: 'Male', value: 'male' },
-]
-
-export const ACTIVITY_LEVEL_OPTIONS = [
-    { label: 'Sedentary', value: 'sedentary' },
-    { label: 'Lightly Active', value: 'lightly_active' },
-    { label: 'Moderately Active', value: 'moderately_active' },
-    { label: 'Very Active', value: 'very_active' },
-]
 
 // ***************** Schemas *****************
 export const CientProfile = v.object({
@@ -319,6 +342,7 @@ export const TrainerProperties = v.intersect([
         programs: v.array(v.partial(TrainerProgram)),
     })
 ]);
+
 
 // ----------------- User -----------------
 type User = FirebaseAuthTypes.User;
