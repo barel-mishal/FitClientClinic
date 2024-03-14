@@ -27,7 +27,6 @@ export type RootStackParamList = {
 // npx expo prebuild --platform ios - this is to prebuild the app for ios
 
 function MyNavigator() {
-  console.log('MyNavigatorfdfkjdfkdjf');
   const authUser = useAuth();
   return (
       <>
@@ -39,7 +38,6 @@ function MyNavigator() {
 }
 
 export default function App() {
-  console.log('App');
   
   return (
     <AuthProvider>

@@ -13,7 +13,6 @@ type Props = {
 
 const TrainerProgramCard: React.FC<Props> = ({ program, navigation }) => {
     const auth = useAuth();
-    console.log('auth TrainerProgramCard', auth);
     if (!auth?.user) return <View></View>;
     
     return (

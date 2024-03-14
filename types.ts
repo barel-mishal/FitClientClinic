@@ -228,25 +228,23 @@ export const formatDuration = (duration: Duration, substruct: `${number}s` = "0s
 
 
 // ***************** Schemas *****************
-export const CientProfile = v.transform(v.object({
+export const ClientProfile = v.object({
     name: v.string(),
     email: v.string(),
     phone: NumberSchema,
     role: v.literal('client'),
     trainerPhone: v.optional(NumberSchema),
     userId: v.optional(v.string()),
-}), (input) => {
-   const id = input.trainerPhone ? databaseMethods.validateTrainerPhoneAndGetId(input.trainerPhone) : undefined;
-   if (id) return { ...input, trainerId: id };
-   return input;
-}) ;
+    trainerId: v.optional(v.string()),
+})
 
-export type TypeCientProfile = v.Input<typeof CientProfile>;
-export type OutputCientProfile = v.Output<typeof CientProfile>;
+
+export type TypeCientProfile = v.Input<typeof ClientProfile>;
+export type OutputCientProfile = v.Output<typeof ClientProfile>;
 
 export const ClientRegisterData = v.merge([
     v.object({password: v.string([v.minLength(6)])}),
-    CientProfile
+    ClientProfile
 ]);
 
 export type InputClientRegister = v.Input<typeof ClientRegisterData>;
@@ -276,7 +274,7 @@ export const ClientPersonalFitnessInfo = v.object({
 export type TypeClientPersonalFitnessInfo = v.Input<typeof ClientPersonalFitnessInfo>;
 
 export const ClientProperties = v.intersect([
-    v.partial(CientProfile), 
+    v.partial(ClientProfile), 
     v.partial(ClientPersonalFitnessInfo)
 ]);
 

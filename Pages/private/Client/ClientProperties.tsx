@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, TextInput, Button, ScrollView, Text, View } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../../App";
-import { makeIssue, GENDER_OPTIONS, ACTIVITY_LEVEL_OPTIONS, InputClientProperties, Client, ClientProperties, ClientPersonalFitnessInfo, CientProfile } from "../../../types";
+import { makeIssue, GENDER_OPTIONS, ACTIVITY_LEVEL_OPTIONS, InputClientProperties, Client, ClientPersonalFitnessInfo, ClientProfile } from "../../../types";
 import databaseMethods from "../../../services/databaseMethods";
 import * as v from "valibot";
 import RadioButton from "../../../Components/RadioComponent";
@@ -36,21 +36,24 @@ const SignupClient = ({ navigation }: Props) => {
     injuries: a.data?.injuries,
   });
 
-
   // Function to handle input change
   const handleChange = (name: string, value: string | [string, string, string] | number) => {
     setForm(prev => ({ ...(prev ?? {}), [name]: value }));
   };
 
-
-
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const parsed = v.safeParse(v.omit(ClientPersonalFitnessInfo, ["MedicalCertificate"]), form);
-    const parsed2 = v.safeParse(v.omit(CientProfile, ["role"]), form);
-
+    const parsed2 = v.safeParse(v.omit(ClientProfile, ["role"]), form);
+    
     if (parsed.success && parsed2.success) {
+      const id = parsed2?.output?.trainerPhone 
+      ? await databaseMethods.validateTrainerPhoneAndGetId(parsed2?.output?.trainerPhone) 
+      : undefined;      
       databaseMethods.addOrUpdateClientFitnessInfo(parsed.output);
-      databaseMethods.updateClientProfile(a.user, {...parsed2.output, role: "client"});
+      const result = id 
+      ? {...parsed2.output, role: "client" as Client, trainerId: id} 
+      : {...parsed2.output, role: "client" as Client};
+      databaseMethods.updateClientProfile(a.user, result);
     } else if (!parsed.success) {
       setMessage(makeIssue(parsed.issues))
     } else if (!parsed2.success) {

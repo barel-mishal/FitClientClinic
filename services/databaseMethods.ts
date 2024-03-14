@@ -89,6 +89,7 @@ async function validateTrainerPhoneAndGetId(phone: number) {
           return trainerDoc.id;  // Return the trainer's ID
       } else {
           console.log("Phone number not found among trainers");
+          
           return false;  // Return false if no trainer is found
       }
   } catch (error) {
