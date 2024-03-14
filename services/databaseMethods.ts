@@ -15,6 +15,7 @@ const databaseMethods = {
   addOrUpdateClientFitnessInfo,
   getUserProperties,
   getTrainerProgram,
+  validateTrainerPhoneAndGetId,
 }
 
 async function login(email: string, password: string) {
@@ -50,11 +51,7 @@ async function register(form: OutputClientRegister | OutputTrainerRegister) {
 async function createClientProfile(user: FirebaseAuthTypes.User, form: OutputClientRegister) {
   try {
       await firestore().collection<OutputCientProfile & { userId: string }>('profile').doc(user.uid).set({
-          name: form.name,
-          role: form.role,
-          email: form.email,
-          phone: form.phone,
-          trainerId: form.trainerId,
+          ...form,
           userId: user.uid,
       });
   } catch (error) {
@@ -67,19 +64,40 @@ async function createClientProfile(user: FirebaseAuthTypes.User, form: OutputCli
 async function updateClientProfile(user: FirebaseAuthTypes.User, form: OutputCientProfile) {
   try {
       await firestore().collection<OutputCientProfile & { userId: string }>('profile').doc(user.uid).set({
-          name: form.name,
-          role: form.role,
-          email: form.email,
-          phone: form.phone,
-          trainerId: form.trainerId,
+          ...form,  
           userId: user.uid,
       });
+      console.log("Profile updated successfully");
   } catch (error) {
       console.error("Error adding profile: ", error);
       // Separating user cleanup into its own function for clarity.
       await cleanupUser(user);
   }
 }
+
+async function validateTrainerPhoneAndGetId(phone: number) {
+  try {
+      // Query profiles where the role is 'trainer' and the phone number matches the input
+      const docRef = firestore().collection('profile').where('role', '==', 'trainer').where('phone', '==', phone);
+      const snapshot = await docRef.get();
+
+      // Check if any documents are found
+      if (!snapshot.empty) {
+          // Assuming phone numbers are unique, we take the first document
+          const trainerDoc = snapshot.docs[0];
+          console.log(`Phone number belongs to a trainer with ID: ${trainerDoc.id}`);
+          return trainerDoc.id;  // Return the trainer's ID
+      } else {
+          console.log("Phone number not found among trainers");
+          return false;  // Return false if no trainer is found
+      }
+  } catch (error) {
+      console.error("Error validating trainer phone number and getting ID: ", error);
+      throw error;
+  }
+}
+
+
 
 async function createTrainerProfile(user: FirebaseAuthTypes.User, form: TypeTrainerProfile) {
   try {

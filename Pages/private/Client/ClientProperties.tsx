@@ -21,8 +21,8 @@ const SignupClient = ({ navigation }: Props) => {
   const [form, setForm] = useState<Partial<InputClientProperties>>({
     name: a.data.name,
     email: a.data.email,
-    phone: a.data.phone,
-    trainerId: a.data?.trainerId,
+    phone: a.data.phone?.toString(),
+    trainerPhone: a.data?.trainerPhone?.toString(),
     weight: a.data?.weight,
     age: a.data?.age,
     height: a.data?.height,
@@ -42,17 +42,20 @@ const SignupClient = ({ navigation }: Props) => {
     setForm(prev => ({ ...(prev ?? {}), [name]: value }));
   };
 
+
+
   const handleSubmit = () => {
     const parsed = v.safeParse(v.omit(ClientPersonalFitnessInfo, ["MedicalCertificate"]), form);
     const parsed2 = v.safeParse(v.omit(CientProfile, ["role"]), form);
 
-
     if (parsed.success && parsed2.success) {
       databaseMethods.addOrUpdateClientFitnessInfo(parsed.output);
       databaseMethods.updateClientProfile(a.user, {...parsed2.output, role: "client"});
-    } else setMessage(makeIssue(parsed.issues));
-
-
+    } else if (!parsed.success) {
+      setMessage(makeIssue(parsed.issues))
+    } else if (!parsed2.success) {
+      setMessage(makeIssue(parsed2.issues))
+    }
   };
 
   const updateGoal = (index: number, text: string) => {
@@ -79,7 +82,7 @@ const SignupClient = ({ navigation }: Props) => {
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Trainer ID (Phone Number)</Text>
-          <TextInput style={styles.input} placeholder="Trainer ID (if any)" onChangeText={text => handleChange('trainerId', text)} value={form?.trainerId}/>
+          <TextInput style={styles.input} placeholder="Trainer ID (if any)" onChangeText={text => handleChange('trainerPhone', text)} value={form?.trainerPhone}/>
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Weight (kg)</Text>

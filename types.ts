@@ -1,6 +1,6 @@
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import * as v from "valibot";
-import { ReturnUserProerties } from './services/databaseMethods';
+import databaseMethods, { ReturnUserProerties } from './services/databaseMethods';
 
 
 
@@ -228,14 +228,18 @@ export const formatDuration = (duration: Duration, substruct: `${number}s` = "0s
 
 
 // ***************** Schemas *****************
-export const CientProfile = v.object({
+export const CientProfile = v.transform(v.object({
     name: v.string(),
     email: v.string(),
     phone: NumberSchema,
     role: v.literal('client'),
-    trainerId: v.optional(NumberSchema),
+    trainerPhone: v.optional(NumberSchema),
     userId: v.optional(v.string()),
-});
+}), (input) => {
+   const id = input.trainerPhone ? databaseMethods.validateTrainerPhoneAndGetId(input.trainerPhone) : undefined;
+   if (id) return { ...input, trainerId: id };
+   return input;
+}) ;
 
 export type TypeCientProfile = v.Input<typeof CientProfile>;
 export type OutputCientProfile = v.Output<typeof CientProfile>;
