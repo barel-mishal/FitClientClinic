@@ -23,11 +23,13 @@ const HomeClient: React.FC<Props> = ({ navigation }) => {
     return (
             <View style={{...styles.container, padding: 16}}>
                 <Text style={styles.title}>Wolcome {data?.name}</Text>
-                <CardWrapper>
-                    <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('ClientProperties')}>
-                        <Text style={styles.title2}>Client Properties</Text>
+                <Text style={{fontSize: 20, color: "#082F49"}}>Where focus goes energy flows</Text>
+
+                <CardWrapper styleOption={{backgroundColor: "#fdba74"}}>
+                    <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('ClientWorkouts')}>
+                        <Text style={styles.title2}>START A WORKOUT</Text>
                         <Text>
-                            Update your personal information
+                            Start a new workout or continue an existing one
                         </Text>
                     </TouchableOpacity>
                 </CardWrapper>
@@ -37,6 +39,15 @@ const HomeClient: React.FC<Props> = ({ navigation }) => {
                         <Text style={styles.title2}>Client Workouts</Text>
                         <Text>
                             View your workouts and create new ones as well as view your progress
+                        </Text>
+                    </TouchableOpacity>
+                </CardWrapper>
+
+                <CardWrapper>
+                    <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('ClientProperties')}>
+                        <Text style={styles.title2}>Client Properties</Text>
+                        <Text>
+                            Update your personal information
                         </Text>
                     </TouchableOpacity>
                 </CardWrapper>
