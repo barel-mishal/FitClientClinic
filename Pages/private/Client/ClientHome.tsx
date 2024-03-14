@@ -22,23 +22,28 @@ const HomeClient: React.FC<Props> = ({ navigation }) => {
 
     return (
             <View style={{...styles.container, padding: 16}}>
-                    <Text style={styles.title}>Wolcome {data?.name}</Text>
-                
+                <Text style={styles.title}>Wolcome {data?.name}</Text>
                 <CardWrapper>
-                    <TouchableOpacity onPress={() => navigation.navigate('ClientProperties')}>
+                    <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('ClientProperties')}>
                         <Text style={styles.title2}>Client Properties</Text>
+                        <Text>
+                            Update your personal information
+                        </Text>
                     </TouchableOpacity>
                 </CardWrapper>
                 
                 <CardWrapper>
-                    <TouchableOpacity onPress={() => navigation.navigate('ClientWorkouts')}>
+                    <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('ClientWorkouts')}>
                         <Text style={styles.title2}>Client Workouts</Text>
+                        <Text>
+                            View your workouts and create new ones as well as view your progress
+                        </Text>
                     </TouchableOpacity>
                 </CardWrapper>
 
-                <CardWrapper styleOption={{justifyContent: "space-evenly"}}>
-                    <TouchableOpacity onPress={databaseMethods.logout}>
-                        <Text style={styles.title2}>Log Out</Text>
+                <CardWrapper styleOption={{justifyContent: "space-evenly", backgroundColor: "transparent"}}>
+                    <TouchableOpacity style={styles.gap2} onPress={databaseMethods.logout}>
+                        <Text style={styles.alertText}>Log Out</Text>
                     </TouchableOpacity>
                 </CardWrapper>
             </View>
@@ -63,14 +68,20 @@ const styles = StyleSheet.create({
         backgroundColor: "#fffff",
     },
     title: {
-        fontSize: 24,
+        fontSize: 30,
         fontWeight: "bold",
         color: "#082F49",
     },
     title2: {
-        fontSize: 20,
+        fontSize: 24,
         fontWeight: "bold",
         color: "#082F49",
+    },
+    alertText: {
+        color: "#9f1239",
+        fontSize: 16,
+        fontWeight: "400",
+        fontStyle: "italic",
     },
     cardWrapper: {
         display: "flex",
@@ -80,7 +91,17 @@ const styles = StyleSheet.create({
         padding: 16,
         borderRadius: 8,
         backgroundColor: "rgba(125, 211, 252, 0.5)",
+        shadowColor: "#082F49",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
     },
+    gap2: {
+        gap: 16,
+        display: "flex",
+    }
 });
 
 export default HomeClient;
