@@ -6,6 +6,8 @@ import { RootStackParamList } from "../../../App";
 import databaseMethods from "../../../services/databaseMethods";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 import { isUserLoggedIn } from "../../../types";
+import CardWrapper from "../../../Components/CardWrap";
+import styles from "../Both/StyleHome";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ClientHome'>;
 
@@ -61,58 +63,6 @@ const HomeClient: React.FC<Props> = ({ navigation }) => {
     );
 }
 
-export const CardWrapper = (props: { children: React.ReactNode, styleOption?: ViewStyle}) => {
-    return (
-        <View style={{...styles.cardWrapper, ...props.styleOption}}>
-            {props.children}
-        </View>
-    );
-}
 
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: "flex-start",
-        alignItems: "flex-start",
-        gap: 16,
-        backgroundColor: "#fffff",
-    },
-    title: {
-        fontSize: 30,
-        fontWeight: "bold",
-        color: "#082F49",
-    },
-    title2: {
-        fontSize: 24,
-        fontWeight: "bold",
-        color: "#082F49",
-    },
-    alertText: {
-        color: "#9f1239",
-        fontSize: 16,
-        fontWeight: "400",
-        fontStyle: "italic",
-    },
-    cardWrapper: {
-        display: "flex",
-        flexDirection: "row",
-        flexWrap: "wrap",
-        width: "100%",
-        padding: 16,
-        borderRadius: 8,
-        backgroundColor: "rgba(125, 211, 252, 0.5)",
-        shadowColor: "#082F49",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.25,
-    },
-    gap2: {
-        gap: 16,
-        display: "flex",
-    }
-});
 
 export default HomeClient;
