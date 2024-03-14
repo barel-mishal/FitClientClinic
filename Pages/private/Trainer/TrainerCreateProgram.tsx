@@ -4,6 +4,11 @@ import { View, Text, StyleSheet, Button, TextInput, ScrollView, TouchableOpacity
 import { RootStackParamList } from "../../../App";
 import ImageUpload from "../../../Components/ImageUploadComponent";
 import { FitnessProgram, createRandomId, uniqueId } from "../../../types";
+import { MaterialIcons } from '@expo/vector-icons';
+import RadioButton from "../../../Components/RadioComponent";
+import SelectDropdown from "react-native-select-dropdown";
+import { MultiSelect } from "react-native-element-dropdown";
+
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerCreateProgram'>;
@@ -106,10 +111,12 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
       {/* <ExerciseDetail exercise={state?.program?.exercises[state.currentExerciseIndex]} /> */}
       <View style={styles.containerGapPaading}>
       <Button title="Submit Program" onPress={handleSubmit} />
-        <Text style={styles.inputTitle}>Your name</Text>
+        <Text style={styles.inputTitle}>Program Name</Text>
         <TextInput style={styles.input} placeholder="Name" onChangeText={text => dispatch({type: "UPDATE_PROGRAM", payload: {key: "name", value: text}})} value={state.program?.name}/>
         <Text style={styles.inputTitle}>Description</Text>
-        <TextInput style={styles.input} placeholder="Email" secureTextEntry={false} onChangeText={text => dispatch({type: "UPDATE_PROGRAM", payload: {key: "description", value: text}})}  value={state.program?.description}/>
+        <TextInput style={styles.input} placeholder="Description" onChangeText={text => dispatch({type: "UPDATE_PROGRAM", payload: {key: "description", value: text}})} value={state.program?.description}/>
+        <Text style={styles.inputTitle}>Client For Program</Text>
+        <MultiSelect data={[ {label: "Barel"}, {label: "Eli"}, {label: "Omri"} ]} renderSelectedItem={(l) => <Text style={styles.title}>{l.label}</Text>} labelField={"label"} valueField="label" onChange={() => {}}/>
         <Text style={styles.inputTitle}>Duration</Text>
         <ScrollView horizontal={true} style={styles.horizantalBlocks}>
           <TouchableOpacity style={styles.bigButton} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "2h"}})}>
@@ -151,6 +158,8 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
               <ImageUpload /> 
               <Text style={styles.inputTitle}>Weight</Text>
               <TextInput style={styles.input} placeholder="Weight" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "weight", value: text, index}})} value={exercise.weight?.toString()}/>
+              <View>
+
               <Text style={styles.inputTitle}>Sets</Text>
               <ScrollView horizontal={true} >
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
@@ -160,9 +169,18 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
                     </TouchableOpacity>
                   );
                 })}
-              </ScrollView>              
-              <Text style={styles.inputTitle}>Reps</Text>
-              <TextInput style={styles.input} placeholder="Reps" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "reps", value: text, index}})} value={exercise?.reps ? exercise.reps.toString() : ""}/>
+              </ScrollView>  
+              <View style={styles.containerGapPaading}> 
+                <Text style={styles.inputTitle}>Reps</Text>
+                <View style={{...styles.horizantalBlocks, gap: 10}}>
+                    <RadioButton onPress={() => {}} options={[{label: "Time", value: "time"}, {label: "Repition", value: "reps"}]} val={"time"} />
+                </View>
+                </View>
+              </View>
+              <Text style={styles.inputTitle}>Estimated Duration</Text>
+              <TextInput style={styles.input} placeholder="Duration" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "estimatedDuration", value: text, index}})} value={exercise.estimatedDuration?.toString()}/>
+              <Text style={styles.inputTitle}>URL Exercise Example</Text>
+              <TextInput style={styles.input} placeholder="URL" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "urlExample", value: text, index}})} value={exercise.urlExample?.toString()}/>
             </View>
           );
         })}
@@ -184,12 +202,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexDirection: 'row',
     
+    
   },
   containerGapPaading: {
     // styles for your container
     display: 'flex',
     flexDirection: 'column',
     gap: 10,
+    
   },
 
     title: {
@@ -212,11 +232,10 @@ const styles = StyleSheet.create({
     bigButton: {
         backgroundColor: 'lightgrey',
         padding: 10,
-        margin: 10,
+        marginRight: 10,
         borderRadius: 6,
     },
     horizantalBlocks: {
-        backgroundColor: 'lightblue',
         display: 'flex',
         flexDirection: 'row',
         width: Dimensions.get('window').width,
