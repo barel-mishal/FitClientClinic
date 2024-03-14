@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { StyleSheet, TextInput, Button, ScrollView, Text, View } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../../App";
-import { makeIssue, GENDER_OPTIONS, ACTIVITY_LEVEL_OPTIONS, InputClientProperties, Client, ClientProperties, ClientPersonalFitnessInfo } from "../../../types";
+import { makeIssue, GENDER_OPTIONS, ACTIVITY_LEVEL_OPTIONS, InputClientProperties, Client, ClientProperties, ClientPersonalFitnessInfo, CientProfile } from "../../../types";
 import databaseMethods from "../../../services/databaseMethods";
 import * as v from "valibot";
 import RadioButton from "../../../Components/RadioComponent";
@@ -44,8 +44,15 @@ const SignupClient = ({ navigation }: Props) => {
 
   const handleSubmit = () => {
     const parsed = v.safeParse(v.omit(ClientPersonalFitnessInfo, ["MedicalCertificate"]), form);
-    if (parsed.success) databaseMethods.addOrUpdateClientFitnessInfo(parsed.output);
-    else setMessage(makeIssue(parsed.issues));
+    const parsed2 = v.safeParse(v.omit(CientProfile, ["role"]), form);
+
+
+    if (parsed.success && parsed2.success) {
+      databaseMethods.addOrUpdateClientFitnessInfo(parsed.output);
+      databaseMethods.updateClientProfile(a.user, {...parsed2.output, role: "client"});
+    } else setMessage(makeIssue(parsed.issues));
+
+
   };
 
   const updateGoal = (index: number, text: string) => {

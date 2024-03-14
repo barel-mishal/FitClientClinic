@@ -116,12 +116,12 @@ const TrainerPrograms: React.FC<Props> = ({ navigation }) => {
     return (
         <View>
             <ScrollView> 
-                <View style={styles.container}>
+                <View style={styles?.container}>
                 <TouchableOpacity onPress={() => {setPrograms(newProgram())}} style={{display: "flex", width: "100%" , flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center", padding: 7, marginTop: 14, borderRadius: 20, backgroundColor: "#7DD3FC", opacity: 50, }}>
                     <Text style={{ fontSize: 16, fontWeight: "700", color: "#082F49" }}>Add Program</Text>
                     <Ionicons name="add-circle" size={24} color="#082F49" />
                 </TouchableOpacity>
-                {programs.map((m, index) => {
+                {programs?.map((m, index) => {
                     const program = {...m, trainerName: firstCharUpperCase(auth?.data?.name)}
                     return <TrainerProgramCard key={index} program={program} navigation={navigation} />
                 })}

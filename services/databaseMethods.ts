@@ -10,6 +10,7 @@ const databaseMethods = {
 
   },
   getUserProfile,
+  updateClientProfile,
   logout: userSignOut,
   addOrUpdateClientFitnessInfo,
   getUserProperties,
@@ -47,6 +48,23 @@ async function register(form: OutputClientRegister | OutputTrainerRegister) {
 }
 
 async function createClientProfile(user: FirebaseAuthTypes.User, form: OutputClientRegister) {
+  try {
+      await firestore().collection<OutputCientProfile & { userId: string }>('profile').doc(user.uid).set({
+          name: form.name,
+          role: form.role,
+          email: form.email,
+          phone: form.phone,
+          trainerId: form.trainerId,
+          userId: user.uid,
+      });
+  } catch (error) {
+      console.error("Error adding profile: ", error);
+      // Separating user cleanup into its own function for clarity.
+      await cleanupUser(user);
+  }
+}
+
+async function updateClientProfile(user: FirebaseAuthTypes.User, form: OutputCientProfile) {
   try {
       await firestore().collection<OutputCientProfile & { userId: string }>('profile').doc(user.uid).set({
           name: form.name,
@@ -185,11 +203,12 @@ async function getUserClientFitnessInfo(uid: FirebaseAuthTypes.User["uid"]) {
 }
 
 async function getUserProperties(id: FirebaseAuthTypes.User["uid"])  {
+  console.log('getUserProperties');
   const profile = await getUserProfile(id);
   const isClient = profile?.role === "client";
   const fitness = isClient ? await getUserClientFitnessInfo(id) : {};
   const parsed = isClient ?  { ...profile, ...fitness } : { ...profile, appoinments: [], programs: [] };
-  console.log(JSON.stringify(parsed, null, 2))
+  console.log('parsed', parsed);
   if (parsed) return parsed;
   else throw new Error("Error parsing client properties");
 }

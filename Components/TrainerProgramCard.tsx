@@ -2,18 +2,19 @@ import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import { Entypo } from '@expo/vector-icons';
 import { useAuth } from "./ContextComopnents/AuthContext";
-import { FitnessPrograms } from "../types";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../App";
+import { FitnessProgram } from "../types";
 
 type Props = {
-    program: FitnessPrograms[number] & { trainerName: string };
+    program: FitnessProgram & { trainerName: string };
     navigation: NativeStackNavigationProp<RootStackParamList, "TrainerPrograms", undefined>;
 }
 
 const TrainerProgramCard: React.FC<Props> = ({ program, navigation }) => {
     const auth = useAuth();
-    if (!auth.user) return <View></View>;
+    console.log('auth TrainerProgramCard', auth);
+    if (!auth?.user) return <View></View>;
     
     return (
         <TouchableOpacity onPress={() => { navigation.navigate("TrainerProgram", {id: program.id})} }>

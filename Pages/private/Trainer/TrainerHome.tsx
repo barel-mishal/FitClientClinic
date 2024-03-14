@@ -3,6 +3,7 @@ import React from "react";
 
 import { View, Text, StyleSheet, Button } from "react-native";
 import { RootStackParamList } from "../../../App";
+import databaseMethods from "../../../services/databaseMethods";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerHome'>;
@@ -15,6 +16,7 @@ const TrainerHome: React.FC<Props> = ({ navigation }) => {
             <Button title="Clients" onPress={() => navigation.navigate('TrainerClients')} />
             <Button title="Programs" onPress={() => navigation.navigate('TrainerPrograms')} />
             <Button title="Create Program" onPress={() => navigation.navigate('TrainerCreateProgram')} />
+            <Button title="Logout" onPress={() => databaseMethods.logout()} />
         </View>
     );
 }

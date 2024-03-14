@@ -1,7 +1,8 @@
 import React, { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth';
-import { UserSchema } from '../../types';
-import databaseMethods, { ReturnUserProerties } from '../../services/databaseMethods';
+import { Dimensions, Text, View } from 'react-native';
+import { type UserSchema } from '../../types';
+import databaseMethods, { type ReturnUserProerties } from '../../services/databaseMethods';
 
 
 const AuthContext = createContext<UserSchema>({
@@ -25,18 +26,18 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
                     setCurrentUser(user);
                 
                 })
-                .finally(() => {
-                    setLoading(false);
-            });
-            
+                .catch((error) => {console.error('error getting user properties', error);})
         });
-
-        return unsubscribe;
+        setLoading(false);
+        return () => {
+            unsubscribe();
+        } 
     }, []);
+
 
     return (
         <AuthContext.Provider value={(currentUser && profile) ? { user: currentUser, data: profile } : { user: null }}>
-            {!loading && children}
+            {!loading ? children : <View style={{display: "flex", height: Dimensions.get("window").height, width: Dimensions.get("window").width, justifyContent: "center", alignItems: "center"}}><Text >loading...</Text></View>}
         </AuthContext.Provider>
     );
 };
