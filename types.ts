@@ -228,15 +228,21 @@ export const formatDuration = (duration: Duration, substruct: `${number}s` = "0s
 
 
 // ***************** Schemas *****************
-export const ClientProfile = v.object({
-    name: v.string(),
-    email: v.string(),
+export const profileSchema = v.object({
+    name: v.string([v.minLength(2)]),
+    email: v.string([v.email()]),
     phone: NumberSchema,
+    userId: v.optional(v.string()),
+})
+
+export const ClientProfile = v.merge([
+    profileSchema,
+    v.object({
     role: v.literal('client'),
     trainerPhone: v.optional(NumberSchema),
     userId: v.optional(v.string()),
     trainerId: v.optional(v.string()),
-})
+})])
 
 
 export type TypeCientProfile = v.Input<typeof ClientProfile>;
@@ -280,17 +286,14 @@ export const ClientProperties = v.intersect([
 
 export type InputClientProperties = v.Input<typeof ClientProperties>;
 
-export const TrainerProfile = v.object({
-    name: v.string([v.minLength(2)]),
-    email: v.string([v.email()]),
-    phone: NumberSchema,
+export const TrainerProfile = v.merge([
+    profileSchema,
+    v.object({
     role: v.literal('trainer'),
     certification: v.string([v.minLength(1)]),
     yearsOfExperience: NumberSchema,
     userId: v.optional(v.string()),
-})
-
-const ClientWorkout = v.object({})
+})]);
 
 export type TypeTrainerProfile = v.Input<typeof TrainerProfile>
 
@@ -314,6 +317,10 @@ export const TrainerProperties = v.intersect([
         programs: v.array(v.partial(TrainerProgram)),
     })
 ]);
+
+export const ProfileSchema = v.union([ClientProfile, TrainerProfile]);
+export type ProfileSchema = v.Input<typeof ProfileSchema>;
+export type ProfileSchemaOutput = v.Output<typeof ProfileSchema>;
 
 
 // ----------------- Fitness Program -----------------

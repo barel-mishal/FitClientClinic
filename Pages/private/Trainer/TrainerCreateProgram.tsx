@@ -3,11 +3,11 @@ import React, { useReducer } from "react";
 import { View, Text, StyleSheet, Button, TextInput, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { RootStackParamList } from "../../../App";
 import ImageUpload from "../../../Components/ImageUploadComponent";
-import { FitnessProgram, createRandomId, uniqueId } from "../../../types";
-import { MaterialIcons } from '@expo/vector-icons';
+import { FitnessProgram, uniqueId } from "../../../types";
+import { Ionicons } from '@expo/vector-icons';
 import RadioButton from "../../../Components/RadioComponent";
-import SelectDropdown from "react-native-select-dropdown";
 import { MultiSelect } from "react-native-element-dropdown";
+import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 
 
 
@@ -98,49 +98,60 @@ function reducer(state: ProgramState, action: Actions) {
 }
 
 const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
-        // const auth = useAuth();
-    // if (!auth.user) return <View></View>;
-    // const program = databaseMethods.getTrainerProgram(auth.user.uid, id);
+  const auth = useAuth();
+  if (!auth.user || auth.data.role === "client") return <View></View>;
   const [state, dispatch] = useReducer(reducer, initialState);
   const handleSubmit = () => {console.log(state.program)};
+  // get all the clients from the database, and then set the state of the clients to choose from. 
+  // improve the multi select to be able to select multiple clients
+  const clients = auth.data
   
 
   return (
     <ScrollView style={styles.container}>
-      {/* Display current exercise */}
-      {/* <ExerciseDetail exercise={state?.program?.exercises[state.currentExerciseIndex]} /> */}
       <View style={styles.containerGapPaading}>
-          <Button title="Finish Creating A Program" onPress={handleSubmit} />
-        
-        <Text style={styles.inputTitle}>Program Name</Text>
-        <TextInput style={styles.input} placeholder="Name" onChangeText={text => dispatch({type: "UPDATE_PROGRAM", payload: {key: "name", value: text}})} value={state.program?.name}/>
-        <Text style={styles.inputTitle}>Description</Text>
-        <TextInput style={styles.input} placeholder="Description" onChangeText={text => dispatch({type: "UPDATE_PROGRAM", payload: {key: "description", value: text}})} value={state.program?.description}/>
-        <Text style={styles.inputTitle}>Client For Program</Text>
-        <MultiSelect data={[ {label: "Barel"}, {label: "Eli"}, {label: "Omri"} ]} renderSelectedItem={(l) => <Text style={styles.title}>{l.label}</Text>} labelField={"label"} valueField="label" onChange={() => {}}/>
-        <Text style={styles.inputTitle}>Duration</Text>
-        <ScrollView horizontal={true} style={styles.horizantalBlocks}>
-          <TouchableOpacity style={styles.bigButton} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "2h"}})}>
-            <Text>Hour +</Text>
+        <View style={{paddingHorizontal: 10, display: "flex", gap: 30}}>
+          <TouchableOpacity onPress={handleSubmit} style={{display: "flex", width: "100%" , flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center", padding: 12, marginTop: 14, borderRadius: 20, backgroundColor: "#7DD3FC", opacity: 50, }}>
+              <Text style={{ fontSize: 16, fontWeight: "700", color: "#082F49" }}>Finish Creating A Program</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.bigButton} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "1h"}})}>
-            <Text>Hour</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.bigButton} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "45m"}})}>
-            <Text>45 minutes</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.bigButton} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "30m"}})}>
-            <Text>30 minutes</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.bigButton} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "20m"}})}>
-            <Text>20 minutes</Text>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.bigButton} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "10m"}})}>
-            <Text>10 minutes</Text>
-          </TouchableOpacity>
-        </ScrollView>
+          <View style={styles.containerGapPaading}>
+            <Text style={styles.inputTitle}>Program Name</Text>
+            <TextInput style={styles.input} placeholder="Name" onChangeText={text => dispatch({type: "UPDATE_PROGRAM", payload: {key: "name", value: text}})} value={state.program?.name}/>
+          </View>
+          <View style={styles.containerGapPaading}>
+            <Text style={styles.inputTitle}>Description</Text>
+            <TextInput style={styles.input} placeholder="Description" onChangeText={text => dispatch({type: "UPDATE_PROGRAM", payload: {key: "description", value: text}})} value={state.program?.description}/>
+          </View>
+          <View style={styles.containerGapPaading}>
+            <Text style={styles.inputTitle}>Client For Program</Text>
+            <MultiSelect data={[ {label: "Barel"}, {label: "Eli"}, {label: "Omri"} ]} renderSelectedItem={(l) => <Text style={styles.title}>{l.label}</Text>} labelField={"label"} valueField="label" onChange={() => {}}/>
+          </View>
+          <View style={styles.containerGapPaading}>
+            <Text style={styles.inputTitle}>Duration</Text>
+            <ScrollView horizontal={true} style={styles.horizantalBlocks}>
+              <TouchableOpacity style={styles.bigButton} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "2h"}})}>
+                <Text>Hour +</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.bigButton} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "1h"}})}>
+                <Text>Hour</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.bigButton} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "45m"}})}>
+                <Text>45 minutes</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.bigButton} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "30m"}})}>
+                <Text>30 minutes</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.bigButton} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "20m"}})}>
+                <Text>20 minutes</Text>
+              </TouchableOpacity>
+              <TouchableOpacity style={styles.bigButton} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "10m"}})}>
+                <Text>10 minutes</Text>
+              </TouchableOpacity>
+            </ScrollView>
+          </View>
+        </View>
       </View>
-      {/* Navigation buttons */}
+      
       <View>
         <View style={styles.navigation}>
           {state?.program?.exercises?.length ? <Button title="Back" onPress={() => dispatch({ type: 'PREV_EXERCISE' })} /> : <View></View>}
@@ -160,7 +171,6 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
               <Text style={styles.inputTitle}>Weight</Text>
               <TextInput style={styles.input} placeholder="Weight" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "weight", value: text, index}})} value={exercise.weight?.toString()}/>
               <View>
-
               <Text style={styles.inputTitle}>Sets</Text>
               <ScrollView horizontal={true} >
                 {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => {

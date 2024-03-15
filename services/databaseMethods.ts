@@ -1,4 +1,4 @@
-import { OutputClientRegister, OutputTrainerRegister, TypeCientProfile, TypeClientPersonalFitnessInfo, InputClientRegister, InputTrainerRegister, TrainerProperties, TypeTrainerProfile, OutputCientProfile } from '../types';
+import { OutputClientRegister, OutputTrainerRegister, TypeCientProfile, TypeClientPersonalFitnessInfo, InputClientRegister, InputTrainerRegister, TrainerProperties, TypeTrainerProfile, OutputCientProfile, ProfileSchemaOutput } from '../types';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { newProgram } from '../Pages/private/Trainer/TrainerPrograms';
@@ -151,10 +151,10 @@ function handleRegistrationError(error: any) {
 }
 
 
-async function getUserProfile(uid: FirebaseAuthTypes.User["uid"]): Promise<TypeCientProfile | undefined> {
+async function getUserProfile(uid: FirebaseAuthTypes.User["uid"]): Promise<ProfileSchemaOutput | undefined> {
   try {
       // Reference to the user's profile document
-      const docRef = firestore().collection<TypeCientProfile>('profile').doc(uid);
+      const docRef = firestore().collection<ProfileSchemaOutput>('profile').doc(uid);
       const doc = await docRef.get();
 
       if (doc.exists) {
@@ -226,9 +226,9 @@ async function getUserProperties(id: FirebaseAuthTypes.User["uid"])  {
   const profile = await getUserProfile(id);
   const isClient = profile?.role === "client";
   const fitness = isClient ? await getUserClientFitnessInfo(id) : {};
-  const parsed = isClient ?  { ...profile, ...fitness } : { ...profile, appoinments: [], programs: [] };
-  console.log('parsed', parsed);
-  if (parsed) return parsed;
+  const clients = !isClient ? (await firestore().collection('profile').where('trainerId', '==', id).get()).docs.map(doc => doc.data()) : [];
+  if (profile?.role === "trainer") return { ...profile, appoinments: [], programs: [], clients };
+  else if (profile?.role === "client") return { ...profile, ...fitness };
   else throw new Error("Error parsing client properties");
 }
 
