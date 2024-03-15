@@ -1,13 +1,13 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useReducer } from "react";
+import React, { useReducer, useState } from "react";
 import { View, Text, StyleSheet, Button, TextInput, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
 import { RootStackParamList } from "../../../App";
 import ImageUpload from "../../../Components/ImageUploadComponent";
 import { FitnessProgram, uniqueId } from "../../../types";
-import { Ionicons } from '@expo/vector-icons';
 import RadioButton from "../../../Components/RadioComponent";
 import { MultiSelect } from "react-native-element-dropdown";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
+import MultiSelectComponent from "../../../Components/MultiSelect";
 
 
 
@@ -99,12 +99,15 @@ function reducer(state: ProgramState, action: Actions) {
 
 const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
   const auth = useAuth();
-  if (!auth.user || auth.data.role === "client") return <View></View>;
+  if (!auth.user || auth.data.role !== "trainer") return <View></View>;
   const [state, dispatch] = useReducer(reducer, initialState);
   const handleSubmit = () => {console.log(state.program)};
   // get all the clients from the database, and then set the state of the clients to choose from. 
   // improve the multi select to be able to select multiple clients
-  const clients = auth.data
+  const clients = auth.data.clients.filter(c => c.name || c.userId).map(c => ({label: c.name!, value: c.userId!}));
+  const [selected, setSelected] = useState<string[]>([]);
+
+  console.log(clients);
   
 
   return (
@@ -115,16 +118,16 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
               <Text style={{ fontSize: 16, fontWeight: "700", color: "#082F49" }}>Finish Creating A Program</Text>
           </TouchableOpacity>
           <View style={styles.containerGapPaading}>
+            <Text style={styles.inputTitle}>Client For Program</Text>
+            <MultiSelectComponent items={clients} selected={selected} onChange={(i) => setSelected(i)} />
+          </View>
+          <View style={styles.containerGapPaading}>
             <Text style={styles.inputTitle}>Program Name</Text>
             <TextInput style={styles.input} placeholder="Name" onChangeText={text => dispatch({type: "UPDATE_PROGRAM", payload: {key: "name", value: text}})} value={state.program?.name}/>
           </View>
           <View style={styles.containerGapPaading}>
             <Text style={styles.inputTitle}>Description</Text>
             <TextInput style={styles.input} placeholder="Description" onChangeText={text => dispatch({type: "UPDATE_PROGRAM", payload: {key: "description", value: text}})} value={state.program?.description}/>
-          </View>
-          <View style={styles.containerGapPaading}>
-            <Text style={styles.inputTitle}>Client For Program</Text>
-            <MultiSelect data={[ {label: "Barel"}, {label: "Eli"}, {label: "Omri"} ]} renderSelectedItem={(l) => <Text style={styles.title}>{l.label}</Text>} labelField={"label"} valueField="label" onChange={() => {}}/>
           </View>
           <View style={styles.containerGapPaading}>
             <Text style={styles.inputTitle}>Duration</Text>
