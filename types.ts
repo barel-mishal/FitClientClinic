@@ -1,7 +1,5 @@
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import * as v from "valibot";
-import databaseMethods, { ReturnUserProerties } from './services/databaseMethods';
-
 
 
 // ***************** Roles *****************
@@ -310,17 +308,25 @@ const TrinerClientAppointment = v.object({});
 
 const TrainerProgram = v.object({});
 
-export const TrainerProperties = v.intersect([
+export const TrainerProperties = v.merge([
     TrainerProfile,
     v.object({
         appointments: v.array(v.partial(TrinerClientAppointment)),
         programs: v.array(v.partial(TrainerProgram)),
+        clients: v.array(v.partial(ClientProfile)),
     })
 ]);
 
 export const ProfileSchema = v.union([ClientProfile, TrainerProfile]);
 export type ProfileSchema = v.Input<typeof ProfileSchema>;
 export type ProfileSchemaOutput = v.Output<typeof ProfileSchema>;
+
+export const userPropertiesSchema = v.union([ClientProperties, TrainerProperties]);
+export type TypeUserPropertiesSchema = v.Input<typeof userPropertiesSchema>;
+export type ReturnUserProerties = v.Output<typeof userPropertiesSchema>;
+     
+
+
 
 
 // ----------------- Fitness Program -----------------

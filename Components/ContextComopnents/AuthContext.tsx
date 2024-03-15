@@ -1,8 +1,8 @@
 import React, { PropsWithChildren, createContext, useContext, useEffect, useState } from 'react';
 import auth from '@react-native-firebase/auth';
 import { Dimensions, Text, View } from 'react-native';
-import { type UserSchema } from '../../types';
-import databaseMethods, { type ReturnUserProerties } from '../../services/databaseMethods';
+import { ReturnUserProerties, type UserSchema } from '../../types';
+import databaseMethods from '../../services/databaseMethods';
 
 
 const AuthContext = createContext<UserSchema>({

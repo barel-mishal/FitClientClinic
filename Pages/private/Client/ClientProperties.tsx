@@ -16,7 +16,8 @@ type Props = NativeStackScreenProps<RootStackParamList, 'ClientProperties'>;
 
 const SignupClient = ({ navigation }: Props) => {
   const a = useAuth();
-  if (!a.user || a?.data?.role === "trainer") return <Text>Not Authenticated</Text>;
+
+  if (!a.user || a?.data?.role !== "client") return <Text>Not Authenticated</Text>;
   const [message, setMessage] = useState<string | undefined>(undefined);
   const [form, setForm] = useState<Partial<InputClientProperties>>({
     name: a.data.name,

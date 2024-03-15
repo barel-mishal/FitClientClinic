@@ -1,4 +1,4 @@
-import { OutputClientRegister, OutputTrainerRegister, TypeCientProfile, TypeClientPersonalFitnessInfo, InputClientRegister, InputTrainerRegister, TrainerProperties, TypeTrainerProfile, OutputCientProfile, ProfileSchemaOutput } from '../types';
+import { OutputClientRegister, OutputTrainerRegister, TypeCientProfile, TypeClientPersonalFitnessInfo, InputClientRegister, InputTrainerRegister, TrainerProperties, TypeTrainerProfile, OutputCientProfile, ProfileSchemaOutput, ReturnUserProerties } from '../types';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { newProgram } from '../Pages/private/Trainer/TrainerPrograms';
@@ -221,18 +221,25 @@ async function getUserClientFitnessInfo(uid: FirebaseAuthTypes.User["uid"]) {
   }
 }
 
-async function getUserProperties(id: FirebaseAuthTypes.User["uid"])  {
-  console.log('getUserProperties');
+async function getAllTrainerClients(trainerId: string) {
+  try {
+    const clients = await firestore().collection('profile').where('trainerId', '==', trainerId).get();
+    return clients.docs.map(doc => doc.data());
+  } catch (error) {
+    console.error("Error fetching clients: ", error);
+    throw error;
+  }
+}
+
+async function getUserProperties(id: FirebaseAuthTypes.User["uid"]): Promise<ReturnUserProerties | undefined>  {
   const profile = await getUserProfile(id);
   const isClient = profile?.role === "client";
   const fitness = isClient ? await getUserClientFitnessInfo(id) : {};
-  const clients = !isClient ? (await firestore().collection('profile').where('trainerId', '==', id).get()).docs.map(doc => doc.data()) : [];
-  if (profile?.role === "trainer") return { ...profile, appoinments: [], programs: [], clients };
+  const clients = !isClient ? await getAllTrainerClients(id) : [];
+  if (profile?.role === "trainer") return { ...profile, appointments: [], programs: [], clients };
   else if (profile?.role === "client") return { ...profile, ...fitness };
   else throw new Error("Error parsing client properties");
 }
-
-export type ReturnUserProerties = Awaited<ReturnType<typeof getUserProperties>>;
 
 function getTrainerProgram(trainerId: string, programId: string) {
   return newProgram()
