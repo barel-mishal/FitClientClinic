@@ -110,7 +110,8 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
       {/* Display current exercise */}
       {/* <ExerciseDetail exercise={state?.program?.exercises[state.currentExerciseIndex]} /> */}
       <View style={styles.containerGapPaading}>
-      <Button title="Submit Program" onPress={handleSubmit} />
+          <Button title="Finish Creating A Program" onPress={handleSubmit} />
+        
         <Text style={styles.inputTitle}>Program Name</Text>
         <TextInput style={styles.input} placeholder="Name" onChangeText={text => dispatch({type: "UPDATE_PROGRAM", payload: {key: "name", value: text}})} value={state.program?.name}/>
         <Text style={styles.inputTitle}>Description</Text>
