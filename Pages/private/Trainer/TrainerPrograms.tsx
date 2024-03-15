@@ -117,7 +117,7 @@ const TrainerPrograms: React.FC<Props> = ({ navigation }) => {
         <View>
             <ScrollView> 
                 <View style={styles?.container}>
-                <TouchableOpacity onPress={() => {setPrograms(newProgram())}} style={{display: "flex", width: "100%" , flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center", padding: 7, marginTop: 14, borderRadius: 20, backgroundColor: "#7DD3FC", opacity: 50, }}>
+                <TouchableOpacity onPress={() => {navigation.navigate("TrainerCreateProgram")}} style={{display: "flex", width: "100%" , flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center", padding: 7, marginTop: 14, borderRadius: 20, backgroundColor: "#7DD3FC", opacity: 50, }}>
                     <Text style={{ fontSize: 16, fontWeight: "700", color: "#082F49" }}>Add Program</Text>
                     <Ionicons name="add-circle" size={24} color="#082F49" />
                 </TouchableOpacity>
