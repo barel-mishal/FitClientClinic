@@ -11,7 +11,6 @@ const RenderProgram = ({ program }: { program: FitnessProgramOutput }) => {
 
     const [exerciseIndex, setExerciseIndex] = useState(0);
 
-
     const handleNextExercise = () => {
         if (exerciseIndex < program.exercises.length - 1) {
           setExerciseIndex(exerciseIndex + 1);
@@ -33,7 +32,7 @@ const RenderProgram = ({ program }: { program: FitnessProgramOutput }) => {
             <Text style={styles.exerciseTitle}>{exercise.name}</Text>
             <Text style={styles.exerciseDescription}>{exercise.description}</Text>
 
-            {exercise?.reps && exercise?.repetitionType === "time" ? (
+            {exercise?.repetitionType === "time" ? (
                 <View style={styles.exerciseDetail}>
                     <Text style={styles.exerciseSet}>Time</Text>
                     <RenderClock duration={exercise?.time as Duration ?? "0s"} styleText={styles.exerciseDuration} />

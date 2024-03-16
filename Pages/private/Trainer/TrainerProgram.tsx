@@ -11,19 +11,10 @@ type Props = NativeStackScreenProps<RootStackParamList, 'TrainerProgram'>;
 
 const TrainerProgram: React.FC<Props> = ({ navigation, route: { params: {id}} }) => {
     const auth = useAuth();
-    if (!auth.user) return <View></View>;
-    const [program, setProgram] = React.useState<Required<FitnessProgramOutput>[]>(() => {
-        const program: Required<FitnessProgramOutput>[] = [] as unknown as Required<FitnessProgramOutput>[];
-        databaseMethods.getTrainerProgram(auth.user.uid, id).then((p) => {
-            if (p) program.push(p);
-            else return []
-        });
-        return program;
-    });
-    if (program.length === 0) return <View></View>;
-
+    if (!auth.user || auth.data.role !== "trainer") return <View></View>;
+    const p = auth.data.programs.filter((p) => p.id! === id);
     
-    return <RenderProgram program={program[0]} />
+    return <RenderProgram program={p[0] as FitnessProgramOutput} />;
 }
 
 
