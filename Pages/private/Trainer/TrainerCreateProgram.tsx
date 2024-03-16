@@ -3,10 +3,10 @@ import React, { useReducer, useState } from "react";
 import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity, Dimensions, ViewStyle, StyleProp } from 'react-native';
 import { RootStackParamList } from "../../../App";
 import ImageUpload from "../../../Components/ImageUploadComponent";
-import { FitnessProgram, uniqueId } from "../../../types";
+import { FitnessProgram, FitnessProgramSchema, makeIssue, uniqueId } from "../../../types";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
-import MultiSelectComponent from "../../../Components/MultiSelect";
 import RadioButton from "../../../Components/RadioComponent";
+import * as v from "valibot";
 
 
 
@@ -23,8 +23,10 @@ interface ProgramState {
     updateExercises: (exercises: Partial<Exercise>[], key: keyof Exercise, value: Partial<Exercise[keyof Exercise]>, index: number) => Partial<Exercise>[];
 }
 
-const initialState: ProgramState = { 
-    program: {}, 
+const initialState: (id: string) => ProgramState = (trainerId: string) => ({ 
+    program: {
+      trainerId: trainerId
+    }, 
     currentExercise: undefined,
     errorMessage: "",
     updateProgram: (program: Partial<FitnessProgram>, key: keyof FitnessProgram, value: Partial<FitnessProgram[keyof FitnessProgram]>) => {
@@ -47,7 +49,7 @@ const initialState: ProgramState = {
     },
     newExercise: (id: string) => ({id}),
   
-};
+});
 
 type Actions = {
     type: "UPDATE_PROGRAM";
@@ -100,8 +102,14 @@ function reducer(state: ProgramState, action: Actions) {
 const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
   const auth = useAuth();
   if (!auth.user || auth.data.role !== "trainer") return <View></View>;
-  const [state, dispatch] = useReducer(reducer, initialState);
-  const handleSubmit = () => {console.log(state.program)};
+  const [state, dispatch] = useReducer(reducer, initialState(auth.user.uid));
+  const [message, setMessage] = useState<string | undefined>(undefined);
+  const handleSubmit = () => {
+    const parsed = v.safeParse(FitnessProgramSchema, state.program);
+    if (!parsed.success) return setMessage(makeIssue(parsed.issues));
+    console.log(parsed.output)
+    setMessage(undefined);
+  };
   // get all the clients from the database, and then set the state of the clients to choose from. 
   // improve the multi select to be able to select multiple clients
   const clients = auth.data.clients.filter(c => c.name || c.userId).map(c => ({label: c.name!, value: c.userId!}));
@@ -124,6 +132,11 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
     return exercise?.reps === rep ? {...styles.bigButtonSelected, ...squer} : {...styles.bigButton, ...squer};
   } 
 
+  const styleTime = (time: string, id: string) => {
+    const exercise = state.program?.exercises?.find(e => e.id === id);
+    return exercise?.estimatedDuration === time ? styles.bigButtonSelected : styles.bigButton;
+  }
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.containerGapPaading}>
@@ -131,6 +144,8 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
           <TouchableOpacity onPress={handleSubmit} style={{display: "flex", width: "100%" , flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center", padding: 12, marginTop: 14, borderRadius: 20, backgroundColor: "#7DD3FC", opacity: 50, }}>
               <Text style={{ fontSize: 16, fontWeight: "700", color: "#082F49" }}>Save And Close Program</Text>
           </TouchableOpacity>
+          <Text style={styles.errorMessage}>{message}</Text>
+
           <View style={styles.containerGapPaading}>
             <Text style={styles.inputTitle}>Client For Program</Text>
             {/* <MultiSelectComponent items={clients} selected={selected} onChange={(i) => setSelected(i)} /> */}
@@ -222,6 +237,29 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
                   <Text style={styles.inputTitle}>Duration</Text>
                   <TextInput style={styles.input} placeholder="Duration" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "time", value: text, index}})} value={exercise.estimatedDuration?.toString()}/>
                 </View> 
+                <View style={styles.containerGapPaading}>
+                  <Text style={styles.inputTitle}>Duration</Text>
+                  <ScrollView horizontal={true} style={styles.horizantalBlocks}>
+                    <TouchableOpacity style={styleTime("2h", exercise.id!)} onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "time", value: "2h", index}})}>
+                      <Text>Hour +</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styleTime("1h", exercise.id!)} onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "time", value: "1h", index}})}>
+                      <Text>Hour</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styleTime("45m", exercise.id!)} onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "time", value: "45m", index}})}>
+                      <Text>45 minutes</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styleTime("30m", exercise.id!)} onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "time", value: "30m", index}})}>
+                      <Text>30 minutes</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styleTime("20m", exercise.id!)} onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "time", value: "20m", index}})}>
+                      <Text>20 minutes</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={styleTime("10m", exercise.id!)} onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "time", value: "10m", index}})}>
+                      <Text>10 minutes</Text>
+                    </TouchableOpacity>
+                  </ScrollView>
+                </View>
                 </> : <>
                 <View style={{display: "flex", gap: 10}}>
                 <Text style={styles.inputTitle}>Reps</Text>
@@ -239,7 +277,6 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
                 </ScrollView>
                 </View>
                 </>}
-               
                 <Text style={styles.inputTitle}>Weight</Text>
                 <TextInput style={styles.input} placeholder="Weight" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "weight", value: text, index}})} value={exercise.weight?.toString()}/>
                 <Text style={styles.inputTitle}>Estimated Duration</Text>
