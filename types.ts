@@ -344,7 +344,9 @@ const ExerciseSchema = v.object({
     urlExample: v.optional(v.string()),
     sets: NumberSchema,
     estimatedDuration: v.string(),
-    reps: NumberSchema,
+    reps: v.optional(NumberSchema),
+    repetitionType: v.union([v.literal('time'), v.literal('reps')]),
+    time: v.optional(v.string()),
     weight: v.optional(NumberSchema),
 });
 

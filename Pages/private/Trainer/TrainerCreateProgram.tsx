@@ -1,11 +1,9 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useReducer, useState } from "react";
-import { View, Text, StyleSheet, Button, TextInput, ScrollView, TouchableOpacity, Dimensions, ViewStyle, StyleProp } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity, Dimensions, ViewStyle, StyleProp } from 'react-native';
 import { RootStackParamList } from "../../../App";
 import ImageUpload from "../../../Components/ImageUploadComponent";
 import { FitnessProgram, uniqueId } from "../../../types";
-import RadioButton from "../../../Components/RadioComponent";
-import { MultiSelect } from "react-native-element-dropdown";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 import MultiSelectComponent from "../../../Components/MultiSelect";
 
@@ -106,15 +104,19 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
   // get all the clients from the database, and then set the state of the clients to choose from. 
   // improve the multi select to be able to select multiple clients
   const clients = auth.data.clients.filter(c => c.name || c.userId).map(c => ({label: c.name!, value: c.userId!}));
+  
   const [selected, setSelected] = useState<string[]>([]); 
+  
   const styleDuration = (duration: string) => {
     return state.program.duration === duration ? styles.bigButtonSelected : styles.bigButton;
   } 
+  
   const styleSet = (set: string, id: string): StyleProp<ViewStyle> => {
     const exercise = state.program?.exercises?.find(e => e.id === id);
     const squer: StyleProp<ViewStyle> = {width: 50, height: 50, justifyContent: "center", alignItems: "center"};
     return exercise?.sets === set ? {...styles.bigButtonSelected, ...squer} : {...styles.bigButton, ...squer};
   } 
+  
   const styleRep = (rep: string, id: string): StyleProp<ViewStyle> => {
     const exercise = state.program?.exercises?.find(e => e.id === id);
     const squer: StyleProp<ViewStyle> = {width: 50, height: 50, justifyContent: "center", alignItems: "center"};
@@ -130,7 +132,7 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
           </TouchableOpacity>
           <View style={styles.containerGapPaading}>
             <Text style={styles.inputTitle}>Client For Program</Text>
-            <MultiSelectComponent items={clients} selected={selected} onChange={(i) => setSelected(i)} placeholder="Select Client" />
+            <MultiSelectComponent items={clients} selected={selected} onChange={(i) => setSelected(i)} />
           </View>
           <View style={styles.containerGapPaading}>
             <Text style={styles.inputTitle}>Program Name</Text>

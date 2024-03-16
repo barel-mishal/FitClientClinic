@@ -20,12 +20,11 @@ import React, { useState } from 'react';
     items: Item[];
     onChange: (i: string[]) => void;
     selected: string[];
-    placeholder?: string;
   }
 
 
 
-  const MultiSelectComponent: React.FC<Props> = ({items, onChange, selected, placeholder}) => {
+  const MultiSelectComponent: React.FC<Props> = ({items, onChange, selected}) => {
 
     const renderItem = (item: Item) => {
       return (
@@ -48,7 +47,7 @@ import React, { useState } from 'react';
           data={items}
           labelField="label"
           valueField="value"
-          placeholder={placeholder ?? "Select item"}
+          placeholder={"Select client"}
           value={selected}
           search
           searchPlaceholder="Search..."
