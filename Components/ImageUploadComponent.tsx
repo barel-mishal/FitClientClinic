@@ -1,3 +1,4 @@
+import { AntDesign } from '@expo/vector-icons';
 import React from 'react';
 import { Button, View } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
@@ -31,8 +32,9 @@ const ImageUpload = () => {
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Button title="Choose Photo" onPress={handleChoosePhoto} />
+    <View style={{ display: "flex", flexDirection: "row", justifyContent: 'center', alignItems: 'center', borderWidth: 2, borderRadius: 10, borderColor: "#082F49", backgroundColor: "#bae6fd" }}>
+      <AntDesign name="camera" size={24} color="#082F49"  />
+      <Button title="Choose Photo" onPress={handleChoosePhoto} color={"#082F49"} />
     </View>
   );
 };

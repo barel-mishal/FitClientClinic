@@ -168,7 +168,7 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
       </View>
           {state.program?.exercises?.map((exercise, index) => {
             return (
-              <View key={exercise.id} style={{...styles.containerGapPaading, paddingHorizontal: 10, paddingVertical: 15, borderColor: "lightblue", borderStyle: "solid", borderWidth: 2, borderRadius: 20, margin: 10}}>
+              <View key={exercise.id} style={{...styles.containerGapPaading, paddingHorizontal: 10, paddingVertical: 15, borderColor: "#bae6fd", borderStyle: "solid", borderWidth: 2, borderRadius: 20, margin: 10}}>
                 <Text style={styles.inputTitle}>Name</Text>
                 <TextInput style={styles.input} placeholder="Jog Warm-up" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "name", value: text, index}})} value={exercise.name?.toString()}/>
                 <Text style={styles.inputTitle}>Description</Text>
@@ -214,6 +214,7 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     height: Dimensions.get('window').height,
+    backgroundColor: '#f0f9ff',
   },
   navigation: {
     display: 'flex',
@@ -231,7 +232,7 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 1,
-        borderColor: '#ddd',
+        borderColor: '#7dd3fc',
         padding: 10,
         borderRadius: 6,
     },
@@ -243,7 +244,7 @@ const styles = StyleSheet.create({
         fontSize: 16, fontWeight: "700", color: "#082F49" 
     },
     bigButton: {
-        borderColor: 'lightblue',
+        borderColor: '#22d3ee',
         padding: 10,
         color: "#082F49",
         marginRight: 10,
@@ -251,7 +252,7 @@ const styles = StyleSheet.create({
         borderWidth: 2,
     },
     bigButtonSelected: {
-        backgroundColor: 'lightblue',
+        backgroundColor: '#22d3ee',
         padding: 10,
         marginRight: 10,
         borderRadius: 6,
@@ -261,7 +262,7 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         width: Dimensions.get('window').width,
-    },
+    }
 });
   
 
