@@ -47,6 +47,7 @@ const initialState: ProgramState = {
         return newExercises;
     },
     newExercise: (id: string) => ({id}),
+  
 };
 
 type Actions = {
@@ -61,7 +62,7 @@ type Actions = {
 } | {
     type: "UPDATE_EXERCISE";
     payload: {key: keyof Exercise, value: Exercise[keyof Exercise], index: number};
-};
+}
 function reducer(state: ProgramState, action: Actions) {
   switch (action.type) {
     case 'NEXT_EXERCISE':
@@ -113,6 +114,11 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
     const exercise = state.program?.exercises?.find(e => e.id === id);
     const squer: StyleProp<ViewStyle> = {width: 50, height: 50, justifyContent: "center", alignItems: "center"};
     return exercise?.sets === set ? {...styles.bigButtonSelected, ...squer} : {...styles.bigButton, ...squer};
+  } 
+  const styleRep = (rep: string, id: string): StyleProp<ViewStyle> => {
+    const exercise = state.program?.exercises?.find(e => e.id === id);
+    const squer: StyleProp<ViewStyle> = {width: 50, height: 50, justifyContent: "center", alignItems: "center"};
+    return exercise?.reps === rep ? {...styles.bigButtonSelected, ...squer} : {...styles.bigButton, ...squer};
   } 
 
   return (
@@ -183,19 +189,24 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
                       key={i} 
                       style={styleSet(i.toString(), exercise.id!)}
                       onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "sets", value: i.toString(), index}})}>
-                        <Text>{i}</Text>
+                        <Text>{i.toString()}</Text>
                       </TouchableOpacity>
                     );
                   })}
                 </ScrollView>  
-                <View style={styles.containerGapPaading}> 
-                  <Text style={styles.inputTitle}>Reps</Text>
-                  <View style={{...styles.horizantalBlocks, gap: 10}}>
-                      <RadioButton 
-                      onPress={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "reps", value: text, index}})} 
-                      options={[{label: "Time", value: "time"}, {label: "Repition", value: "reps"}]} val={"time"} />
-                  </View>
-                </View>
+                <Text style={styles.inputTitle}>Reps</Text>
+                <ScrollView horizontal={true} >
+                  {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 20, 25].reverse().map((i) => {
+                    return (
+                      <TouchableOpacity  
+                      key={i} 
+                      style={styleRep(i.toString(), exercise.id!)}
+                      onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "reps", value: i.toString(), index}})}>
+                        <Text>{i.toString()}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>  
                 <Text style={styles.inputTitle}>Weight</Text>
                 <TextInput style={styles.input} placeholder="Weight" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "weight", value: text, index}})} value={exercise.weight?.toString()}/>
                 

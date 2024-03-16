@@ -332,19 +332,9 @@ export type ReturnUserProerties = v.Output<typeof userPropertiesSchema>;
 // ----------------- Fitness Program -----------------
 export type Duration = `${number}m` | `${number}h` | `${number}s`;
 
-const RepetitionByTimeSchema = v.object({
-    repetitionType: v.literal('time'),
-    duration: v.string([v.regex(/^\d{1,2}[m|h|s]$/)]),
-});
 
-const RepetitionByRepsSchema = v.object({
-    repetitionType: v.literal('reps'),
-    numberOfReps: v.number(),
-    repDuration: v.string(),
-    weight: v.optional(NumberSchema),
-});
 
-const RepetitionSchema = v.union([RepetitionByTimeSchema, RepetitionByRepsSchema]);
+
 
 const ExerciseSchema = v.object({
     id: v.string(),
@@ -354,7 +344,7 @@ const ExerciseSchema = v.object({
     urlExample: v.optional(v.string()),
     sets: NumberSchema,
     estimatedDuration: v.string(),
-    reps: v.array(RepetitionSchema),
+    reps: NumberSchema,
     weight: v.optional(NumberSchema),
 });
 
