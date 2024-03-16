@@ -175,9 +175,6 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
                 <TextInput style={styles.input} placeholder="Description" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "description", value: text, index}})} value={exercise.description?.toString()}/>
                 <Text style={styles.inputTitle}>Image</Text>
                 <ImageUpload /> 
-                <Text style={styles.inputTitle}>Weight</Text>
-                <TextInput style={styles.input} placeholder="Weight" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "weight", value: text, index}})} value={exercise.weight?.toString()}/>
-                <View>
                 <Text style={styles.inputTitle}>Sets</Text>
                 <ScrollView horizontal={true} >
                   {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
@@ -194,10 +191,14 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
                 <View style={styles.containerGapPaading}> 
                   <Text style={styles.inputTitle}>Reps</Text>
                   <View style={{...styles.horizantalBlocks, gap: 10}}>
-                      <RadioButton onPress={() => {}} options={[{label: "Time", value: "time"}, {label: "Repition", value: "reps"}]} val={"time"} />
-                  </View>
+                      <RadioButton 
+                      onPress={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "reps", value: text, index}})} 
+                      options={[{label: "Time", value: "time"}, {label: "Repition", value: "reps"}]} val={"time"} />
                   </View>
                 </View>
+                <Text style={styles.inputTitle}>Weight</Text>
+                <TextInput style={styles.input} placeholder="Weight" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "weight", value: text, index}})} value={exercise.weight?.toString()}/>
+                
                 <Text style={styles.inputTitle}>Estimated Duration</Text>
                 <TextInput style={styles.input} placeholder="Duration" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "estimatedDuration", value: text, index}})} value={exercise.estimatedDuration?.toString()}/>
                 <Text style={styles.inputTitle}>URL Exercise Example</Text>
