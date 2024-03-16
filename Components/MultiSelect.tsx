@@ -20,11 +20,12 @@ import React, { useState } from 'react';
     items: Item[];
     onChange: (i: string[]) => void;
     selected: string[];
+    placeholder?: string;
   }
 
 
 
-  const MultiSelectComponent: React.FC<Props> = ({items, onChange, selected}) => {
+  const MultiSelectComponent: React.FC<Props> = ({items, onChange, selected, placeholder}) => {
 
     const renderItem = (item: Item) => {
       return (
@@ -34,6 +35,7 @@ import React, { useState } from 'react';
         </View>
       );
     };
+    
 
     return (
       <View style={styles.container}>
@@ -46,7 +48,7 @@ import React, { useState } from 'react';
           data={items}
           labelField="label"
           valueField="value"
-          placeholder="Select item"
+          placeholder={placeholder ?? "Select item"}
           value={selected}
           search
           searchPlaceholder="Search..."
@@ -55,7 +57,7 @@ import React, { useState } from 'react';
             <AntDesign
               style={styles.icon}
               color="black"
-              name="Safety"
+              name="user"
               size={20}
             />
           )}
