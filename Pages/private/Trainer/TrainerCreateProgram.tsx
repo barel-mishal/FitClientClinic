@@ -6,6 +6,7 @@ import ImageUpload from "../../../Components/ImageUploadComponent";
 import { FitnessProgram, uniqueId } from "../../../types";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 import MultiSelectComponent from "../../../Components/MultiSelect";
+import RadioButton from "../../../Components/RadioComponent";
 
 
 
@@ -132,7 +133,19 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
           </TouchableOpacity>
           <View style={styles.containerGapPaading}>
             <Text style={styles.inputTitle}>Client For Program</Text>
-            <MultiSelectComponent items={clients} selected={selected} onChange={(i) => setSelected(i)} />
+            {/* <MultiSelectComponent items={clients} selected={selected} onChange={(i) => setSelected(i)} /> */}
+            <ScrollView horizontal={true} >
+                  {clients.map((i) => {
+                    return (
+                      <TouchableOpacity  
+                      key={i.value} 
+                      style={{padding: 10, paddingHorizontal: 25, justifyContent: "center", alignItems: "center", borderColor: "#7dd3fc", borderWidth: 2, borderRadius: 20, margin: 10, backgroundColor: selected.includes(i.value) ? "#7dd3fc" : "#bae6fd"}}
+                      onPress={() => setSelected([i.value])}>
+                        <Text>{i.label.toString()}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+              </ScrollView>  
           </View>
           <View style={styles.containerGapPaading}>
             <Text style={styles.inputTitle}>Program Name</Text>
@@ -196,6 +209,21 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
                     );
                   })}
                 </ScrollView>  
+                <Text style={styles.inputTitle}>Reapte by</Text>
+                <View style={{display: "flex", flexDirection: "row", gap: 10}}>
+                <RadioButton 
+                onPress={(text) => dispatch({type: "UPDATE_EXERCISE", payload: {key: "repetitionType", value: text, index}})}
+                options={[{label: "Time", value: "time" }, {label: "Reps", value: "reps" }]} 
+                key={exercise.id!}
+                val={state.program.exercises?.[index].repetitionType ?? "reps"} />
+                </View>
+                {state.program.exercises?.[index].repetitionType === "time" ? <>
+                <View style={{display: "flex", gap: 10}}>
+                  <Text style={styles.inputTitle}>Duration</Text>
+                  <TextInput style={styles.input} placeholder="Duration" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "time", value: text, index}})} value={exercise.estimatedDuration?.toString()}/>
+                </View> 
+                </> : <>
+                <View style={{display: "flex", gap: 10}}>
                 <Text style={styles.inputTitle}>Reps</Text>
                 <ScrollView horizontal={true} >
                   {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 20, 25].reverse().map((i) => {
@@ -208,10 +236,12 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
                       </TouchableOpacity>
                     );
                   })}
-                </ScrollView>  
+                </ScrollView>
+                </View>
+                </>}
+               
                 <Text style={styles.inputTitle}>Weight</Text>
                 <TextInput style={styles.input} placeholder="Weight" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "weight", value: text, index}})} value={exercise.weight?.toString()}/>
-                
                 <Text style={styles.inputTitle}>Estimated Duration</Text>
                 <TextInput style={styles.input} placeholder="Duration" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "estimatedDuration", value: text, index}})} value={exercise.estimatedDuration?.toString()}/>
                 <Text style={styles.inputTitle}>URL Exercise Example</Text>
