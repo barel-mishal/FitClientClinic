@@ -6,7 +6,7 @@ import { RootStackParamList } from "../../../App";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 import TrainerProgramCard from "../../../Components/TrainerProgramCard";
-import { FitnessProgram, createRandomId } from "../../../types";
+import { FitnessProgram, FitnessProgramOutput, createRandomId } from "../../../types";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerPrograms'>;
@@ -25,10 +25,9 @@ export const newProgram = (): FitnessProgram[] => {
                 description: "A light jog to warm up the body.",
                 sets: "1",
                 estimatedDuration: `${10}m`, // in minutes
-                reps: [{
-                    repetitionType: "time",
-                    duration: "600s", // in seconds
-                }],
+                reps: "1",
+                time: "10m", // in minutes
+                repetitionType: "time",
                 imgUrl: "https://example.com/warmup-jog.png",
                 urlExample: "https://example.com/warmup-jog-example.mp4",
             },
@@ -38,11 +37,9 @@ export const newProgram = (): FitnessProgram[] => {
                 description: "Standard push-ups to work the chest, shoulders, and triceps.",
                 sets: "3",
                 estimatedDuration: "5m",
-                reps: [{
-                    repetitionType: "reps",
-                    numberOfReps: 15,
-                    repDuration: "2s", // assuming 2 seconds per rep
-                }],
+                reps: "3",
+                repetitionType: "reps",
+                time: undefined,
                 imgUrl: "https://example.com/push-ups.png",
                 urlExample: "https://example.com/push-ups-example.mp4",
             },            
@@ -52,13 +49,9 @@ export const newProgram = (): FitnessProgram[] => {
                 description: "Bodyweight squats to target the lower body, particularly the quadriceps, hamstrings, and glutes.",
                 sets: "3",
                 estimatedDuration: "5m", // in minutes
-                reps: [
-                    {
-                        repetitionType: "reps",
-                        numberOfReps: 20,
-                        repDuration: "2s", // assuming 2 seconds per rep
-                    }
-                ],
+                reps: "12",
+                repetitionType: "reps",
+                time: undefined,
                 imgUrl: "https://example.com/squats.png",
                 urlExample: "https://example.com/squats-example.mp4",
             },
@@ -68,12 +61,9 @@ export const newProgram = (): FitnessProgram[] => {
                 description: "Plank exercise to strengthen the core, including the abdominals and lower back.",
                 sets: "3",
                 estimatedDuration: "5m", // total duration for all sets in minutes
-                reps: [
-                    {
-                        repetitionType: "time",
-                        duration: "60s", // holding the plank for 60 seconds
-                    }
-                ],
+                reps: "3",
+                repetitionType: "time",
+                time: "1m", // assuming 1 minute per rep
                 imgUrl: "https://example.com/plank.png",
                 urlExample: "https://example.com/plank-example.mp4",
             },
@@ -83,13 +73,9 @@ export const newProgram = (): FitnessProgram[] => {
                 description: "Forward lunges to work the legs and improve balance.",
                 sets: "3",
                 estimatedDuration: "5m", // in minutes
-                reps: [
-                    {
-                        repetitionType: "reps",
-                        numberOfReps: 12, // per leg
-                        repDuration: "2s", // assuming 2 seconds per rep
-                    }
-                ],
+                reps: "12",
+                repetitionType: "reps",
+                time: undefined,
                 imgUrl: "https://example.com/lunges.png",
                 urlExample: "https://example.com/lunges-example.mp4",
             },
@@ -101,17 +87,8 @@ export const newProgram = (): FitnessProgram[] => {
 
 const TrainerPrograms: React.FC<Props> = ({ navigation }) => {
     const auth = useAuth()
-    if (!auth.user) return <View></View>
-    
-    const [programs, setPrograms] = useState<FitnessProgram[]>([
-        {
-            id: "1",
-            name: "Program 1",
-            duration: "30m",
-            trainerId: "1",
-            description: "This is program 1",
-            exercises: []
-        }]);
+    if (!auth.user || auth.data?.role !== "trainer") return <View></View>
+    const [programs, setPrograms] = useState<Required<FitnessProgramOutput>[]>((auth.data.programs || []) as Required<FitnessProgramOutput>[])
 
     return (
         <View>

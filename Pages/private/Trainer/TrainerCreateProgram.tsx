@@ -7,6 +7,7 @@ import { FitnessProgram, FitnessProgramSchema, makeIssue, uniqueId } from "../..
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 import RadioButton from "../../../Components/RadioComponent";
 import * as v from "valibot";
+import databaseMethods from "../../../services/databaseMethods";
 
 
 
@@ -104,17 +105,20 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
   if (!auth.user || auth.data.role !== "trainer") return <View></View>;
   const [state, dispatch] = useReducer(reducer, initialState(auth.user.uid));
   const [message, setMessage] = useState<string | undefined>(undefined);
-  const handleSubmit = () => {
+  const [selected, setSelected] = useState<string[]>([]); 
+  const handleSubmit = async () => {
     const parsed = v.safeParse(FitnessProgramSchema, state.program);
     if (!parsed.success) return setMessage(makeIssue(parsed.issues));
-    console.log(parsed.output)
     setMessage(undefined);
+    const programId = await databaseMethods.addOrUpdateFitnessProgram(parsed.output);
+    await databaseMethods.assignProgramToClients(programId, selected);
+    dispatch({type: "UPDATE_PROGRAM", payload: {key: "id", value: programId}});
+    navigation.navigate('TrainerPrograms');
   };
   // get all the clients from the database, and then set the state of the clients to choose from. 
   // improve the multi select to be able to select multiple clients
   const clients = auth.data.clients.filter(c => c.name || c.userId).map(c => ({label: c.name!, value: c.userId!}));
   
-  const [selected, setSelected] = useState<string[]>([]); 
   
   const styleDuration = (duration: string) => {
     return state.program.duration === duration ? styles.bigButtonSelected : styles.bigButton;
@@ -134,7 +138,7 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
 
   const styleTime = (time: string, id: string) => {
     const exercise = state.program?.exercises?.find(e => e.id === id);
-    return exercise?.estimatedDuration === time ? styles.bigButtonSelected : styles.bigButton;
+    return exercise?.time === time ? styles.bigButtonSelected : styles.bigButton;
   }
 
   return (
@@ -233,31 +237,21 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
                 val={state.program.exercises?.[index].repetitionType ?? "reps"} />
                 </View>
                 {state.program.exercises?.[index].repetitionType === "time" ? <>
-                <View style={{display: "flex", gap: 10}}>
-                  <Text style={styles.inputTitle}>Duration</Text>
-                  <TextInput style={styles.input} placeholder="Duration" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "time", value: text, index}})} value={exercise.estimatedDuration?.toString()}/>
-                </View> 
                 <View style={styles.containerGapPaading}>
                   <Text style={styles.inputTitle}>Duration</Text>
                   <ScrollView horizontal={true} style={styles.horizantalBlocks}>
-                    <TouchableOpacity style={styleTime("2h", exercise.id!)} onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "time", value: "2h", index}})}>
-                      <Text>Hour +</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styleTime("1h", exercise.id!)} onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "time", value: "1h", index}})}>
-                      <Text>Hour</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styleTime("45m", exercise.id!)} onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "time", value: "45m", index}})}>
-                      <Text>45 minutes</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styleTime("30m", exercise.id!)} onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "time", value: "30m", index}})}>
-                      <Text>30 minutes</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styleTime("20m", exercise.id!)} onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "time", value: "20m", index}})}>
-                      <Text>20 minutes</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styleTime("10m", exercise.id!)} onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "time", value: "10m", index}})}>
-                      <Text>10 minutes</Text>
-                    </TouchableOpacity>
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 20, 25].map((i) => {
+                      console.log(exercise)
+                      return (
+                        <TouchableOpacity  
+                        key={`${i}m-${exercise.id}`} 
+                        style={styleTime(i.toString() + "m", exercise.id!)}
+                        onPress={() => dispatch({type: "UPDATE_EXERCISE", payload: {key: "time", value: `${i}m`, index}})}>
+                          <Text>{i.toString() + "m"}</Text>
+                        </TouchableOpacity>
+                      );
+
+                    })}
                   </ScrollView>
                 </View>
                 </> : <>
@@ -277,7 +271,7 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
                 </ScrollView>
                 </View>
                 </>}
-                <Text style={styles.inputTitle}>Weight</Text>
+                <Text style={styles.inputTitle}>Weight KG</Text>
                 <TextInput style={styles.input} placeholder="Weight" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "weight", value: text, index}})} value={exercise.weight?.toString()}/>
                 <Text style={styles.inputTitle}>Estimated Duration</Text>
                 <TextInput style={styles.input} placeholder="Duration" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "estimatedDuration", value: text, index}})} value={exercise.estimatedDuration?.toString()}/>
@@ -286,6 +280,7 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
               </View>
             );
           })}
+          <View style={{height: 100}}></View>
     </ScrollView>
   );
 };

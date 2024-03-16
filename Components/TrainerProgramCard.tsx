@@ -4,10 +4,10 @@ import { Entypo } from '@expo/vector-icons';
 import { useAuth } from "./ContextComopnents/AuthContext";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../App";
-import { FitnessProgram } from "../types";
+import { FitnessProgramOutput } from "../types";
 
 type Props = {
-    program: FitnessProgram & { trainerName: string };
+    program: Required<FitnessProgramOutput> & { trainerName: string };
     navigation: NativeStackNavigationProp<RootStackParamList, "TrainerPrograms", undefined>;
 }
 

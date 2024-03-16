@@ -225,6 +225,40 @@ export const formatDuration = (duration: Duration, substruct: `${number}s` = "0s
 };
 
 
+// ----------------- Fitness Program -----------------
+export type Duration = `${number}m` | `${number}h` | `${number}s`;
+
+
+const ExerciseSchema = v.object({
+    id: v.string(),
+    name: v.string(),
+    description: v.string(),
+    imgUrl: v.optional(v.string()),
+    urlExample: v.optional(v.string()),
+    sets: NumberSchema,
+    estimatedDuration: v.string(),
+    reps: v.optional(NumberSchema),
+    repetitionType: v.union([v.literal('time'), v.literal('reps')]),
+    time: v.optional(v.string([v.regex(/^\d+(m|h|s)$/)])),
+    weight: v.optional(NumberSchema),
+});
+
+export type Exercise = v.Input<typeof ExerciseSchema>;
+
+export const FitnessProgramSchema = v.object({
+    id: v.optional(v.string()),
+    name: v.string(),
+    description: v.string(),
+    duration: v.string(),
+    exercises: v.array(v.partial(ExerciseSchema)),
+    trainerId: v.string(),
+});
+
+export type FitnessProgram = v.Input<typeof FitnessProgramSchema>;
+export type FitnessProgramOutput = v.Output<typeof FitnessProgramSchema>;
+
+
+
 // ***************** Schemas *****************
 export const profileSchema = v.object({
     name: v.string([v.minLength(2)]),
@@ -273,6 +307,7 @@ export const ClientPersonalFitnessInfo = v.object({
     idealTrainingDuration: v.string(),
     idealTrainingTime: v.string(),
     injuries: v.string(),
+    currentProgramId: v.optional(v.string()),
 });
 
 export type TypeClientPersonalFitnessInfo = v.Input<typeof ClientPersonalFitnessInfo>;
@@ -306,13 +341,11 @@ export type OutputTrainerRegister = v.Output<typeof TrainerRegisterData>;
 
 const TrinerClientAppointment = v.object({});
 
-const TrainerProgram = v.object({});
-
-export const TrainerProperties = v.merge([
+export const TrainerProperties = v.intersect([
     TrainerProfile,
     v.object({
         appointments: v.array(v.partial(TrinerClientAppointment)),
-        programs: v.array(v.partial(TrainerProgram)),
+        programs: v.array(v.partial(FitnessProgramSchema)),
         clients: v.array(v.partial(ClientProfile)),
     })
 ]);
@@ -324,43 +357,6 @@ export type ProfileSchemaOutput = v.Output<typeof ProfileSchema>;
 export const userPropertiesSchema = v.union([ClientProperties, TrainerProperties]);
 export type TypeUserPropertiesSchema = v.Input<typeof userPropertiesSchema>;
 export type ReturnUserProerties = v.Output<typeof userPropertiesSchema>;
-     
-
-
-
-
-// ----------------- Fitness Program -----------------
-export type Duration = `${number}m` | `${number}h` | `${number}s`;
-
-
-const ExerciseSchema = v.object({
-    id: v.string(),
-    name: v.string(),
-    description: v.string(),
-    imgUrl: v.optional(v.string()),
-    urlExample: v.optional(v.string()),
-    sets: NumberSchema,
-    estimatedDuration: v.string(),
-    reps: v.optional(NumberSchema),
-    repetitionType: v.union([v.literal('time'), v.literal('reps')]),
-    time: v.optional(v.string([v.regex(/^\d+(m|h|s)$/)])),
-    weight: v.optional(NumberSchema),
-});
-
-export type Exercise = v.Input<typeof ExerciseSchema>;
-
-export const FitnessProgramSchema = v.object({
-    id: v.optional(v.string()),
-    name: v.string(),
-    description: v.string(),
-    duration: v.string(),
-    exercises: v.array(v.partial(ExerciseSchema)),
-    trainerId: v.string(),
-});
-
-export type FitnessProgram = v.Input<typeof FitnessProgramSchema>;
-
-
 
 // ----------------- User -----------------
 type User = FirebaseAuthTypes.User;

@@ -1,7 +1,6 @@
-import { OutputClientRegister, OutputTrainerRegister, TypeCientProfile, TypeClientPersonalFitnessInfo, InputClientRegister, InputTrainerRegister, TrainerProperties, TypeTrainerProfile, OutputCientProfile, ProfileSchemaOutput, ReturnUserProerties } from '../types';
+import { OutputClientRegister, OutputTrainerRegister, TypeCientProfile, TypeClientPersonalFitnessInfo, InputClientRegister, InputTrainerRegister, TrainerProperties, TypeTrainerProfile, OutputCientProfile, ProfileSchemaOutput, ReturnUserProerties, FitnessProgram, FitnessProgramOutput } from '../types';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
-import { newProgram } from '../Pages/private/Trainer/TrainerPrograms';
 
 const databaseMethods = {
   login,
@@ -16,6 +15,11 @@ const databaseMethods = {
   getUserProperties,
   getTrainerProgram,
   validateTrainerPhoneAndGetId,
+  addOrUpdateFitnessProgram,
+  getAllTrainerClients,
+  getUserClientFitnessInfo,
+  assignProgramToClients,
+  getAllTrainerPrograms,
 }
 
 async function login(email: string, password: string) {
@@ -236,23 +240,96 @@ async function getUserProperties(id: FirebaseAuthTypes.User["uid"]): Promise<Ret
   const isClient = profile?.role === "client";
   const fitness = isClient ? await getUserClientFitnessInfo(id) : {};
   const clients = !isClient ? await getAllTrainerClients(id) : [];
-  if (profile?.role === "trainer") return { ...profile, appointments: [], programs: [], clients };
+  if (profile?.role === "trainer") return { ...profile, appointments: [], programs: await getAllTrainerPrograms(id), clients };
   else if (profile?.role === "client") return { ...profile, ...fitness };
   else throw new Error("Error parsing client properties");
 }
 
-function getTrainerProgram(trainerId: string, programId: string) {
-  return newProgram()
-  // const docRef = firestore().collection('TrainerPrograms').doc(trainerId).collection('programs').doc(programId);
-  // const doc = await docRef.get();
+async function addOrUpdateFitnessProgram(program: FitnessProgramOutput) {
+  let programRef;
+  const { id, ...programData } = program; // Destructure to separate `id` from the rest of the program data
 
-  // if (doc.exists) {
-  //   const data = doc.data();
-  //   return data;
-  // } else {
-  //   console.log("No program found for this trainer");
-  //   return undefined;
-  // }
+  if (id) {
+    // If id is defined, use it to reference an existing document
+    programRef = firestore().collection('FitnessPrograms').doc(id);
+  } else {
+    // If id is undefined, create a reference for a new document
+    programRef = firestore().collection('FitnessPrograms').doc();
+  }
+
+  try {
+    if (id && (await programRef.get()).exists) {
+      // If id is defined and the document exists, update the existing program
+      await programRef.update(programData);
+      console.log(`Fitness program ${id ? id : programRef.id} updated successfully`);
+    } else {
+      // If id is undefined or the document does not exist, add a new program
+      await programRef.set({ ...programData, id: programRef.id }); // Ensure id is included in the document
+      console.log(`Fitness program ${programRef.id} added successfully`);
+    }
+  } catch (error) {
+    console.error('Error adding/updating fitness program:', error);
+    throw error; // Re-throw to handle it according to the app's policy
+  }
+
+  // Return the id of the document that was added or updated
+  return programRef.id;
 }
+
+
+async function getTrainerProgram(trainerId: string, id: string) {
+  try {
+    // Attempt to fetch the program by its id
+    const programRef = firestore().collection<Required<FitnessProgramOutput>>('FitnessPrograms').doc(id);
+    const doc = await programRef.get();
+
+    if (!doc.exists) {
+      console.log("No such fitness program found");
+      return null;  // No program found
+    }
+
+    const programData = doc.data();
+
+    // If trainerId is necessary for validation, ensure the program belongs to the trainer
+    if (programData && programData.trainerId === trainerId) {
+      return programData;  // Return the program data
+    } else {
+      console.log("This program does not belong to the specified trainer");
+      return null;  // Program does not belong to the trainer or missing trainerId in programData
+    }
+  } catch (error) {
+    console.error("Error fetching trainer's program: ", error);
+    throw error;  // Re-throw to handle it according to the app's policy
+  }
+}
+
+async function assignProgramToClients(programId: string, userIds: string[]) {
+  const batch = firestore().batch(); // Use a batch to perform all updates in a single operation
+
+  userIds.forEach(userId => {
+    const userFitnessInfoRef = firestore().collection('ClientFitnessInfo').doc(userId);
+    batch.update(userFitnessInfoRef, { currentProgramId: programId });
+  });
+
+  try {
+    await batch.commit(); // Commit the batch
+    console.log(`Program ${programId} assigned to clients successfully.`);
+  } catch (error) {
+    console.error('Error assigning program to clients:', error);
+    throw error; // Re-throw to handle it according to the app's policy
+  }
+}
+
+async function getAllTrainerPrograms(trainerId: string) {
+  try {
+    const programs = await firestore().collection<Required<FitnessProgramOutput>>('FitnessPrograms').where('trainerId', '==', trainerId).get();
+    return programs.docs.map(doc => doc.data());
+  } catch (error) {
+    console.error("Error fetching programs: ", error);
+    throw error;
+  }
+}
+
+
 
 export default databaseMethods;
