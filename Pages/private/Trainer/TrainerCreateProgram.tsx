@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useReducer, useState } from "react";
-import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity, Dimensions, ViewStyle, StyleProp } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity, Dimensions, ViewStyle, StyleProp, Button } from 'react-native';
 import { RootStackParamList } from "../../../App";
 import ImageUpload from "../../../Components/ImageUploadComponent";
 import { FitnessProgram, FitnessProgramSchema, makeIssue, uniqueId } from "../../../types";
@@ -277,6 +277,8 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
                 <TextInput style={styles.input} placeholder="Duration" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "estimatedDuration", value: text, index}})} value={exercise.estimatedDuration?.toString()}/>
                 <Text style={styles.inputTitle}>URL Exercise Example</Text>
                 <TextInput style={styles.input} placeholder="URL" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "urlExample", value: text, index}})} value={exercise.urlExample?.toString()}/>
+                {/* delete exercise */}
+                <Button title="Delete Exercise" color={"#b91c1c"} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "exercises", value: state.program?.exercises?.filter((e, i) => i !== index)}})} />
               </View>
             );
           })}
