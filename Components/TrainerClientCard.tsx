@@ -1,27 +1,26 @@
 import React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { Entypo } from '@expo/vector-icons';
-import { useAuth } from "./ContextComopnents/AuthContext";
+import { AntDesign, Entypo } from '@expo/vector-icons';
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../App";
-import { FitnessProgramOutput } from "../types";
+import { OutputClientProperties } from "../types";
 
 type Props = {
-    program: Required<FitnessProgramOutput> & { trainerName: string };
-    navigation: NativeStackNavigationProp<RootStackParamList, "TrainerPrograms" | "TrainerClients", undefined>;
+    navigation: NativeStackNavigationProp<RootStackParamList, "TrainerClients", undefined>;
+    client: OutputClientProperties
 }
 
-const TrainerProgramCard: React.FC<Props> = ({ program, navigation }) => {
-    const auth = useAuth();
-    if (!auth?.user) return <View></View>;
-    
+const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
+
     return (
-        <TouchableOpacity onPress={() => { navigation.navigate("TrainerProgram", {id: program.id})} }>
+        <TouchableOpacity onPress={() => { navigation.navigate("TrainerClients")} }>
             <View style={styles.programCard}>
                 <View style={styles.headerRow}>
                     <View style={styles.titleContainer}>
-                        <Text style={styles.programName}>{program.name}</Text>
-                        <Text style={styles.trainerName}>Trainer: {program.trainerName}</Text>
+                        <Text style={styles.programName}>{client.name}</Text>
+                        <AntDesign name="user" size={24} color="#082F49" />
+                        <Text style={styles.trainerName}>{client.email}</Text>
+                        <AntDesign name="contacts" size={24} color="#082F49" />
                     </View>
                     <TouchableOpacity onPress={() => {console.log("menu")}}>
                         <Entypo name="dots-three-horizontal" size={24} color="#082F49" />
@@ -32,10 +31,10 @@ const TrainerProgramCard: React.FC<Props> = ({ program, navigation }) => {
                         <Text style={styles.descriptionLabel}>Description:</Text>
                         <View style={styles.durationContainer}>
                             <Entypo name="time-slot" size={16} color="#082F49" />
-                            <Text style={styles.duration}>~{program.duration}m</Text>
+                            <Text style={styles.duration}>~{client.gender}m</Text>
                         </View>
                     </View>
-                    <Text style={styles.descriptionText}>{program.description}</Text>
+                    <Text style={styles.descriptionText}>{client.goals?.[0]}</Text>
                 </View>
             </View>
         </TouchableOpacity>
@@ -104,6 +103,6 @@ const styles = StyleSheet.create({
     },
 });
 
-export default TrainerProgramCard;
+export default TrainerClientCard;
 
 

@@ -5,6 +5,7 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-nati
 import { RootStackParamList } from "../../../App";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
+import TrainerClientCard from "../../../Components/TrainerClientCard";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerClients'>;
 
@@ -21,6 +22,9 @@ const TrainerClients: React.FC<Props> = ({ navigation }) => {
                     <Text style={{ fontSize: 16, fontWeight: "700", color: "#082F49" }}>Add Client</Text>
                     <Ionicons name="add-circle" size={24} color="#082F49" />
                 </TouchableOpacity>
+                {auth.data.clients?.map((m, index) => {
+                    return <TrainerClientCard key={index} client={m} navigation={navigation} />
+                })}
                 {/* {programs?.map((m, index) => {
                     const program = {...m, trainerName: firstCharUpperCase(auth?.data?.name)}
                     return <TrainerProgramCard key={index} program={program} navigation={navigation} />

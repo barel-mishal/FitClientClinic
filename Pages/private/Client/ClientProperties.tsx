@@ -50,11 +50,12 @@ const SignupClient = ({ navigation }: Props) => {
       const id = parsed2?.output?.trainerPhone 
       ? await databaseMethods.validateTrainerPhoneAndGetId(parsed2?.output?.trainerPhone) 
       : undefined;      
-      databaseMethods.addOrUpdateClientFitnessInfo(parsed.output);
+      databaseMethods.addOrUpdateClientFitnessInfo({...parsed.output, userId: a.user.uid});
       const result = id 
       ? {...parsed2.output, role: "client" as Client, trainerId: id} 
       : {...parsed2.output, role: "client" as Client};
       databaseMethods.updateClientProfile(a.user, result);
+      
     } else if (!parsed.success) {
       setMessage(makeIssue(parsed.issues))
     } else if (!parsed2.success) {

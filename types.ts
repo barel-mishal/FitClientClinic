@@ -326,6 +326,7 @@ export const ClientProperties = v.intersect([
 ]);
 
 export type InputClientProperties = v.Input<typeof ClientProperties>;
+export type OutputClientProperties = v.Output<typeof ClientProperties>;
 
 export const TrainerProfile = v.merge([
     profileSchema,

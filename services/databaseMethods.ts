@@ -20,6 +20,7 @@ const databaseMethods = {
   getUserClientFitnessInfo,
   assignProgramToClients,
   getAllTrainerPrograms,
+  getAllTrainerClientsWithFitnessInfo
 }
 
 async function login(email: string, password: string) {
