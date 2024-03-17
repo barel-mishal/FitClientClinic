@@ -338,7 +338,6 @@ export type TypeTrainerProfile = v.Input<typeof TrainerProfile>
 
 export const TrainerRegisterData = v.merge([
     TrainerProfile,
-
     v.object({ password: v.string([v.minLength(6)]) }),
 ]);
 
