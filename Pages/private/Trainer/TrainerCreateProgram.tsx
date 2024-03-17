@@ -11,12 +11,11 @@ type Props = NativeStackScreenProps<RootStackParamList, 'TrainerCreateProgram'>;
 const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation, route }) => {
   const auth = useAuth();
   if (!auth.user || auth.data.role !== "trainer") return <View></View>;
-
   return (
     <TrainerCreateProgramComponent 
-    navigation={navigation} 
-    trainer={auth.data} 
-    user={auth.user} route={route} />
+      navigation={navigation} 
+      trainer={auth.data} 
+      user={auth.user} route={route} />
   );
 };
 
