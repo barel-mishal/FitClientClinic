@@ -8,7 +8,7 @@ import { FitnessProgramOutput } from "../types";
 
 type Props = {
     program: Required<FitnessProgramOutput> & { trainerName: string };
-    navigation: NativeStackNavigationProp<RootStackParamList, "TrainerPrograms", undefined>;
+    navigation: NativeStackNavigationProp<RootStackParamList, "TrainerPrograms" | "TrainerClients", undefined>;
 }
 
 const TrainerProgramCard: React.FC<Props> = ({ program, navigation }) => {

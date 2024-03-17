@@ -204,6 +204,12 @@ export const makeIssue = (issues: v.SchemaIssues) => {
 
 }
 
+export const firstCharUpperCase = (str: string | undefined) => {
+    if (!str) return "";
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+
 export function isUserLoggedIn(userSchema: UserSchema): userSchema is { user: FirebaseAuthTypes.User, data: ReturnUserProerties } {
     return userSchema.user !== null;
 }

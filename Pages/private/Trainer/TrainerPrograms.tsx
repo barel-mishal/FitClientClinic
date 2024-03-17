@@ -6,7 +6,7 @@ import { RootStackParamList } from "../../../App";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 import TrainerProgramCard from "../../../Components/TrainerProgramCard";
-import { FitnessProgram, FitnessProgramOutput, createRandomId } from "../../../types";
+import { FitnessProgramOutput } from "../../../types";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerPrograms'>;
