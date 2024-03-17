@@ -31,9 +31,6 @@ export type RootStackParamList =
 & RootStackTrainerParamList 
 & RootStackClientParamList
 & RootStackPublicParamList;
-// דפנה ואלינה באסף ברופא
-// כליל קפלו
-// אסותה אשדוד קטן 
 // npx expo prebuild --platform ios - this is to prebuild the app for ios
 
 function MyNavigator() {
