@@ -15,6 +15,7 @@ import TrainerClients from "./private/Trainer/TrainerClients";
 import TrainerPrograms from "./private/Trainer/TrainerPrograms";
 import TrainerProgram from "./private/Trainer/TrainerProgram";
 import TrainerCreateFitnessProgram from "./private/Trainer/TrainerCreateProgram";
+import TrainerClient from "./private/Trainer/TrainerClient";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -48,6 +49,7 @@ export const PrivateNavigator: React.FC<PrivateNavigatorProps> = ({ role })  =>{
             <Stack.Screen name={"TrainerHome"} component={TrainerHome} options={{}} />
             <Stack.Screen name={"TrainerAppointments"} component={TrainerAppointment} options={{}} />
             <Stack.Screen name={"TrainerClients"} component={TrainerClients} options={{}} />
+            <Stack.Screen name={"TrainerClient"} component={TrainerClient} options={{}} />
             <Stack.Screen name={"TrainerPrograms"} component={TrainerPrograms} options={{}} />
             <Stack.Screen name={"TrainerProgram"} component={TrainerProgram} options={{}} />
             <Stack.Screen name={"TrainerCreateProgram"} component={TrainerCreateFitnessProgram} options={{}} />
