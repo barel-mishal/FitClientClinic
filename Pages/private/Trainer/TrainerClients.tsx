@@ -10,12 +10,10 @@ import TrainerProgramCard from "../../../Components/TrainerProgramCard";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerClients'>;
 
-type Program = Required<FitnessProgramOutput> & { trainerName: string }
 
 const TrainerClients: React.FC<Props> = ({ navigation }) => {
     const auth = useAuth()
     if (!auth.user || auth.data?.role !== "trainer") return <View></View>
-    const programs = (auth.data.programs || []) as Program[] 
 
     return (
         <View>
@@ -25,10 +23,10 @@ const TrainerClients: React.FC<Props> = ({ navigation }) => {
                     <Text style={{ fontSize: 16, fontWeight: "700", color: "#082F49" }}>Add Program</Text>
                     <Ionicons name="add-circle" size={24} color="#082F49" />
                 </TouchableOpacity>
-                {programs?.map((m, index) => {
+                {/* {programs?.map((m, index) => {
                     const program = {...m, trainerName: firstCharUpperCase(auth?.data?.name)}
                     return <TrainerProgramCard key={index} program={program} navigation={navigation} />
-                })}
+                })} */}
                 </View>
             </ScrollView>
         </View>

@@ -10,11 +10,12 @@ import { FitnessProgramOutput } from "../../../types";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerPrograms'>;
+type Program = Required<FitnessProgramOutput> & { trainerName: string }
 
 const TrainerPrograms: React.FC<Props> = ({ navigation }) => {
     const auth = useAuth()
     if (!auth.user || auth.data?.role !== "trainer") return <View></View>
-    const [programs, setPrograms] = useState<Required<FitnessProgramOutput>[]>((auth.data.programs || []) as Required<FitnessProgramOutput>[])
+    const programs = (auth.data.programs || []) as Program[] 
 
     return (
         <View>
