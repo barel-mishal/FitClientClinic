@@ -350,6 +350,9 @@ export const TrainerProperties = v.intersect([
     })
 ]);
 
+export type TypeTrainerProperties = v.Input<typeof TrainerProperties>;
+export type ReturnTrainerProerties = v.Output<typeof TrainerProperties>;
+
 export const ProfileSchema = v.union([ClientProfile, TrainerProfile]);
 export type ProfileSchema = v.Input<typeof ProfileSchema>;
 export type ProfileSchemaOutput = v.Output<typeof ProfileSchema>;
@@ -359,7 +362,7 @@ export type TypeUserPropertiesSchema = v.Input<typeof userPropertiesSchema>;
 export type ReturnUserProerties = v.Output<typeof userPropertiesSchema>;
 
 // ----------------- User -----------------
-type User = FirebaseAuthTypes.User;
+export type User = FirebaseAuthTypes.User;
 
 export type UserAction = {
     getUser: (id: string) => User;

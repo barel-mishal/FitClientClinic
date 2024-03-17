@@ -1,17 +1,18 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useReducer, useState } from "react";
 import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity, Dimensions, ViewStyle, StyleProp, Button } from 'react-native';
-import { RootStackParamList } from "../../../App";
-import ImageUpload from "../../../Components/ImageUploadComponent";
-import { FitnessProgram, FitnessProgramSchema, makeIssue, uniqueId } from "../../../types";
-import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
-import RadioButton from "../../../Components/RadioComponent";
+import { RootStackParamList } from "../App";
+import ImageUpload from "./ImageUploadComponent";
+import { FitnessProgram, FitnessProgramSchema, ReturnTrainerProerties, User, makeIssue, uniqueId } from "../types";
+import { useAuth } from "./ContextComopnents/AuthContext";
+import RadioButton from "./RadioComponent";
 import * as v from "valibot";
-import databaseMethods from "../../../services/databaseMethods";
+import databaseMethods from "../services/databaseMethods";
 
-
-
-type Props = NativeStackScreenProps<RootStackParamList, 'TrainerCreateProgram'>;
+interface Props extends NativeStackScreenProps<RootStackParamList, 'TrainerCreateProgram'> {
+  trainer: ReturnTrainerProerties;
+  user: User;
+}
 
 type Exercise = FitnessProgram['exercises'][number];
 interface ProgramState {
@@ -53,17 +54,17 @@ const initialState: (id: string) => ProgramState = (trainerId: string) => ({
 });
 
 type Actions = {
-    type: "UPDATE_PROGRAM";
-    payload: {key: keyof FitnessProgram, value: FitnessProgram[keyof FitnessProgram]};
-} | {
-    type: "NEXT_EXERCISE";
-} | {
-    type: "PREV_EXERCISE";
-} | {
-    type: "ADD_EXERCISE";
-} | {
-    type: "UPDATE_EXERCISE";
-    payload: {key: keyof Exercise, value: Exercise[keyof Exercise], index: number};
+      type: "UPDATE_PROGRAM";
+      payload: {key: keyof FitnessProgram, value: FitnessProgram[keyof FitnessProgram]};
+  } | {
+      type: "NEXT_EXERCISE";
+  } | {
+      type: "PREV_EXERCISE";
+  } | {
+      type: "ADD_EXERCISE";
+  } | {
+      type: "UPDATE_EXERCISE";
+      payload: {key: keyof Exercise, value: Exercise[keyof Exercise], index: number};
 }
 function reducer(state: ProgramState, action: Actions) {
   switch (action.type) {
@@ -100,10 +101,8 @@ function reducer(state: ProgramState, action: Actions) {
   }
 }
 
-const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
-  const auth = useAuth();
-  if (!auth.user || auth.data.role !== "trainer") return <View></View>;
-  const [state, dispatch] = useReducer(reducer, initialState(auth.user.uid));
+const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation, trainer, user }) => {
+  const [state, dispatch] = useReducer(reducer, initialState(user.uid));
   const [message, setMessage] = useState<string | undefined>(undefined);
   const [selected, setSelected] = useState<string[]>([]); 
   const handleSubmit = async () => {
@@ -117,7 +116,7 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation }) => {
   };
   // get all the clients from the database, and then set the state of the clients to choose from. 
   // improve the multi select to be able to select multiple clients
-  const clients = auth.data.clients.filter(c => c.name || c.userId).map(c => ({label: c.name!, value: c.userId!}));
+  const clients = trainer.clients.filter(c => c.name || c.userId).map(c => ({label: c.name!, value: c.userId!}));
   
   
   const styleDuration = (duration: string) => {
