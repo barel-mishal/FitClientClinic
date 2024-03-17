@@ -314,9 +314,11 @@ export const ClientPersonalFitnessInfo = v.object({
     idealTrainingTime: v.string(),
     injuries: v.string(),
     currentProgramId: v.optional(v.string()),
+    userId: v.optional(v.string()),
 });
 
 export type TypeClientPersonalFitnessInfo = v.Input<typeof ClientPersonalFitnessInfo>;
+export type OutputClientPersonalFitnessInfo = v.Output<typeof ClientPersonalFitnessInfo>;
 
 export const ClientProperties = v.intersect([
     v.partial(ClientProfile), 

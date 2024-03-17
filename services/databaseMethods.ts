@@ -1,4 +1,4 @@
-import { OutputClientRegister, OutputTrainerRegister, TypeCientProfile, TypeClientPersonalFitnessInfo, InputClientRegister, InputTrainerRegister, TrainerProperties, TypeTrainerProfile, OutputCientProfile, ProfileSchemaOutput, ReturnUserProerties, FitnessProgram, FitnessProgramOutput } from '../types';
+import { OutputClientRegister, OutputTrainerRegister, TypeCientProfile, TypeClientPersonalFitnessInfo, InputClientRegister, InputTrainerRegister, TrainerProperties, TypeTrainerProfile, OutputCientProfile, ProfileSchemaOutput, ReturnUserProerties, FitnessProgram, FitnessProgramOutput, OutputClientPersonalFitnessInfo } from '../types';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 
@@ -207,6 +207,26 @@ async function addOrUpdateClientFitnessInfo(fitnessInfo: Omit<TypeClientPersonal
   }
 };
 
+async function getAllTrainerClientsWithFitnessInfo(trainerId: string) {
+  try {
+    const clientsSnapshot = await firestore().collection('profile').where('trainerId', '==', trainerId).get();
+    const clientsData = await Promise.all(clientsSnapshot.docs.map(async (doc) => {
+      const clientData = doc.data();
+      const fitnessInfoSnapshot = await firestore().collection<OutputClientPersonalFitnessInfo>('ClientFitnessInfo').where('userId', '==', doc.id).get();
+      
+      const fitnessInfoData = fitnessInfoSnapshot.docs[0]?.data();
+      
+      // Combine client data with their fitness info
+      return { ...clientData, fitnessInfo: fitnessInfoData || null };
+    }));
+
+    return clientsData;
+  } catch (error) {
+    console.error("Error fetching clients and their fitness info: ", error);
+    throw error;
+  }
+}
+
 async function getUserClientFitnessInfo(uid: FirebaseAuthTypes.User["uid"]) {
   try {
     const docRef = firestore().collection('ClientFitnessInfo').doc(uid);
@@ -240,10 +260,11 @@ async function getUserProperties(id: FirebaseAuthTypes.User["uid"]): Promise<Ret
   const isClient = profile?.role === "client";
   const fitness = isClient ? await getUserClientFitnessInfo(id) : {};
   const clients = !isClient ? await getAllTrainerClients(id) : [];
+  console.log("clients", clients);
   if (profile?.role === "trainer") return { ...profile, appointments: [], programs: await getAllTrainerPrograms(id), clients };
   else if (profile?.role === "client") return { ...profile, ...fitness };
   else throw new Error("Error parsing client properties");
-}
+};
 
 async function addOrUpdateFitnessProgram(program: FitnessProgramOutput) {
   let programRef;
