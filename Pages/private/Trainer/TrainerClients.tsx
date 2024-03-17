@@ -25,10 +25,6 @@ const TrainerClients: React.FC<Props> = ({ navigation }) => {
                 {auth.data.clients?.map((m, index) => {
                     return <TrainerClientCard key={index} client={m} navigation={navigation} />
                 })}
-                {/* {programs?.map((m, index) => {
-                    const program = {...m, trainerName: firstCharUpperCase(auth?.data?.name)}
-                    return <TrainerProgramCard key={index} program={program} navigation={navigation} />
-                })} */}
                 </View>
             </ScrollView>
         </View>
