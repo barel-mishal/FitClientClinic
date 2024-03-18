@@ -314,6 +314,7 @@ async function getTrainerProgram(trainerId: string, id: string) {
 
     // If trainerId is necessary for validation, ensure the program belongs to the trainer
     if (programData && programData.trainerId === trainerId) {
+      console.log("Program found:", programData);
       return programData;  // Return the program data
     } else {
       console.log("This program does not belong to the specified trainer");

@@ -17,6 +17,7 @@ export type RootStackClientParamList = {
   ClientHome: undefined;
   ClientWorkouts: undefined;
   ClientProperties: undefined;
+  ClientWorkout: { programId: string, trainerId: string };
 };
 
 export type RootStackPublicParamList = {

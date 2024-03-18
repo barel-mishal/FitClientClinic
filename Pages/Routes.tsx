@@ -16,6 +16,7 @@ import TrainerPrograms from "./private/Trainer/TrainerPrograms";
 import TrainerProgram from "./private/Trainer/TrainerProgram";
 import TrainerCreateFitnessProgram from "./private/Trainer/TrainerCreateProgram";
 import TrainerClient from "./private/Trainer/TrainerClient";
+import ClientWorkout from "./private/Client/ClientWorkout";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
@@ -42,6 +43,7 @@ export const PrivateNavigator: React.FC<PrivateNavigatorProps> = ({ role })  =>{
         return <Stack.Navigator>
             <Stack.Screen name={"ClientHome"} component={ClientHome} options={{}} />
             <Stack.Screen name={"ClientWorkouts"} component={ClientWorkouts} options={{}} />
+            <Stack.Screen name={"ClientWorkout"} component={ClientWorkout} options={{headerTitle: "Workout"}} />
             <Stack.Screen name={"ClientProperties"} component={ClientProperties} options={{}} />
         </Stack.Navigator>
     } else if (role === 'trainer') {

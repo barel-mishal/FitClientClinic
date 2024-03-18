@@ -15,14 +15,17 @@ type Props = NativeStackScreenProps<RootStackParamList, 'ClientHome'>;
 const HomeClient: React.FC<Props> = ({ navigation }) => {
     const userSchema = useAuth();
 
-    if (!isUserLoggedIn(userSchema)) {
+    if (!userSchema.user || userSchema.data.role !== "client") {
         navigation.navigate('GetStarted');
         return <Text>User is not logged in</Text>;
     }
 
     const { data } = userSchema;
 
-    const activeCardStyle = true ? "#fdba74" : "#fed7aa"
+    const isWorkOutDisabled = !data?.currentProgramId || !data?.trainerId;
+    const activeCardStyle = isWorkOutDisabled ? "#fed7aa" : "#fdba74";
+    const activeCardTextStyle = isWorkOutDisabled ? "#fb923c" : "#431407";
+
 
     return (
         <ScrollView>
@@ -32,38 +35,38 @@ const HomeClient: React.FC<Props> = ({ navigation }) => {
                         <Text style={{fontSize: 20, color: "#0891b2", fontWeight: "bold"}}>Where focus goes energy flows</Text>
                     </Stack>
                     <Stack styleOption={{gap: 32}}>
-                    <CardWrapper styleOption={{backgroundColor: "#fdba74", shadowColor: "#431407"}}>
-                        <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('ClientWorkouts')}>
-                            <Text style={{...styles.title2, color: "#431407"}}>START A WORKOUT</Text>
-                            <Text style={{color: "#431407"}}>
-                                Start a new workout or continue an existing one
-                            </Text>
-                        </TouchableOpacity>
-                    </CardWrapper>
-                    
-                    <CardWrapper>
-                        <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('ClientWorkouts')}>
-                            <Text style={styles.title2}>Client Workouts</Text>
-                            <Text>
-                                View your workouts and create new ones as well as view your progress
-                            </Text>
-                        </TouchableOpacity>
-                    </CardWrapper>
+                        <CardWrapper styleOption={{backgroundColor: activeCardStyle, shadowColor: "#431407"}}>
+                            <TouchableOpacity disabled={isWorkOutDisabled} style={styles.gap2} onPress={() => (!data?.currentProgramId || !data?.trainerId) ? null : navigation.navigate('ClientWorkout', {programId: data.currentProgramId, trainerId: data.trainerId}) }>
+                                <Text style={{...styles.title2, color: activeCardTextStyle}}>START A WORKOUT</Text>
+                                <Text style={{color: "#431407"}}>
+                                    { "Start a new workout or continue an existing one"}
+                                </Text>
+                            </TouchableOpacity>
+                        </CardWrapper>
+                        
+                        <CardWrapper>
+                            <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('ClientWorkouts')}>
+                                <Text style={styles.title2}>Client Workouts</Text>
+                                <Text>
+                                    View your workouts and create new ones as well as view your progress
+                                </Text>
+                            </TouchableOpacity>
+                        </CardWrapper>
 
-                    <CardWrapper>
-                        <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('ClientProperties')}>
-                            <Text style={styles.title2}>Client Properties</Text>
-                            <Text>
-                                Update your personal information
-                            </Text>
-                        </TouchableOpacity>
-                    </CardWrapper>
+                        <CardWrapper>
+                            <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('ClientProperties')}>
+                                <Text style={styles.title2}>Client Properties</Text>
+                                <Text>
+                                    Update your personal information
+                                </Text>
+                            </TouchableOpacity>
+                        </CardWrapper>
 
-                    <CardWrapper styleOption={{justifyContent: "space-evenly", backgroundColor: "transparent"}}>
-                        <TouchableOpacity style={styles.gap2} onPress={databaseMethods.logout}>
-                            <Text style={styles.alertText}>Log Out</Text>
-                        </TouchableOpacity>
-                    </CardWrapper>
+                        <CardWrapper styleOption={{justifyContent: "space-evenly", backgroundColor: "transparent"}}>
+                            <TouchableOpacity style={styles.gap2} onPress={databaseMethods.logout}>
+                                <Text style={styles.alertText}>Log Out</Text>
+                            </TouchableOpacity>
+                        </CardWrapper>
                     </Stack>
                 </View>
         </ScrollView>

@@ -27,7 +27,8 @@ const styles = StyleSheet.create({
     gap2: {
         gap: 16,
         display: "flex",
-    }
+    },
+    
 });
 
 
