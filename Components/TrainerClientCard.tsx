@@ -11,15 +11,16 @@ type Props = {
 }
 
 const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
-
     return (
-        <TouchableOpacity onPress={() => { navigation.navigate("TrainerClients")} }>
+        <TouchableOpacity onPress={() => { navigation.navigate("TrainerClient", {id: client?.userId as string})} }>
+            {/* Redesign this page */}
             <View style={styles.programCard}>
+                
                 <View style={styles.headerRow}>
                     <View style={styles.titleContainer}>
-                        <Text style={styles.programName}>{client.name}</Text>
+                        <Text style={styles.programName}>{client?.name}</Text>
                         <AntDesign name="user" size={24} color="#082F49" />
-                        <Text style={styles.trainerName}>{client.email}</Text>
+                        <Text style={styles.trainerName}>{client?.email}</Text>
                         <AntDesign name="contacts" size={24} color="#082F49" />
                     </View>
                     <TouchableOpacity onPress={() => {console.log("menu")}}>
@@ -31,10 +32,10 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
                         <Text style={styles.descriptionLabel}>Description:</Text>
                         <View style={styles.durationContainer}>
                             <Entypo name="time-slot" size={16} color="#082F49" />
-                            <Text style={styles.duration}>~{client.gender}m</Text>
+                            <Text style={styles.duration}>~{client?.gender}m</Text>
                         </View>
                     </View>
-                    <Text style={styles.descriptionText}>{client.goals?.[0]}</Text>
+                    <Text style={styles.descriptionText}>{client?.goals?.[0]}</Text>
                 </View>
             </View>
         </TouchableOpacity>
