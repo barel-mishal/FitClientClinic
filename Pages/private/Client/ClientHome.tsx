@@ -32,7 +32,7 @@ const HomeClient: React.FC<Props> = ({ navigation }) => {
                         <Text style={{fontSize: 20, color: "#0891b2", fontWeight: "bold"}}>Where focus goes energy flows</Text>
                     </Stack>
                     <Stack styleOption={{gap: 32}}>
-                    <CardWrapper styleOption={{backgroundColor: "#fdba74"}}>
+                    <CardWrapper styleOption={{backgroundColor: "#fdba74", shadowColor: "#431407"}}>
                         <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('ClientWorkouts')}>
                             <Text style={{...styles.title2, color: "#431407"}}>START A WORKOUT</Text>
                             <Text style={{color: "#431407"}}>
