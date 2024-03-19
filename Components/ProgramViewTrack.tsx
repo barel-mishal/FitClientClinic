@@ -114,7 +114,7 @@ const RenderProgramTrack: React.FC<{program: ProgramState}> = ({ program }) => {
         <>
         
         {state.state === "start" && <StartWorkout program={state} dispatch={dispatch} />}
-        {state.state === "on" && <OnWorkout {...state} />}
+        {state.state === "on" && <OnWorkout program={state} dispatch={dispatch} />}
         {state.state === "pause" && <PuseWorkout {...state} />}
         {state.state === "finish" && <FinishWorkout {...state} />}
         {state.state === "stop" && <FinishWorkout {...state} />}
@@ -197,11 +197,12 @@ export const StartWorkout: React.FC<{program: ProgramState, dispatch: React.Disp
   )
 };
 
-export const OnWorkout: React.FC<ProgramState> = ({exercises}) => {
+export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatch<ProgramActions>}> = ({program, dispatch}) => {
+  const exercises = program?.exercises;
   const [exerciseIndex, setExerciseIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const exercise = exercises[exerciseIndex];
-  const [modalVisible, setModalVisible] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const handleNextExercise = () => {
     if (exerciseIndex < exercises.length - 1) {
@@ -214,6 +215,9 @@ export const OnWorkout: React.FC<ProgramState> = ({exercises}) => {
       setExerciseIndex(exerciseIndex - 1);
     }
   };
+
+
+  const isLastExercise = exerciseIndex === exercises.length - 1;
 
   return (
     <>
@@ -228,8 +232,8 @@ export const OnWorkout: React.FC<ProgramState> = ({exercises}) => {
             formatDuration={formatClockDuration} stop={paused} />
           <Text style={{ ...stylesOnWorkOut.headerText, fontWeight: "600", color: "#082f49" }}>Full Body Work Out</Text>
         </View>
-        <TouchableOpacity style={{ ...stylesOnWorkOut.button, borderColor: "#f43f5e" }}>
-          <Text style={{ fontSize: 20, textAlign: "center", color: '#f43f5e', fontWeight: "300" }}>Finish</Text>
+        <TouchableOpacity style={[{ ...stylesOnWorkOut.button }, , isLastExercise ? {borderColor: "#065f46"} : {borderColor: "#f43f5e"}]}>
+          <Text style={[{ fontSize: 20, textAlign: "center", fontWeight: "300" }, isLastExercise ? {color: "#065f46"} : {color: '#f43f5e'}]}>Finish</Text>
         </TouchableOpacity>
       </View>
       
@@ -298,7 +302,7 @@ export const OnWorkout: React.FC<ProgramState> = ({exercises}) => {
               :
               <Feather name="check-square" size={24} color="#f0f9ff" />
               }
-              <Text style={{...stylesOnWorkOut.buttonText, color: "#f0f9ff", fontWeight: "500"}} >& Next</Text>
+              <Text style={{...stylesOnWorkOut.buttonText, color: "#f0f9ff", fontWeight: "500"}} >& {isLastExercise ? "Finish" : "Next"}</Text>
             </View>
           </TouchableOpacity>
         </View>
@@ -311,6 +315,7 @@ export const OnWorkout: React.FC<ProgramState> = ({exercises}) => {
           // theme={{ colors: { background: "transparent" } }}
           style={[stylesModal.centeredView, {zIndex: 10000, height: Dimensions.get("window").height}]}
           onDismiss={() => setModalVisible(false)}
+          
           >
             <ScrollView>
               <View style={stylesModal.centeredView}>
