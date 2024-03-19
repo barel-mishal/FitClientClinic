@@ -41,7 +41,7 @@ const ClientWorkout: React.FC<Props> = ({navigation, route: {params: {programId,
             setProgram({
                 data: {
                     ...res,
-                    state: "start",
+                    state: "on",
                     workoutTime: "1s",
                     completedExercises: [],
                 } as ProgramState,

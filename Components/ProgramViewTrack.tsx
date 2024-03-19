@@ -2,7 +2,7 @@ import { useReducer, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Button, ScrollView, ScrollViewBase, ScrollViewComponent } from "react-native";
 import { RenderClock } from "./RenderClock";
 import { Duration, FitnessProgramOutput, formatClockDuration } from "../types";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, Feather } from "@expo/vector-icons";
 
 
 export type ProgramState = Required<FitnessProgramOutput> & ({
@@ -26,10 +26,14 @@ export type ProgramState = Required<FitnessProgramOutput> & ({
   state: "on",
   workoutTime: Duration,
   completedExercises: Array<string>;
+} | {
+  state: "exercise",
+  workoutTime: Duration,
+  completedExercises: Array<string>;
 });
 
 export type ProgramActions = {
-  type: "start" | "stop" | "pause" | "finish" | "on";
+  type: ProgramState["state"];
   payload?: Duration;
   message?: string;
 };
@@ -66,6 +70,12 @@ const programActions = (state: ProgramState, action: ProgramActions): ProgramSta
       return {
         ...state,
         state: "on",
+        workoutTime: action.payload ?? "0s",
+      };
+    case "exercise":
+      return {
+        ...state,
+        state: "exercise",
         workoutTime: action.payload ?? "0s",
       };
     default:
@@ -186,8 +196,54 @@ export const StartWorkout: React.FC<{program: ProgramState, dispatch: React.Disp
 
 export const OnWorkout: React.FC<ProgramState> = ({}) => {
   return (
-    <View>
-      <Text style={styles.sky50}>On Workout</Text>
+    <View style={stylesOnWorkOut.container}>
+      
+      <View style={stylesOnWorkOut.header}>
+        <Text style={{...stylesOnWorkOut.headerText, fontWeight: "600", color: "#082f49"}}>Full Body Work Out</Text>
+        <TouchableOpacity style={{...stylesOnWorkOut.button,    borderColor: "#f43f5e"}}>
+          <Text style={{fontSize: 20, textAlign: "center", color: '#f43f5e', fontWeight: "300"}}>Finish</Text>
+        </TouchableOpacity>
+      </View>
+      
+      <View style={{...stylesOnWorkOut.content, justifyContent: "space-around"}}>
+        <View style={{display: "flex", flexDirection: "row", gap: 20, alignItems: "baseline", justifyContent: "space-between"}}>
+          <Text style={stylesOnWorkOut.mainTitle}>Warm-up Jog</Text>
+          <TouchableOpacity>
+            <Feather name="list" size={24} color="#082f49" />
+          </TouchableOpacity>
+        </View>
+        <Text style={stylesOnWorkOut.description}>A light jog to warm up the body.</Text>
+        <View style={stylesOnWorkOut.timerContainer}>
+          <View style={stylesOnWorkOut.setContent}>
+            <AntDesign name="retweet" size={24} color="#082f49" />
+            <Text style={stylesOnWorkOut.sets}>1 Set</Text>
+          </View>
+          <View style={stylesOnWorkOut.timer}>
+            <View style={stylesOnWorkOut.timerContent}>
+            <View style={stylesOnWorkOut.timerTextWrapper}>
+              <AntDesign name="pause" size={24} color="#f0f9ff" />
+              <Text style={stylesOnWorkOut.timerTextSmall}>Time</Text>
+            </View>
+            <Text style={stylesOnWorkOut.timerText}>10:00</Text>
+            </View>
+          </View>
+        </View>
+        <View style={stylesOnWorkOut.navigation}>
+          <TouchableOpacity style={stylesOnWorkOut.button}>
+            <Text style={stylesOnWorkOut.buttonText}>Previous</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={{...stylesOnWorkOut.button, borderColor: "#082f49", backgroundColor: "#0c4a6e"}}>
+            <View style={{display: "flex", flexDirection: "row", gap: 10, alignItems: "center",}}>
+              {true ? 
+              <Feather name="square" size={24} color="#f0f9ff" /> 
+              :
+              <Feather name="check-square" size={24} color="#f0f9ff" />
+              }
+              <Text style={{...stylesOnWorkOut.buttonText, color: "#f0f9ff", fontWeight: "500"}}>& Next</Text>
+            </View>
+          </TouchableOpacity>
+        </View>
+      </View>
     </View>
   )
 }
@@ -209,7 +265,7 @@ export const FinishWorkout: React.FC<ProgramState> = ({}) => {
 }
 
 
-const styles = StyleSheet.create({
+export const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#fff',
@@ -258,7 +314,7 @@ const styles = StyleSheet.create({
       color: '#f0f9ff',
     },
 
-  });
+});
 
 export const stylesStartWorkout = StyleSheet.create({
   stacHorizental: {
@@ -277,6 +333,107 @@ export const stylesStartWorkout = StyleSheet.create({
   }
   
 });
+
+export const stylesOnWorkOut = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f0f9ff',
+  },
+  header: {
+    paddingTop: 20,
+    paddingBottom: 20,
+    paddingHorizontal: 10,
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    gap: 10,
+  },
+  headerText: {
+    fontSize: 20,
+    textAlign: 'center',
+  },
+  content: {
+    flex: 1,
+    padding: 20,
+  },
+  mainTitle: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 10,
+    color: "#082f49"
+  },
+  description: {
+    fontSize: 18,
+    marginBottom: 20,
+    color: "#082f49"
+  },
+  timerContainer: {
+    alignItems: 'center',
+    display: 'flex',
+    gap: 10,
+  },
+  sets: {
+    fontSize: 16,
+    marginBottom: 10,
+    color: "#082f49"
+  },
+  timer: {
+    width: 170,
+    height: 170,
+    borderRadius: 170/2,
+    backgroundColor: '#075985',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  timerTextWrapper: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'center',
+    width: '100%',
+  },
+  timerContent: {
+    width: 100,
+    height: 100,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  timerText: {
+    fontSize: 32,
+    color: '#f0f9ff',
+    fontWeight: 'bold',
+  },
+  timerTextSmall: {
+    fontSize: 16,
+    color: '#f0f9ff',
+    fontWeight: '500',
+  },
+  navigation: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 30,
+  },
+  button: {
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 5,
+  },
+  buttonText: {
+    fontSize: 16,
+  },
+  setContent: {
+    display: 'flex',
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'stretch',
+    justifyContent: 'center',
+  }
+});
+
 
 
 export default RenderProgramTrack;
