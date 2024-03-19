@@ -158,12 +158,14 @@ export const StartWorkout: React.FC<{program: ProgramState, dispatch: React.Disp
       <ScrollView style={{ flex: 1, backgroundColor: "#f0f9ff", padding: 16, borderRadius: 16, marginHorizontal: 20 }}>
         <Text style={{fontSize: 16, fontWeight: "200", color: "#0c4a6e", marginBottom: 20}}>Exercises</Text>
         <View style={{display: "flex", gap: 8}}>
-          {program.exercises.map((e, i) => {
+          {program.exercises.reverse().map((e, i) => {
             const n = i + 1;
+            const textReps = e.repetitionType === "time" ? formatClockDuration(e.time as Duration ?? "") : `${e.sets}x${e.reps}`;
             return (
               <View key={e.id} style={{ flexDirection: "row", gap: 4 }}>
                 <Text style={{color: "#082f49"}}>{n}.</Text>
                 <Text style={{color: "#082f49"}}>{e.name}</Text>
+                <Text style={{color: "#082f49"}}>{textReps}</Text>
               </View>
             )
           })}
