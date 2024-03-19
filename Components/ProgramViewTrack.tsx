@@ -251,7 +251,7 @@ export const OnWorkout: React.FC<ProgramState> = ({exercises}) => {
               <Text style={stylesOnWorkOut.sets}>1 Set</Text>
             
             </View>
-              <TouchableOpacity onPress={() => setPaused(!paused)}>
+              <Pressable onPress={() => setPaused(!paused)}>
                 <View style={[stylesOnWorkOut.timer]}>
                   {paused && <>
                     <AntDesign name="playcircleo" size={60} color="#f0f9ff" style={[{position: "absolute", zIndex: 100}]} />
@@ -274,7 +274,7 @@ export const OnWorkout: React.FC<ProgramState> = ({exercises}) => {
                   formatDuration={formatTimerDuration} stop={paused} />
                   </View>
                 </View>
-              </TouchableOpacity>
+              </Pressable>
           </View> : 
           <View style={[stylesOnWorkOut.timerContainer, {justifyContent: "flex-start"}]}>
             <Text style={[{}]}>{exercise?.sets} Set</Text>
