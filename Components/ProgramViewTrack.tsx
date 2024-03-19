@@ -1,8 +1,11 @@
-import { useReducer, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Button, ScrollView, ScrollViewBase, ScrollViewComponent } from "react-native";
+import { useEffect, useReducer, useRef, useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Button, ScrollView, ScrollViewBase, ScrollViewComponent, Pressable } from "react-native";
 import { RenderClock } from "./RenderClock";
-import { Duration, FitnessProgramOutput, formatClockDuration } from "../types";
+import { Duration, FitnessProgramOutput, formatClockDuration, formatTimerDuration } from "../types";
 import { AntDesign, Feather } from "@expo/vector-icons";
+import { BlurView } from "@react-native-community/blur";
+import ModalComponent from "./ModalComp";
+import { Modal } from "react-native-paper";
 
 
 export type ProgramState = Required<FitnessProgramOutput> & ({
@@ -194,57 +197,154 @@ export const StartWorkout: React.FC<{program: ProgramState, dispatch: React.Disp
   )
 };
 
-export const OnWorkout: React.FC<ProgramState> = ({}) => {
+export const OnWorkout: React.FC<ProgramState> = ({exercises}) => {
+  const [exerciseIndex, setExerciseIndex] = useState(0);
+  const [paused, setPaused] = useState(false);
+  const exercise = exercises[exerciseIndex];
+  const [modalVisible, setModalVisible] = useState(true);
+
+  const handleNextExercise = () => {
+    if (exerciseIndex < exercises.length - 1) {
+      setExerciseIndex(exerciseIndex + 1);
+    }
+  };
+
+  const handlePreviousExercise = () => {
+    if (exerciseIndex > 0) {
+      setExerciseIndex(exerciseIndex - 1);
+    }
+  };
+
   return (
-    <View style={stylesOnWorkOut.container}>
+    <>
+    <View style={stylesOnWorkOut.container} key={exercise.id}> 
       
       <View style={stylesOnWorkOut.header}>
-        <Text style={{...stylesOnWorkOut.headerText, fontWeight: "600", color: "#082f49"}}>Full Body Work Out</Text>
-        <TouchableOpacity style={{...stylesOnWorkOut.button,    borderColor: "#f43f5e"}}>
-          <Text style={{fontSize: 20, textAlign: "center", color: '#f43f5e', fontWeight: "300"}}>Finish</Text>
+        <View style={{ display: "flex", flexDirection: "column", gap: 2, alignItems: "flex-start" }}>
+          <RenderClock
+            key={exercise.id} 
+            duration={"1s"} 
+            styleText={{ color: "rgba(8, 47, 73, 0.7)" }}
+            formatDuration={formatClockDuration} stop={paused} />
+          <Text style={{ ...stylesOnWorkOut.headerText, fontWeight: "600", color: "#082f49" }}>Full Body Work Out</Text>
+        </View>
+        <TouchableOpacity style={{ ...stylesOnWorkOut.button, borderColor: "#f43f5e" }}>
+          <Text style={{ fontSize: 20, textAlign: "center", color: '#f43f5e', fontWeight: "300" }}>Finish</Text>
         </TouchableOpacity>
       </View>
       
-      <View style={{...stylesOnWorkOut.content, justifyContent: "space-around"}}>
+      <View style={{...stylesOnWorkOut.content, justifyContent: "space-between"}}>
+        <View>
+
         <View style={{display: "flex", flexDirection: "row", gap: 20, alignItems: "baseline", justifyContent: "space-between"}}>
-          <Text style={stylesOnWorkOut.mainTitle}>Warm-up Jog</Text>
-          <TouchableOpacity>
+          <Text style={stylesOnWorkOut.mainTitle}>{exercise?.name}</Text>
+          <TouchableOpacity onPress={() => setModalVisible(true)}>
             <Feather name="list" size={24} color="#082f49" />
           </TouchableOpacity>
         </View>
-        <Text style={stylesOnWorkOut.description}>A light jog to warm up the body.</Text>
-        <View style={stylesOnWorkOut.timerContainer}>
-          <View style={stylesOnWorkOut.setContent}>
-            <AntDesign name="retweet" size={24} color="#082f49" />
-            <Text style={stylesOnWorkOut.sets}>1 Set</Text>
-          </View>
-          <View style={stylesOnWorkOut.timer}>
-            <View style={stylesOnWorkOut.timerContent}>
-            <View style={stylesOnWorkOut.timerTextWrapper}>
-              <AntDesign name="pause" size={24} color="#f0f9ff" />
-              <Text style={stylesOnWorkOut.timerTextSmall}>Time</Text>
+        <Text style={stylesOnWorkOut.description}>{exercise?.description}</Text>
+        {
+          exercise.repetitionType === "time" ?
+          <View style={stylesOnWorkOut.timerContainer}>
+            <View style={stylesOnWorkOut.setContent}>
+              <AntDesign name="retweet" size={24} color="#082f49" />
+              <Text style={stylesOnWorkOut.sets}>1 Set</Text>
+            
             </View>
-            <Text style={stylesOnWorkOut.timerText}>10:00</Text>
-            </View>
+              <TouchableOpacity onPress={() => setPaused(!paused)}>
+                <View style={[stylesOnWorkOut.timer]}>
+                  {paused && <>
+                    <AntDesign name="playcircleo" size={60} color="#f0f9ff" style={[{position: "absolute", zIndex: 100}]} />
+                    <BlurView
+                      style={{ width: 170, height: 170, borderRadius: 170 / 2, zIndex: 60, position: "absolute" }}
+                      blurType="light"
+                      blurAmount={3}
+                    />
+                  </>
+                  }
+                  <View style={stylesOnWorkOut.timerContent}>
+                    <View style={stylesOnWorkOut.timerTextWrapper}>
+                      <AntDesign name="pause" size={24} color="#f0f9ff" />
+                      <Text style={stylesOnWorkOut.timerTextSmall}>Time</Text>
+                    </View>
+                  <RenderClock 
+                  key={exerciseIndex}
+                  duration={exercise.time as Duration ?? "0s"} 
+                  styleText={stylesOnWorkOut.timerText} 
+                  formatDuration={formatTimerDuration} stop={paused} />
+                  </View>
+                </View>
+              </TouchableOpacity>
+          </View> : 
+          <View style={[stylesOnWorkOut.timerContainer, {justifyContent: "flex-start"}]}>
+            <Text style={[{}]}>{exercise?.sets} Set</Text>
+            <Text style={[{}]}>{exercise?.reps} Reps</Text>
           </View>
+        }
         </View>
+        
         <View style={stylesOnWorkOut.navigation}>
-          <TouchableOpacity style={stylesOnWorkOut.button}>
+          <TouchableOpacity 
+          onPress={() => handlePreviousExercise()}
+          style={stylesOnWorkOut.button}>
             <Text style={stylesOnWorkOut.buttonText}>Previous</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={{...stylesOnWorkOut.button, borderColor: "#082f49", backgroundColor: "#0c4a6e"}}>
+          <TouchableOpacity 
+          onPress={() => handleNextExercise()}
+          style={{...stylesOnWorkOut.button, borderColor: "#082f49", backgroundColor: "#0c4a6e"}}>
             <View style={{display: "flex", flexDirection: "row", gap: 10, alignItems: "center",}}>
               {true ? 
               <Feather name="square" size={24} color="#f0f9ff" /> 
               :
               <Feather name="check-square" size={24} color="#f0f9ff" />
               }
-              <Text style={{...stylesOnWorkOut.buttonText, color: "#f0f9ff", fontWeight: "500"}}>& Next</Text>
+              <Text style={{...stylesOnWorkOut.buttonText, color: "#f0f9ff", fontWeight: "500"}} >& Next</Text>
             </View>
           </TouchableOpacity>
         </View>
+
       </View>
+
+      <Modal
+          key={"modal"}
+          visible={modalVisible}
+          // theme={{ colors: { background: "transparent" } }}
+          style={[stylesModal.centeredView, {zIndex: 10000, height: Dimensions.get("window").height}]}
+          onDismiss={() => setModalVisible(false)}
+          >
+            <ScrollView>
+              <View style={stylesModal.centeredView}>
+                <View style={stylesModal.modalView}>
+                  <View style={{display: "flex", flexDirection: "row", gap: 20, alignItems: "flex-end"}}>
+                    <Text style={{marginBottom: 10, fontSize: 24}}>Exercises</Text>
+                    <Pressable
+                      style={[stylesModal.button, stylesModal.buttonClose]}
+                      onPress={() => setModalVisible(!modalVisible)}>
+                      <Text style={stylesModal.textStyle}>Hide Modal</Text>
+                    </Pressable>
+                  </View>
+                  <View style={{display: "flex", gap: 16, marginTop: 32}}>
+                  {exercises.map((e, i) => {
+                    const n = i + 1;
+                    const textReps = e.repetitionType === "time" ? formatClockDuration(e.time as Duration ?? "0s") : `${e.sets}x${e.reps}`;
+                    return (
+                      <Pressable key={e.id} style={{ flexDirection: "row", gap: 4 }}>
+                        <View key={e.id} style={{ flexDirection: "row", gap: 7, backgroundColor: "#082f49", padding: 12, borderRadius: 12 }}>
+                          <Text style={{color: "#f0f9ff", fontSize: 16}}>{n}.</Text>
+                          <Text style={{color: "#f0f9ff", fontSize: 16}}>{e.name}</Text>
+                          <Text style={{color: "#f0f9ff", fontSize: 16}}>{textReps}</Text>
+                        </View>
+                      </Pressable>
+                    )
+                  })}
+                  </View>
+                </View>
+              </View>
+            </ScrollView>
+        </Modal>
+
     </View>
+    </>
   )
 }
 
@@ -385,6 +485,7 @@ export const stylesOnWorkOut = StyleSheet.create({
     backgroundColor: '#075985',
     justifyContent: 'center',
     alignItems: 'center',
+    
   },
   timerTextWrapper: {
     display: 'flex',
@@ -431,9 +532,61 @@ export const stylesOnWorkOut = StyleSheet.create({
     gap: 10,
     alignItems: 'stretch',
     justifyContent: 'center',
-  }
+  },
+  absolute: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    bottom: 0,
+    right: 0,
+  },
 });
 
+
+
+const stylesModal = StyleSheet.create({
+  centeredView: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 22,
+  },
+  modalView: {
+    margin: 20,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 35,
+    alignItems: 'flex-start',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  button: {
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+  },
+  buttonOpen: {
+    backgroundColor: '#F194FF',
+  },
+  buttonClose: {
+    backgroundColor: '#2196F3',
+  },
+  textStyle: {
+    color: 'white',
+    fontWeight: 'bold',
+    textAlign: 'center',
+  },
+  modalText: {
+    marginBottom: 15,
+    textAlign: 'center',
+  },
+});
 
 
 export default RenderProgramTrack;

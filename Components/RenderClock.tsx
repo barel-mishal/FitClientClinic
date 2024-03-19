@@ -5,12 +5,17 @@ import { StyleProp, TextStyle, Text } from "react-native";
 
 type DurationFormatter = (duration: Duration, subtract: `${number}s`) => `${string}:${string}`;
 
-const useIntervalTimer = (duration: Duration, formatDuration: DurationFormatter) => {
+const useIntervalTimer = (duration: Duration, formatDuration: DurationFormatter, stop?: boolean) => {
   const oneSecondRef = useRef(1);
   const [timeLeft, setTimeLeft] = useState<string>(formatDuration(duration, '0s'));
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
+    if (stop) return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+      }
+    }
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
     }
@@ -26,13 +31,13 @@ const useIntervalTimer = (duration: Duration, formatDuration: DurationFormatter)
         clearInterval(intervalRef.current);
       }
     };
-  }, [duration, formatDuration]);
+  }, [duration, formatDuration, stop]);
 
   return timeLeft;
 };
 
-export const RenderClock: React.FC<{ duration: Duration, styleText: StyleProp<TextStyle>, formatDuration: DurationFormatter }> = ({ duration, styleText, formatDuration }) => {
-  const timeLeft = useIntervalTimer(duration, formatDuration);
+export const RenderClock: React.FC<{ duration: Duration, styleText: StyleProp<TextStyle>, formatDuration: DurationFormatter, stop?: boolean }> = ({ duration, styleText, formatDuration, stop }) => {
+  const timeLeft = useIntervalTimer(duration, formatDuration, stop);
   return <Text style={styleText}>{timeLeft}</Text>;
 };
 

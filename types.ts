@@ -229,10 +229,8 @@ export const formatTimerDuration = (duration: Duration, substruct: `${number}s` 
     const currentSecound = s - parseInt(substruct);
     return `${Math.floor(currentSecound/60).toString().padStart(2, "0")}:${(currentSecound%60).toString().padEnd(2, "0")}`;
 };
-export const formatClockDuration = (duration: Duration, substruct: `${number}s` = "0s"): `${string}:${string}` => {
-    const s = duration.includes('h') ? parseInt(duration) * SIXTY * SIXTY : duration.includes('m') ? parseInt(duration) * SIXTY : parseInt(duration);
-    const currentSecound = s + parseInt(substruct);
-    return `${Math.floor(currentSecound/60).toString().padStart(2, "0")}:${(currentSecound%60).toString().padEnd(2, "0")}`;
+export const formatClockDuration = (_: Duration, add: `${number}s` = "0s"): `${string}:${string}` => {
+    return `${Math.floor(parseInt(add)/60).toString().padStart(2, "0")}:${(parseInt(add)%60).toString().padStart(2, "0")}`;
 };
 
 
