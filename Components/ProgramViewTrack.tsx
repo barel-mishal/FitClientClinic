@@ -1,25 +1,31 @@
 import { useReducer, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Button } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Button, ScrollView, ScrollViewBase, ScrollViewComponent } from "react-native";
 import { RenderClock } from "./RenderClock";
 import { Duration, FitnessProgramOutput, formatClockDuration } from "../types";
+import { AntDesign } from "@expo/vector-icons";
 
 
 export type ProgramState = Required<FitnessProgramOutput> & ({
   state: "start";
   workoutTime: Duration;
+  completedExercises: Array<string>;
 } | {
   state: "stop";
   workoutTime: Duration;
+  completedExercises: Array<string>;
 } | {
   state: "pause";
   workoutTime: Duration;
+  completedExercises: Array<string>;
 } | {
   state: "finish";
   workoutTime: Duration;
   message: string;
+  completedExercises: Array<string>;
 } | {
   state: "on",
   workoutTime: Duration,
+  completedExercises: Array<string>;
 });
 
 export type ProgramActions = {
@@ -136,17 +142,50 @@ const RenderProgramTrack: React.FC<{program: ProgramState}> = ({ program }) => {
 
 export const StartWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatch<ProgramActions>}> = ({dispatch, program}) => {
   return (
-    <View>
-      <Text>Start Workout {program.state}</Text>
-      <Button title="Start" onPress={() => dispatch({type: "on"})} />
+    <View style={{ flex: 1, backgroundColor: "#0c4a6e" }}>
+      <View style={{ flex: 1, maxHeight: Dimensions.get('window').height / 3, justifyContent: "center" }}>
+        <View style={{...stylesStartWorkout.stacHorizental, marginTop: 50}}>
+          <Text style={{fontSize: 40, fontWeight: "bold", ...styles.sky50}}>{program.name}</Text>
+          <AntDesign name="questioncircle" size={24} color="#f0f9ff" />
+        </View>
+
+        <View style={stylesStartWorkout.stack}>
+          <Text style={{fontSize: 16, fontWeight: "200", color: "#bae6fd"}}>Description</Text>
+          <Text style={{...styles.sky50, fontSize: 24}}>{program.description}</Text>
+        </View>
+      </View>
+
+      <ScrollView style={{ flex: 1, backgroundColor: "#f0f9ff", padding: 16, borderRadius: 16, marginHorizontal: 20 }}>
+        <Text style={{fontSize: 16, fontWeight: "200", color: "#0c4a6e", marginBottom: 20}}>Exercises</Text>
+        <View style={{display: "flex", gap: 8}}>
+          {program.exercises.map((e, i) => {
+            const n = i + 1;
+            return (
+              <View key={e.id} style={{ flexDirection: "row", gap: 4 }}>
+                <Text style={{color: "#082f49"}}>{n}.</Text>
+                <Text style={{color: "#082f49"}}>{e.name}</Text>
+              </View>
+            )
+          })}
+        </View>
+      </ScrollView>
+      <View style={{ marginHorizontal: 20, marginBottom: 20, marginTop: 10 }}>
+        <TouchableOpacity
+          onPress={() => dispatch({type: "on"})}
+          activeOpacity={0.8} // Slight opacity change on press for better feedback
+          style={{ backgroundColor: "#fde68a", alignItems: "center", padding: 10, borderRadius: 16 }}
+        >
+          <Text style={{ color: "#78350f", fontSize: 32 }}>Start</Text>
+        </TouchableOpacity>
+  </View>
     </View>
   )
-}
+};
 
 export const OnWorkout: React.FC<ProgramState> = ({}) => {
   return (
     <View>
-      <Text>On Workout</Text>
+      <Text style={styles.sky50}>On Workout</Text>
     </View>
   )
 }
@@ -213,7 +252,29 @@ const styles = StyleSheet.create({
       fontSize: 18,
       color: 'blue',
     },
+    sky50: {
+      color: '#f0f9ff',
+    },
+
   });
+
+export const stylesStartWorkout = StyleSheet.create({
+  stacHorizental: {
+    marginVertical: 20,
+    marginHorizontal: 16,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+  },
+  stack: {
+    marginVertical: 20,
+    marginHorizontal: 16,
+    display: "flex",
+    gap: 6,
+  }
+  
+});
 
 
 export default RenderProgramTrack;
