@@ -203,9 +203,14 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
   const exercise = exercises[exerciseIndex];
   const [modalVisible, setModalVisible] = useState(false);
 
+  const isCompleted = program.completedExercises.includes(exercise?.id ?? "");
+  const exerciseLeft = exercises.length - program.completedExercises.length;
+  const isFinished = exerciseLeft === 0;
+
   const handleNextExercise = () => {
-    if (exerciseIndex < exercises.length - 1) {
-      setExerciseIndex(exerciseIndex + 1);
+    const leftExercisesIndex = exercises.findIndex(e => !program.completedExercises.includes(e.id ?? "") && e.id !== exercise.id);
+    if (leftExercisesIndex > -1) {
+      setExerciseIndex(leftExercisesIndex);
       dispatch({type: "completedExercise", payload: exercise.id})
     } else {
       dispatch({type: "finish", message: "Workout Finished"});
@@ -228,9 +233,7 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
   }, [modalVisible])
 
 
-  const isLastExercise = exerciseIndex === exercises.length - 1;
-  const isCompleted = program.completedExercises.includes(exercise.id ?? "");
-  const exerciseLeft = exercises.length - program.completedExercises.length;
+  
 
   return (
     <>
@@ -242,8 +245,8 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
           <Text style={{fontSize: 12}}>{formatClockDuration({step: `${Math.round(elapsed.elapsedTime/1000)}s`, duration: "0s"})}</Text>
           <Text style={{ ...stylesOnWorkOut.headerText, fontWeight: "600", color: "#082f49" }}>Full Body Work Out</Text>
         </View>
-        <TouchableOpacity style={[{ ...stylesOnWorkOut.button }, , isLastExercise ? {borderColor: "#065f46"} : {borderColor: "#f43f5e"}]}>
-          <Text style={[{ fontSize: 20, textAlign: "center", fontWeight: "300" }, isLastExercise ? {color: "#065f46"} : {color: '#f43f5e'}]}>Finish</Text>
+        <TouchableOpacity style={[{ ...stylesOnWorkOut.button }, isFinished ? {borderColor: "#065f46"} : {borderColor: "#f43f5e"}]} onPress={handleNextExercise}>
+          <Text style={[{ fontSize: 20, textAlign: "center", fontWeight: "300" }, isFinished ? {color: "#065f46"} : {color: '#f43f5e'}]}>Finish</Text>
         </TouchableOpacity>
       </View>
       
@@ -314,7 +317,7 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
               :
               <Feather name="square" size={24} color="#f0f9ff" /> 
               }
-              <Text style={{...stylesOnWorkOut.buttonText, color: "#f0f9ff", fontWeight: "500"}} >& {isLastExercise ? "Finish" : "Next"}</Text>
+              <Text style={{...stylesOnWorkOut.buttonText, color: "#f0f9ff", fontWeight: "500"}} >& {isFinished ? "Finish" : "Next"}</Text>
             </View>
           </TouchableOpacity>
         </View>
