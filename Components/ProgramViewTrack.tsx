@@ -39,6 +39,10 @@ export type ProgramActions = {
   type: ProgramState["state"];
   payload?: Duration;
   message?: string;
+} | {
+  type: "completedExercise";
+  payload?: ProgramState["exercises"][number]["id"];
+  message?: string;
 };
 
 const programActions = (state: ProgramState, action: ProgramActions): ProgramState => {
@@ -81,6 +85,15 @@ const programActions = (state: ProgramState, action: ProgramActions): ProgramSta
         state: "exercise",
         workoutTime: action.payload ?? "0s",
       };
+    case "completedExercise": {
+      const exs = state["exercises"]
+      .filter(e => e.id === action.payload)
+      .map(e => e.id as string);
+      return {
+        ...state,
+        completedExercises: state.completedExercises.concat(exs)
+      }
+    }; 
     default:
       return state;
   }
@@ -207,6 +220,9 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
   const handleNextExercise = () => {
     if (exerciseIndex < exercises.length - 1) {
       setExerciseIndex(exerciseIndex + 1);
+      dispatch({type: "completedExercise", payload: exercise.id})
+    } else {
+      dispatch({type: "finish", message: "Workout Finished"});
     }
   };
 
@@ -218,6 +234,7 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
 
 
   const isLastExercise = exerciseIndex === exercises.length - 1;
+  const isCompleted = program.completedExercises.includes(exercise.id ?? "");
 
   return (
     <>
@@ -297,10 +314,10 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
           onPress={() => handleNextExercise()}
           style={{...stylesOnWorkOut.button, borderColor: "#082f49", backgroundColor: "#0c4a6e"}}>
             <View style={{display: "flex", flexDirection: "row", gap: 10, alignItems: "center",}}>
-              {true ? 
-              <Feather name="square" size={24} color="#f0f9ff" /> 
-              :
+              {isCompleted ? 
               <Feather name="check-square" size={24} color="#f0f9ff" />
+              :
+              <Feather name="square" size={24} color="#f0f9ff" /> 
               }
               <Text style={{...stylesOnWorkOut.buttonText, color: "#f0f9ff", fontWeight: "500"}} >& {isLastExercise ? "Finish" : "Next"}</Text>
             </View>
@@ -333,7 +350,7 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
                     const n = i + 1;
                     const textReps = e.repetitionType === "time" ? formatClockDuration(e.time as Duration ?? "0s") : `${e.sets}x${e.reps}`;
                     return (
-                      <Pressable key={e.id} style={{ flexDirection: "row", gap: 4 }}>
+                      <Pressable key={e.id} style={{ flexDirection: "row", gap: 4 }} onPress={() => setExerciseIndex(i)}>
                         <View key={e.id} style={{ flexDirection: "row", gap: 7, backgroundColor: "#082f49", padding: 12, borderRadius: 12 }}>
                           <Text style={{color: "#f0f9ff", fontSize: 16}}>{n}.</Text>
                           <Text style={{color: "#f0f9ff", fontSize: 16}}>{e.name}</Text>

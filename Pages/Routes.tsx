@@ -56,5 +56,7 @@ export const PrivateNavigator: React.FC<PrivateNavigatorProps> = ({ role })  =>{
             <Stack.Screen name={"TrainerProgram"} component={TrainerProgram} options={{}} />
             <Stack.Screen name={"TrainerCreateProgram"} component={TrainerCreateFitnessProgram} options={{}} />
         </Stack.Navigator>
-    } 
+    } else {
+        return <PublicNavigator />
+    }
 }
