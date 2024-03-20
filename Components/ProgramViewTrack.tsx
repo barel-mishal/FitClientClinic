@@ -1,10 +1,9 @@
-import { useEffect, useReducer, useRef, useState } from "react";
+import { useReducer, useRef, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Button, ScrollView, ScrollViewBase, ScrollViewComponent, Pressable } from "react-native";
 import { RenderClock } from "./RenderClock";
 import { Duration, FitnessProgramOutput, formatClockDuration, formatTimerDuration } from "../types";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { BlurView } from "@react-native-community/blur";
-import ModalComponent from "./ModalComp";
 import { Modal } from "react-native-paper";
 
 
@@ -107,21 +106,6 @@ const programActions = (state: ProgramState, action: ProgramActions): ProgramSta
 const RenderProgramTrack: React.FC<{program: ProgramState}> = ({ program }) => {
     // useReducer to manage the state of the program
     const [state, dispatch] = useReducer(programActions, program);
-
-    const [exerciseIndex, setExerciseIndex] = useState(0);
-
-    const handleNextExercise = () => {
-        if (exerciseIndex < program.exercises.length - 1) {
-          setExerciseIndex(exerciseIndex + 1);
-        }
-      }
-    const handlePreviousExercise = () => {
-      if (exerciseIndex > 0) {
-        setExerciseIndex(exerciseIndex - 1);
-      }
-    }
-
-    const exercise = program.exercises[exerciseIndex];
 
     return (
         <>
@@ -236,6 +220,7 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
 
   const isLastExercise = exerciseIndex === exercises.length - 1;
   const isCompleted = program.completedExercises.includes(exercise.id ?? "");
+  const exerciseLeft = exercises.length - program.completedExercises.length;
 
   return (
     <>
@@ -312,6 +297,7 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
           style={stylesOnWorkOut.button}>
             <Text style={stylesOnWorkOut.buttonText}>Previous</Text>
           </TouchableOpacity>
+          <Text style={{fontSize: 20, color: "#082f49"}}>{exerciseLeft}/{exercises.length}</Text>
           <TouchableOpacity 
           onPress={() => handleNextExercise()}
           style={{...stylesOnWorkOut.button, borderColor: "#082f49", backgroundColor: "#0c4a6e"}}>
@@ -539,6 +525,7 @@ export const stylesOnWorkOut = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     marginTop: 30,
+    alignItems: 'center',
   },
   button: {
     paddingVertical: 10,
