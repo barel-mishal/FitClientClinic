@@ -3,11 +3,11 @@ import { Duration, formatClockDuration, formatTimerDuration } from "../types";
 import React from "react";
 import { StyleProp, TextStyle, Text } from "react-native";
 
-type DurationFormatter = (duration: Duration, subtract: `${number}s`) => `${string}:${string}`;
+export type DurationFormatter = ({step, duration}: {duration: Duration, step: `${number}s`}) => `${string}:${string}`;
 
 const useIntervalTimer = (duration: Duration, formatDuration: DurationFormatter, stop?: boolean) => {
   const oneSecondRef = useRef(1);
-  const [timeLeft, setTimeLeft] = useState<string>(formatDuration(duration, '0s'));
+  const [timeLeft, setTimeLeft] = useState<string>(formatDuration({duration, step: '0s'}));
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ const useIntervalTimer = (duration: Duration, formatDuration: DurationFormatter,
     }
     intervalRef.current = setInterval(() => {
       setTimeLeft((currentValue) => {
-        const time = formatDuration(duration, `${oneSecondRef.current}s`);
+        const time = formatDuration({duration, step: `${oneSecondRef.current}s`});
         oneSecondRef.current += 1;
         return time;
       });

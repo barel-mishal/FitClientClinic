@@ -1,5 +1,6 @@
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import * as v from "valibot";
+import { DurationFormatter } from './Components/RenderClock';
 
 
 // ***************** Roles *****************
@@ -224,13 +225,13 @@ export function isUserLoggedIn(userSchema: UserSchema): userSchema is { user: Fi
  * // You can use secound argument also
  * formatDuration("30:00", "3s") // "29:57"
 */
-export const formatTimerDuration = (duration: Duration, substruct: `${number}s` = "0s"): `${string}:${string}` => {
+export const formatTimerDuration: DurationFormatter = ({step = "0s", duration}: {step: `${number}s`, duration: Duration}): `${string}:${string}` => {
     const s = duration.includes('h') ? parseInt(duration) * SIXTY * SIXTY : duration.includes('m') ? parseInt(duration) * SIXTY : parseInt(duration);
-    const currentSecound = s - parseInt(substruct);
+    const currentSecound = s - parseInt(step);
     return `${Math.floor(currentSecound/60).toString().padStart(2, "0")}:${(currentSecound%60).toString().padEnd(2, "0")}`;
 };
-export const formatClockDuration = (_: Duration, add: `${number}s` = "0s"): `${string}:${string}` => {
-    return `${Math.floor(parseInt(add)/60).toString().padStart(2, "0")}:${(parseInt(add)%60).toString().padStart(2, "0")}`;
+export const formatClockDuration: DurationFormatter = ({step = "0s", duration}: {step: `${number}s`, duration: Duration}): `${string}:${string}` => {
+    return `${Math.floor(parseInt(step)/60).toString().padStart(2, "0")}:${(parseInt(step)%60).toString().padStart(2, "0")}`;
 };
 
 

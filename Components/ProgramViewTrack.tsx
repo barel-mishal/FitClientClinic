@@ -186,7 +186,7 @@ export const StartWorkout: React.FC<{program: ProgramState, dispatch: React.Disp
         <View style={{display: "flex", gap: 8}}>
           {program.exercises.reverse().map((e, i) => {
             const n = i + 1;
-            const textReps = e.repetitionType === "time" ? formatClockDuration(e.time as Duration ?? "") : `${e.sets}x${e.reps}`;
+            const textReps = e.repetitionType === "time" ? formatClockDuration({step: "0s", duration: e.time as Duration}) : `${e.sets}x${e.reps}`;
             return (
               <View key={e.id} style={{ flexDirection: "row", gap: 4 }}>
                 <Text style={{color: "#082f49"}}>{n}.</Text>
@@ -213,6 +213,7 @@ export const StartWorkout: React.FC<{program: ProgramState, dispatch: React.Disp
 export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatch<ProgramActions>}> = ({program, dispatch}) => {
   const exercises = program?.exercises;
   const [exerciseIndex, setExerciseIndex] = useState(0);
+  const refClock = useRef("0s");
   const [paused, setPaused] = useState(false);
   const exercise = exercises[exerciseIndex];
   const [modalVisible, setModalVisible] = useState(false);
@@ -244,7 +245,7 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
         <View style={{ display: "flex", flexDirection: "column", gap: 2, alignItems: "flex-start" }}>
           <RenderClock
             key={exercise.id} 
-            duration={"1s"} 
+            duration={refClock.current as Duration ?? "0s"}
             styleText={{ color: "rgba(8, 47, 73, 0.7)" }}
             formatDuration={formatClockDuration} stop={paused} />
           <Text style={{ ...stylesOnWorkOut.headerText, fontWeight: "600", color: "#082f49" }}>Full Body Work Out</Text>
@@ -349,7 +350,7 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
                   <View style={{display: "flex", gap: 16, marginTop: 32}}>
                   {exercises.map((e, i) => {
                     const n = i + 1;
-                    const textReps = e.repetitionType === "time" ? formatClockDuration(e.time as Duration ?? "0s") : `${e.sets}x${e.reps}`;
+                    const textReps = e.repetitionType === "time" ? formatClockDuration({duration: e.time as Duration ?? "0s", step: "0s"}) : `${e.sets}x${e.reps}`;
                     return (
                       <Pressable key={e.id} style={{ flexDirection: "row", gap: 4 }} onPress={() => setExerciseIndex(i)}>
                         <View key={e.id} style={{ flexDirection: "row", gap: 7, backgroundColor: "#082f49", padding: 12, borderRadius: 12 }}>
