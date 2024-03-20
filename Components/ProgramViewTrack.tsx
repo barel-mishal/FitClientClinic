@@ -1,8 +1,8 @@
 import { useEffect, useReducer, useRef, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Button, ScrollView, ScrollViewBase, ScrollViewComponent, Pressable } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions, Button, ScrollView, ScrollViewBase, ScrollViewComponent, Pressable, Easing } from "react-native";
 import { RenderClock } from "./RenderClock";
 import { Duration, FitnessProgramOutput, formatClockDuration, formatTimerDuration } from "../types";
-import { AntDesign, Feather } from "@expo/vector-icons";
+import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 import { BlurView } from "@react-native-community/blur";
 import { Modal } from "react-native-paper";
 import { useElapsedTime } from "./temp";
@@ -357,13 +357,44 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
   )
 }
 
-export const FinishWorkout: React.FC<ProgramState> = ({}) => {
+
+export const FinishWorkout: React.FC<ProgramState> = () => {
+  const parentHeight = 400;
+  const parentWidth = Dimensions.get("window").width - 40;
+  const rotation = useRef(new Animated.Value(30)).current; // Starting at 30 degrees
+
+  useEffect(() => {
+    Animated.timing(rotation, {
+      toValue: 10, // End at 10 degrees
+      duration: 1000, // Duration of the animation in milliseconds
+      useNativeDriver: true, // Use native driver for better performance
+      easing: Easing.inOut(Easing.ease), // Ease-in-ease-out effect
+      delay: 0.5 * 1000, // Delay of 0.5 seconds
+    }).start();
+  }, [rotation]);
+
+  const rotationInterpolate = rotation.interpolate({
+    inputRange: [0, 30], // Input range for the interpolation
+    outputRange: ['0deg', '30deg'], // Output range for the interpolation
+  });
+
   return (
-    <View>
-      <Text>Finish Workout</Text>
+    <View style={{ backgroundColor: "#f0f9ff", height: Dimensions.get("screen").height, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <View style={{ backgroundColor: "white", borderRadius: 24, padding: 24, display: "flex", gap: 3, position: "relative", height: parentHeight, width: parentWidth }}>
+        {["You have completed the program", "Workout Finished"].map((message, index) => (
+          <Text key={index} style={{ fontSize: 24, fontWeight: "bold", color: "#082f49" }}>
+            {message}
+          </Text>
+        ))}
+        <Animated.View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", alignItems: "center", justifyContent: "center", transform: [{ rotate: rotationInterpolate }] }}>
+          <MaterialCommunityIcons name="arm-flex" size={200} color="#bae6fd" style={{ opacity: 0.7 }} />
+        </Animated.View>
+      </View>
     </View>
-  )
-}
+  );
+};
+
+
 
 
 export const styles = StyleSheet.create({
