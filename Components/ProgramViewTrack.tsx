@@ -335,6 +335,11 @@ export const FinishWorkout: React.FC<{program: ProgramState, dispatch: React.Dis
   const [countDown, setCountDown] = useState(5);
 
   useEffect(() => {
+    console.log("Workout finished", program);
+
+  }, []);
+
+  useEffect(() => {
     const tick = () => {
       setCountDown((prev) => prev - 1);
     };

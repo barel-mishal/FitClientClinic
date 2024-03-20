@@ -240,7 +240,6 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation, trainer, use
                   <Text style={styles.inputTitle}>Duration</Text>
                   <ScrollView horizontal={true} style={styles.horizantalBlocks}>
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 15, 20, 25].map((i) => {
-                      console.log(exercise)
                       return (
                         <TouchableOpacity  
                         key={`${i}m-${exercise.id}`} 

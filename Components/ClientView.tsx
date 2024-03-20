@@ -5,7 +5,6 @@ This component is used to render the program details for the trainer
 To avoid fetching the program each time it change state 
 */
 const ClientView = ({ client }: { client: any }) => {
-  console.log(client)
 
 
     return (
