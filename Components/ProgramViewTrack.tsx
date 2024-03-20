@@ -17,10 +17,6 @@ export type ProgramState = Required<FitnessProgramOutput> & ({
   workoutTime: Duration;
   completedExercises: Array<string>;
 } | {
-  state: "pause";
-  workoutTime: Duration;
-  completedExercises: Array<string>;
-} | {
   state: "finish";
   workoutTime: Duration;
   message: string;
@@ -57,12 +53,6 @@ const programActions = (state: ProgramState, action: ProgramActions): ProgramSta
       return {
         ...state,
         state: "stop",
-        workoutTime: action.payload ?? "0s",
-      };
-    case "pause":
-      return {
-        ...state,
-        state: "pause",
         workoutTime: action.payload ?? "0s",
       };
     case "finish":
@@ -113,7 +103,6 @@ const RenderProgramTrack: React.FC<{program: ProgramState}> = ({ program }) => {
         
         {state.state === "start" && <StartWorkout program={state} dispatch={dispatch} />}
         {state.state === "on" && <OnWorkout program={state} dispatch={dispatch} />}
-        {state.state === "pause" && <PuseWorkout {...state} />}
         {state.state === "finish" && <FinishWorkout {...state} />}
         {state.state === "stop" && <FinishWorkout {...state} />}
 
@@ -365,14 +354,6 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
 
     </View>
     </>
-  )
-}
-
-export const PuseWorkout: React.FC<ProgramState> = ({}) => {
-  return (
-    <View>
-      <Text>Pause Workout</Text>
-    </View>
   )
 }
 
