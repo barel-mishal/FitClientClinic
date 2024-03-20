@@ -297,9 +297,10 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
                 </View>
               </Pressable>
           </View> : 
-          <View style={[stylesOnWorkOut.timerContainer, {justifyContent: "flex-start"}]}>
-            <Text style={[{}]}>{exercise?.sets} Set</Text>
-            <Text style={[{}]}>{exercise?.reps} Reps</Text>
+          <View style={[{justifyContent: "center", flexDirection: "row", display: "flex", alignItems: "baseline", gap: 3}]}>
+            <Text style={[{fontSize: 24, fontWeight: "700"}]}>{exercise?.sets} (Set)</Text>
+            <Text style={[{fontSize: 20, fontWeight: "700"}]}>:</Text>
+            <Text style={[{fontSize: 40, fontWeight: "700"}]}>{exercise?.reps} (Reps)</Text>
           </View>
         }
         </View>
