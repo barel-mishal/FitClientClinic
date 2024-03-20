@@ -1,4 +1,4 @@
-import { useReducer, useRef, useState } from "react";
+import { useEffect, useReducer, useRef, useState } from "react";
 import { View, Text, TouchableOpacity, StyleSheet, Dimensions, Button, ScrollView, ScrollViewBase, ScrollViewComponent, Pressable } from "react-native";
 import { RenderClock } from "./RenderClock";
 import { Duration, FitnessProgramOutput, formatClockDuration, formatTimerDuration } from "../types";
@@ -217,6 +217,15 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
       setExerciseIndex(exerciseIndex - 1);
     }
   };
+
+  useEffect(() => {
+    if (modalVisible) {
+      setPaused(true);
+    } else {
+      setPaused(false);
+    }
+    
+  }, [modalVisible])
 
 
   const isLastExercise = exerciseIndex === exercises.length - 1;
