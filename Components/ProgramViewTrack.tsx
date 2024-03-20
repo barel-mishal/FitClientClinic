@@ -386,12 +386,12 @@ export const FinishWorkout: React.FC<ProgramState> = () => {
   return (
     <View style={{ backgroundColor: "#f0f9ff", height: Dimensions.get("screen").height, display: "flex", alignItems: "center", justifyContent: "center" }}>
       <View style={{ backgroundColor: "white", borderRadius: 24, padding: 24, display: "flex", gap: 3, position: "relative", height: parentHeight, width: parentWidth }}>
-        {["You have completed the program", "Workout Finished"].map((message, index) => (
-          <Text key={index} style={{ fontSize: 24, fontWeight: "bold", color: "#082f49" }}>
+        {["You have got the finish line! Great Workout"].map((message, index) => (
+          <Text key={index} style={{ fontSize: 50, fontWeight: "bold", color: "#082f49" }}>
             {message}
           </Text>
         ))}
-        <Animated.View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, display: "flex", alignItems: "center", justifyContent: "center", transform: [{ rotate: rotationInterpolate }] }}>
+        <Animated.View style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: -1, bottom: 0, display: "flex", alignItems: "center", justifyContent: "center", transform: [{ rotate: rotationInterpolate }] }}>
           <MaterialCommunityIcons name="arm-flex" size={200} color="#bae6fd" style={{ opacity: 0.7 }} />
         </Animated.View>
         <ConfettiCannon count={50} origin={{ x: -10, y: 0 }} ref={confettiRef} />
