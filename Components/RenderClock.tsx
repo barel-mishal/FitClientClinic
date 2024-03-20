@@ -10,6 +10,7 @@ const useIntervalTimer = (duration: Duration, formatDuration: DurationFormatter,
   const [timeLeft, setTimeLeft] = useState<string>(formatDuration({duration, step: '0s'}));
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
 
+
   useEffect(() => {
     if (stop) return () => {
       if (intervalRef.current) {

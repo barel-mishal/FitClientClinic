@@ -5,6 +5,7 @@ import { Duration, FitnessProgramOutput, formatClockDuration, formatTimerDuratio
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { BlurView } from "@react-native-community/blur";
 import { Modal } from "react-native-paper";
+import { useElapsedTime } from "./temp";
 
 
 export type ProgramState = Required<FitnessProgramOutput> & ({
@@ -197,7 +198,7 @@ export const StartWorkout: React.FC<{program: ProgramState, dispatch: React.Disp
 export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatch<ProgramActions>}> = ({program, dispatch}) => {
   const exercises = program?.exercises;
   const [exerciseIndex, setExerciseIndex] = useState(0);
-  const refClock = useRef("0s");
+  const elapsed = useElapsedTime(true)
   const [paused, setPaused] = useState(false);
   const exercise = exercises[exerciseIndex];
   const [modalVisible, setModalVisible] = useState(false);
@@ -224,15 +225,12 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
 
   return (
     <>
+
     <View style={stylesOnWorkOut.container} key={exercise.id}> 
       
       <View style={stylesOnWorkOut.header}>
         <View style={{ display: "flex", flexDirection: "column", gap: 2, alignItems: "flex-start" }}>
-          <RenderClock
-            key={exercise.id} 
-            duration={refClock.current as Duration ?? "0s"}
-            styleText={{ color: "rgba(8, 47, 73, 0.7)" }}
-            formatDuration={formatClockDuration} stop={paused} />
+          <Text style={{fontSize: 12}}>{formatClockDuration({step: `${Math.round(elapsed.elapsedTime/1000)}s`, duration: "0s"})}</Text>
           <Text style={{ ...stylesOnWorkOut.headerText, fontWeight: "600", color: "#082f49" }}>Full Body Work Out</Text>
         </View>
         <TouchableOpacity style={[{ ...stylesOnWorkOut.button }, , isLastExercise ? {borderColor: "#065f46"} : {borderColor: "#f43f5e"}]}>
