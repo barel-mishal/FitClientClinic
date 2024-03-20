@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions, Button, ScrollView, ScrollViewBase, ScrollViewComponent, Pressable, Easing } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions, ScrollView, Pressable, Easing } from "react-native";
 import { RenderClock } from "./RenderClock";
 import { Duration, FitnessProgramOutput, formatClockDuration, formatTimerDuration } from "../types";
 import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -7,6 +7,7 @@ import { BlurView } from "@react-native-community/blur";
 import { Modal } from "react-native-paper";
 import { useElapsedTime } from "./temp";
 import ConfettiCannon from 'react-native-confetti-cannon';
+import { PropsClientWorkout } from "../Pages/private/Client/ClientWorkout";
 
 
 export type ProgramState = Required<FitnessProgramOutput> & ({
@@ -95,47 +96,14 @@ const programActions = (state: ProgramState, action: ProgramActions): ProgramSta
   It will render the current exercise and the time left for the exercise
   It will also allow the user to navigate between exercises
 */
-const RenderProgramTrack: React.FC<{program: ProgramState}> = ({ program }) => {
+const RenderProgramTrack: React.FC<{program: ProgramState, navigation: PropsClientWorkout["navigation"]}> = ({ program, navigation }) => {
     // useReducer to manage the state of the program
     const [state, dispatch] = useReducer(programActions, program);
-
     return (
         <>
-        
         {state.state === "start" && <StartWorkout program={state} dispatch={dispatch} />}
         {state.state === "on" && <OnWorkout program={state} dispatch={dispatch} />}
-        {state.state === "finish" && <FinishWorkout {...state} />}
-        {state.state === "stop" && <FinishWorkout {...state} />}
-
-        {/* <RenderClock duration={state.workoutTime} styleText={styles.exerciseDuration} formatDuration={formatClockDuration} /> */}
-        {/* <RenderClock duration={workoutTime} styleText={styles.exerciseDuration} formatDuration={formatClockDuration} />
-    
-        <View key={exercise.id} style={styles.exerciseContainer}>
-            <Text style={styles.exerciseTitle}>{exercise.name}</Text>
-            <Text style={styles.exerciseDescription}>{exercise.description}</Text>
-
-            {exercise?.repetitionType === "time" ? (
-                <View style={styles.exerciseDetail}>
-                    <Text style={styles.exerciseSet}>Time</Text>
-                    <RenderClock duration={exercise?.time as Duration ?? "0s"} styleText={styles.exerciseContainer} formatDuration={formatClockDuration} />
-                </View>
-            ) : (
-                <View style={styles.exerciseDetail}>
-                    <Text style={styles.exerciseSet}>{exercise?.sets} Set</Text>
-                    <Text style={styles.exerciseDuration}>{exercise?.reps && exercise?.repetitionType}</Text>
-                </View>
-            )}
-        </View> */}
-    
-  
-        {/* <View style={styles.navigation}>
-          <TouchableOpacity onPress={() => { handlePreviousExercise() }}>
-            <Text style={styles.navText}>Previous</Text>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={() => { handleNextExercise() }}>
-            <Text style={styles.navText}>Next</Text>
-          </TouchableOpacity>
-        </View> */}
+        {state.state === "finish" && <FinishWorkout program={state} dispatch={dispatch} navigation={navigation} />}
       </>
     )
 }
@@ -359,11 +327,25 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
 }
 
 
-export const FinishWorkout: React.FC<ProgramState> = () => {
+export const FinishWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatch<ProgramActions>, navigation: PropsClientWorkout["navigation"]}> = ({program, dispatch, navigation }) => {
   const parentHeight = 400;
   const parentWidth = Dimensions.get("window").width - 40;
   const rotation = useRef(new Animated.Value(30)).current;
   const confettiRef = useRef<ConfettiCannon>(null);
+  const [countDown, setCountDown] = useState(5);
+
+  useEffect(() => {
+    const tick = () => {
+      setCountDown((prev) => prev - 1);
+    };
+    if (countDown > 0) {
+      const interval = setInterval(tick, 1000);
+      return () => clearInterval(interval);
+    } else {
+      // fetch the workout to database. then navigate to the workout history. 
+      navigation.navigate("ClientWorkouts");
+    };
+  }, [countDown]);
 
   useEffect(() => {
     Animated.timing(rotation, {
@@ -386,8 +368,8 @@ export const FinishWorkout: React.FC<ProgramState> = () => {
   return (
     <View style={{ backgroundColor: "#f0f9ff", height: Dimensions.get("screen").height, display: "flex", alignItems: "center", justifyContent: "center" }}>
       <View style={{ backgroundColor: "white", borderRadius: 24, padding: 24, display: "flex", gap: 3, position: "relative", height: parentHeight, width: parentWidth }}>
-        {["You have got the finish line! Great Workout"].map((message, index) => (
-          <Text key={index} style={{ fontSize: 50, fontWeight: "bold", color: "#082f49" }}>
+        {["You've reached the finish line! Great workout!"].map((message, index) => (
+          <Text key={index} style={{ fontSize: 50, fontWeight: "bold", color: "#075985" }}>
             {message}
           </Text>
         ))}
@@ -395,6 +377,9 @@ export const FinishWorkout: React.FC<ProgramState> = () => {
           <MaterialCommunityIcons name="arm-flex" size={200} color="#bae6fd" style={{ opacity: 0.7 }} />
         </Animated.View>
         <ConfettiCannon count={50} origin={{ x: -10, y: 0 }} ref={confettiRef} />
+        <Text style={{ fontSize: 20, fontWeight: "bold", color: "#075985" }}>
+          Congratulations! Let's move to your workout history. 😊 [{countDown}]
+        </Text>
 
       </View>
     </View>

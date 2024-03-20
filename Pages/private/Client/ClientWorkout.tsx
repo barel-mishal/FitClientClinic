@@ -4,11 +4,10 @@ import React, { useEffect } from "react";
 import { Text, StyleSheet } from "react-native";
 import { RootStackParamList } from "../../../App";
 import databaseMethods from "../../../services/databaseMethods";
-import { FitnessProgramOutput } from "../../../types";
 import RenderProgramTrack, { ProgramState } from "../../../Components/ProgramViewTrack";
 
 
-type Props = NativeStackScreenProps<RootStackParamList, 'ClientWorkout'>;
+export type PropsClientWorkout = NativeStackScreenProps<RootStackParamList, 'ClientWorkout'>;
 
 
 
@@ -27,7 +26,7 @@ type ComponentState = {
     error: null
 };
 
-const ClientWorkout: React.FC<Props> = ({navigation, route: {params: {programId, trainerId}}}) => {
+const ClientWorkout: React.FC<PropsClientWorkout> = ({navigation, route: {params: {programId, trainerId}}}) => {
     const [program, setProgram] = React.useState<ComponentState>();
     useEffect(() => {
         setProgram({
@@ -63,7 +62,7 @@ const ClientWorkout: React.FC<Props> = ({navigation, route: {params: {programId,
         <>
             {program?.state === "loading" && <Text>Loading...</Text>}
             {program?.state === "error" && <Text>{program.error?.message}</Text>}
-            {program?.state === "success" && <RenderProgramTrack program={program.data} />}
+            {program?.state === "success" && <RenderProgramTrack program={program.data} navigation={navigation} />}
         </>
     );
 }

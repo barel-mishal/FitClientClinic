@@ -20,7 +20,8 @@ const databaseMethods = {
   getUserClientFitnessInfo,
   assignProgramToClients,
   getAllTrainerPrograms,
-  getAllTrainerClientsWithFitnessInfo
+  getAllTrainerClientsWithFitnessInfo,
+  addFitnessClientWorkout,
 }
 
 async function login(email: string, password: string) {
@@ -281,11 +282,9 @@ async function addOrUpdateFitnessProgram(program: FitnessProgramOutput) {
 
   try {
     if (id && (await programRef.get()).exists) {
-      // If id is defined and the document exists, update the existing program
       await programRef.update(programData);
       console.log(`Fitness program ${id ? id : programRef.id} updated successfully`);
     } else {
-      // If id is undefined or the document does not exist, add a new program
       await programRef.set({ ...programData, id: programRef.id }); // Ensure id is included in the document
       console.log(`Fitness program ${programRef.id} added successfully`);
     }
@@ -294,7 +293,21 @@ async function addOrUpdateFitnessProgram(program: FitnessProgramOutput) {
     throw error; // Re-throw to handle it according to the app's policy
   }
 
-  // Return the id of the document that was added or updated
+  return programRef.id;
+}
+async function addFitnessClientWorkout(workout: FitnessProgramOutput) {
+  let programRef;
+
+  programRef = firestore().collection('FitnessWorkouts').doc();
+
+  try {
+    await programRef.set({ ...workout, id: programRef.id }); // Ensure id is included in the document
+    console.log(`Fitness workout ${programRef.id} added successfully`);
+  } catch (error) {
+    console.error('Error adding/updating fitness program:', error);
+    throw error; 
+  }
+
   return programRef.id;
 }
 
