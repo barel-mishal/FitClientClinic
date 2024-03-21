@@ -22,6 +22,7 @@ const databaseMethods = {
   getAllTrainerPrograms,
   getAllTrainerClientsWithFitnessInfo,
   addFitnessClientWorkout,
+  getUserClientWorkouts
 }
 
 async function login(email: string, password: string) {
@@ -309,6 +310,16 @@ async function addFitnessClientWorkout(workout: FitnessProgramOutput) {
   }
 
   return programRef.id;
+}
+
+async function getUserClientWorkouts(uid: FirebaseAuthTypes.User["uid"]) {
+  try {
+    const workouts = await firestore().collection('FitnessWorkouts').where('userId', '==', uid).get();
+    return workouts.docs.map(doc => doc.data());
+  } catch (error) {
+    console.error("Error fetching workouts: ", error);
+    throw error;
+  }
 }
 
 

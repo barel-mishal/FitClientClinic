@@ -5,6 +5,7 @@ import { Text, StyleSheet } from "react-native";
 import { RootStackParamList } from "../../../App";
 import databaseMethods from "../../../services/databaseMethods";
 import RenderProgramTrack, { ProgramState } from "../../../Components/ProgramViewTrack";
+import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 
 
 export type PropsClientWorkout = NativeStackScreenProps<RootStackParamList, 'ClientWorkout'>;
@@ -27,6 +28,7 @@ type ComponentState = {
 };
 
 const ClientWorkout: React.FC<PropsClientWorkout> = ({navigation, route: {params: {programId, trainerId}}}) => {
+    const u = useAuth();
     const [program, setProgram] = React.useState<ComponentState>();
     useEffect(() => {
         setProgram({
@@ -40,10 +42,11 @@ const ClientWorkout: React.FC<PropsClientWorkout> = ({navigation, route: {params
             setProgram({
                 data: {
                     ...res,
-                    state: "finish",
+                    state: "start",
                     workoutTime: "1s",
                     completedExercises: [] as string[],
                     message: "You have completed the program",
+                    userId: u?.user?.uid,
                 } as ProgramState,
                 state: "success",
                 error: null,

@@ -8,6 +8,7 @@ import { Modal } from "react-native-paper";
 import { useElapsedTime } from "./temp";
 import ConfettiCannon from 'react-native-confetti-cannon';
 import { PropsClientWorkout } from "../Pages/private/Client/ClientWorkout";
+import databaseMethods from "../services/databaseMethods";
 
 
 export type ProgramState = Required<FitnessProgramOutput> & ({
@@ -65,7 +66,6 @@ const programActions = (state: ProgramState, action: ProgramActions): ProgramSta
         message: action.message ?? "Workout Finished",
       };
     case "on":
-      console.log("on");
       return {
         ...state,
         state: "on",
@@ -115,7 +115,7 @@ export const StartWorkout: React.FC<{program: ProgramState, dispatch: React.Disp
       <View style={{ flex: 1, maxHeight: Dimensions.get('window').height / 3, justifyContent: "center" }}>
         <View style={{...stylesStartWorkout.stacHorizental, marginTop: 50}}>
           <Text style={{fontSize: 40, fontWeight: "bold", ...styles.sky50}}>{program.name}</Text>
-          <AntDesign name="questioncircle" size={24} color="#f0f9ff" />
+          {/* <AntDesign name="questioncircle" size={24} color="#f0f9ff" /> */}
         </View>
 
         <View style={stylesStartWorkout.stack}>
@@ -166,10 +166,10 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
   const isFinished = exerciseLeft === 0;
 
   const handleNextExercise = () => {
+    dispatch({type: "completedExercise", payload: exercise.id})
     const leftExercisesIndex = exercises.findIndex(e => !program.completedExercises.includes(e.id ?? "") && e.id !== exercise.id);
     if (leftExercisesIndex > -1) {
       setExerciseIndex(leftExercisesIndex);
-      dispatch({type: "completedExercise", payload: exercise.id})
     } else {
       dispatch({type: "finish", message: "Workout Finished"});
     }
@@ -188,10 +188,7 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
       setPaused(false);
     }
     
-  }, [modalVisible])
-
-
-  
+  }, [modalVisible]);
 
   return (
     <>
@@ -324,8 +321,7 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
     </View>
     </>
   )
-}
-
+};
 
 export const FinishWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatch<ProgramActions>, navigation: PropsClientWorkout["navigation"]}> = ({program, dispatch, navigation }) => {
   const parentHeight = 400;
@@ -333,9 +329,17 @@ export const FinishWorkout: React.FC<{program: ProgramState, dispatch: React.Dis
   const rotation = useRef(new Animated.Value(30)).current;
   const confettiRef = useRef<ConfettiCannon>(null);
   const [countDown, setCountDown] = useState(5);
+  const [workoutUpdated, setWorkoutUpdated] = useState(false);
 
   useEffect(() => {
-    console.log("Workout finished", program);
+    console.log("Workout finished\n\n", program);
+    if (!workoutUpdated) {
+      // update the workout to the database
+      databaseMethods.addFitnessClientWorkout(program)
+      .finally(() => {
+        setWorkoutUpdated(true);
+      });
+    }
 
   }, []);
 
@@ -348,9 +352,9 @@ export const FinishWorkout: React.FC<{program: ProgramState, dispatch: React.Dis
       return () => clearInterval(interval);
     } else {
       // fetch the workout to database. then navigate to the workout history. 
-      navigation.navigate("ClientWorkouts");
+      if (workoutUpdated) navigation.navigate("ClientWorkouts");
     };
-  }, [countDown]);
+  }, [countDown, workoutUpdated, navigation]);
 
   useEffect(() => {
     Animated.timing(rotation, {
