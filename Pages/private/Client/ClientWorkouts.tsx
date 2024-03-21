@@ -33,9 +33,9 @@ const ClientWorkouts: React.FC<Props> = () => {
         const durationScore = goalDuration > 0 ? (workoutDuration / goalDuration) * 100 : 0;
         const exerciseScore = totalExercises > 0 ? (completedExercises / totalExercises) * 100 : 0;
     
-        // Apply weights
-        const weightedDurationScore = durationScore * 0.3; // 70% weight
-        const weightedExerciseScore = exerciseScore * 0.7; // 30% weight
+        // Weights
+        const weightedDurationScore = durationScore * 0.3; 
+        const weightedExerciseScore = exerciseScore * 0.7;
     
         // Calculate final score
         const finalScore = Math.ceil(weightedDurationScore + weightedExerciseScore);
@@ -45,31 +45,40 @@ const ClientWorkouts: React.FC<Props> = () => {
     return (
         <ScrollView>
             <View style={{padding: 16, display: "flex", gap: 24, backgroundColor: "#172554", height: Dimensions.get("window").height}}>
-            {workouts?.map((workout, index) => (
-                <View key={index} style={styles.cardContainer}>
-                    <View style={styles.timeContainer}>
-                        <Text style={styles.timeText}>{formatDateTimeRange(workout.startTime, workout.endTime)}</Text>
-                    </View>
-                {workout?.name && <Text style={styles.cardTitle}>{workout.name}</Text>}
-                {/* score */}
-                <Text style={styles.scoreText}>Score: {calcScore(workout)}</Text>
-                <View style={{display: "flex", gap: 20}}>
-                    <View style={styles.progressBarContainer}>
-                        <View style={[styles.progressBar, { width: `${calcScore(workout)}%` }]}>
+            {workouts?.map((workout, index) => {
+                const newWorkoutToDay = new Date(workout.startTime).toDateString() === new Date().toDateString();
+                console.log(newWorkoutToDay)
+                return (
+                    <View key={index} style={[newWorkoutToDay ? stylesNew.cardContainer : styles.cardContainer]}>
+                        <View style={[newWorkoutToDay ? stylesNew.timeContainer : styles.timeContainer]}>
+                            <Text style={styles.timeText}>{formatDateTimeRange(workout.startTime, workout.endTime)}</Text>
+                        </View>
+                    {workout?.name && <Text style={[newWorkoutToDay ? stylesNew.cardTitle : styles.cardTitle]}>
+                        {workout.name}
+                        </Text>}
+                    {/* score */}
+                    <Text style={[newWorkoutToDay ? stylesNew.scoreText : styles.scoreText]}>
+                        Score: {calcScore(workout)}</Text>
+                    <View style={[{display: "flex", gap: 20}]}>
+                        <View style={[newWorkoutToDay ? stylesNew.progressBarContainer : styles.progressBarContainer]}>
+                            <View style={[newWorkoutToDay ? stylesNew.progressBar : styles.progressBar, { width: `${calcScore(workout)}%` }]}>
 
+                            </View>
+                        </View>
+                        {/* how much exercises completed */}
+                        <View style={[newWorkoutToDay ? stylesNew.warpContainer : styles.warpContainer]} >
+                            <Text style={[newWorkoutToDay ? stylesNew.cardTitle : styles.cardTitle]}>
+                                Evaluation metrics</Text>
+                            <Text style={[newWorkoutToDay ? stylesNew.exercisesText : styles.exercisesText]}>
+                                Exercises completed: {workout?.completedExercises?.length}</Text>
+                            <Text style={[newWorkoutToDay ? stylesNew.exercisesText : styles.exercisesText]}>Total Exercises: {workout?.exercises?.length}</Text>
+                            <Text style={[newWorkoutToDay ? stylesNew.durationText : styles.durationText]}>Actual Duration: {calculateDuration(workout.startTime, workout.endTime).toPrecision(1)}  Minutes</Text>
+                            <Text style={[newWorkoutToDay ? stylesNew.durationText : styles.durationText]}>Goal Duration: {parseFloat(workout?.duration) * 60} Minutes</Text>
                         </View>
                     </View>
-                    {/* how much exercises completed */}
-                    <View style={styles.warpContainer}>
-                        <Text style={styles.scoreText}>Evaluation metrics</Text>
-                        <Text style={styles.exercisesText}>Exercises completed: {workout?.completedExercises?.length}</Text>
-                        <Text style={styles.exercisesText}>Total Exercises: {workout?.exercises?.length}</Text>
-                        <Text style={styles.durationText}>Actual Duration: {calculateDuration(workout.startTime, workout.endTime).toPrecision(1)}  Minutes</Text>
-                        <Text style={styles.durationText}>Goal Duration: {parseFloat(workout?.duration) * 60} Minutes</Text>
                     </View>
-                </View>
-                </View>
-            ))}
+                )
+            })}
             </View>
         </ScrollView>
       );
@@ -123,18 +132,77 @@ const styles = StyleSheet.create({
     timeContainer: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 8, // space below the time container
+        marginBottom: 8,
       },
       timeText: {
         fontSize: 12,
-        color: '#0284c7', // choose a color that matches your app theme
+        color: '#0284c7',
       },
       durationText: {
         fontSize: 14,
         color: '#155e75',
       },
-
-    // ...other styles
   });
 
+// Styles for the new workout using different colors the base color is #22c55e
+const stylesNew = StyleSheet.create({
+    cardContainer: {
+      backgroundColor: '#f0f9ff', // Light blue, kept for contrast
+      borderRadius: 20,
+      padding: 16,
+      shadowColor: '#172554', // Deep blue for shadow
+      shadowOffset: { width: 0, height: 2 },
+      shadowOpacity: 0.1,
+      shadowRadius: 4,
+      elevation: 3,
+    },
+    warpContainer: {
+      backgroundColor: '#f0f9ff', // Light blue, kept for contrast
+      borderRadius: 8,
+      padding: 16,
+      borderColor: '#22c55e', // Base green as border color
+      borderWidth: 0.3,
+      elevation: 3,
+    },
+    cardTitle: {
+      fontSize: 18,
+      fontWeight: 'bold',
+      marginBottom: 8,
+      color: '#172554', // Deep blue, for contrast and legibility
+    },
+    scoreText: {
+      fontSize: 16,
+      color: '#22c55e', // Base green for text
+      fontWeight: '500',
+    },
+    exercisesText: {
+      fontSize: 14,
+      color: '#16a34a', // A darker shade of green for contrast
+    },
+    progressBarContainer: {
+      height: 20,
+      backgroundColor: "rgba(34, 197, 94, 0.2)", // Lighter shade of base green for background
+      borderRadius: 10,
+      marginTop: 8,
+    },
+    progressBar: {
+      height: '100%',
+      borderRadius: 10,
+      backgroundColor: '#22c55e', // Base green for progress bar
+    },
+    timeContainer: {
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      marginBottom: 8,
+    },
+    timeText: {
+      fontSize: 12,
+      color: '#15803d', // Darker green for good readability
+    },
+    durationText: {
+      fontSize: 14,
+      color: '#16a34a', // A different shade of green for variation
+    },
+  });
+  
 export default ClientWorkouts;
