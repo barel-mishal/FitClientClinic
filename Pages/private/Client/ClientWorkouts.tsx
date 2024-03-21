@@ -43,13 +43,13 @@ const ClientWorkouts: React.FC<Props> = () => {
     };
       
     return (
-        <ScrollView>
-            <View style={{padding: 16, display: "flex", gap: 24, backgroundColor: "#172554", height: Dimensions.get("window").height}}>
+        <ScrollView style={{backgroundColor: "#172554", }}>
+            <View style={{padding: 16, display: "flex", gap: 24}}>
             {workouts?.map((workout, index) => {
                 const newWorkoutToDay = new Date(workout.startTime).toDateString() === new Date().toDateString();
-                console.log(newWorkoutToDay)
                 return (
                     <View key={index} style={[newWorkoutToDay ? stylesNew.cardContainer : styles.cardContainer]}>
+                        {newWorkoutToDay && <View style={{position: "absolute", backgroundColor: "#fb923c", padding: 8, borderRadius: 10, right: -6, top: -6}}><Text style={{color: "#431407", fontSize: 16}}>New</Text></View>}
                         <View style={[newWorkoutToDay ? stylesNew.timeContainer : styles.timeContainer]}>
                             <Text style={styles.timeText}>{formatDateTimeRange(workout.startTime, workout.endTime)}</Text>
                         </View>
@@ -72,7 +72,7 @@ const ClientWorkouts: React.FC<Props> = () => {
                             <Text style={[newWorkoutToDay ? stylesNew.exercisesText : styles.exercisesText]}>
                                 Exercises completed: {workout?.completedExercises?.length}</Text>
                             <Text style={[newWorkoutToDay ? stylesNew.exercisesText : styles.exercisesText]}>Total Exercises: {workout?.exercises?.length}</Text>
-                            <Text style={[newWorkoutToDay ? stylesNew.durationText : styles.durationText]}>Actual Duration: {calculateDuration(workout.startTime, workout.endTime).toPrecision(1)}  Minutes</Text>
+                            <Text style={[newWorkoutToDay ? stylesNew.durationText : styles.durationText]}>Actual Duration: {calculateDuration(workout.startTime, workout.endTime).toFixed(2)}  Minutes</Text>
                             <Text style={[newWorkoutToDay ? stylesNew.durationText : styles.durationText]}>Goal Duration: {parseFloat(workout?.duration) * 60} Minutes</Text>
                         </View>
                     </View>

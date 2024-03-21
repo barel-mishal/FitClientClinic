@@ -18,8 +18,10 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
                 
                 <View style={styles.headerRow}>
                     <View style={styles.titleContainer}>
-                        <Text style={styles.programName}>{client?.name}</Text>
-                        <AntDesign name="user" size={24} color="#082F49" />
+                        <View style={{display: "flex", flexDirection: "row-reverse", alignItems: "center", gap: 2}}>
+                            <Text style={styles.styleName}>{client?.name}</Text>
+                            <AntDesign name="user" size={24} color="#082F49" />
+                        </View>
                         <Text style={styles.trainerName}>{client?.email}</Text>
                         <AntDesign name="contacts" size={24} color="#082F49" />
                     </View>
@@ -64,7 +66,7 @@ const styles = StyleSheet.create({
         flexDirection: "column",
         gap: 2,
     },
-    programName: {
+    styleName: {
         fontSize: 30,
         fontWeight: "800",
         color: "#082F49",
