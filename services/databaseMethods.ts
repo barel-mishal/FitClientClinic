@@ -1,6 +1,7 @@
 import { OutputClientRegister, OutputTrainerRegister, TypeCientProfile, TypeClientPersonalFitnessInfo, InputClientRegister, InputTrainerRegister, TrainerProperties, TypeTrainerProfile, OutputCientProfile, ProfileSchemaOutput, ReturnUserProerties, FitnessProgram, FitnessProgramOutput, OutputClientPersonalFitnessInfo } from '../types';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
+import { FinishWorkoutType } from '../Components/ProgramViewTrack';
 
 const databaseMethods = {
   login,
@@ -296,10 +297,10 @@ async function addOrUpdateFitnessProgram(program: FitnessProgramOutput) {
 
   return programRef.id;
 }
-async function addFitnessClientWorkout(workout: FitnessProgramOutput) {
+async function addFitnessClientWorkout(workout: FinishWorkoutType) {
   let programRef;
 
-  programRef = firestore().collection('FitnessWorkouts').doc();
+  programRef = firestore().collection<FinishWorkoutType>('FitnessWorkouts').doc();
 
   try {
     await programRef.set({ ...workout, id: programRef.id }); // Ensure id is included in the document
@@ -314,7 +315,7 @@ async function addFitnessClientWorkout(workout: FitnessProgramOutput) {
 
 async function getUserClientWorkouts(uid: FirebaseAuthTypes.User["uid"]) {
   try {
-    const workouts = await firestore().collection('FitnessWorkouts').where('userId', '==', uid).get();
+    const workouts = await firestore().collection<FinishWorkoutType>('FitnessWorkouts').where('clientId', '==', uid).get();
     return workouts.docs.map(doc => doc.data());
   } catch (error) {
     console.error("Error fetching workouts: ", error);

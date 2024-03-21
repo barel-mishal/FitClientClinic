@@ -262,6 +262,7 @@ export const FitnessProgramSchema = v.object({
     duration: v.string(),
     exercises: v.array(v.partial(ExerciseSchema)),
     trainerId: v.string(),
+    clientId: v.optional(v.string()),
 });
 
 export type FitnessProgram = v.Input<typeof FitnessProgramSchema>;

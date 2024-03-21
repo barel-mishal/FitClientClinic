@@ -2,6 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import AuthProvider, { useAuth } from './Components/ContextComopnents/AuthContext';
 import { PrivateNavigator, PublicNavigator } from './Pages/Routes';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 export type RootStackTrainerParamList = {
   TrainerHome: undefined;
@@ -45,13 +46,18 @@ function MyNavigator() {
   );
 }
 
+// Create a client instance
+const queryClient = new QueryClient();
+
 export default function App() {
-  
   return (
-    <AuthProvider>
-      <NavigationContainer>
-        <MyNavigator />
-      </NavigationContainer>
-    </AuthProvider>
-    );
+    // Wrap the AuthProvider with QueryClientProvider
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <NavigationContainer>
+          <MyNavigator />
+        </NavigationContainer>
+      </AuthProvider>
+    </QueryClientProvider>
+  );
 }

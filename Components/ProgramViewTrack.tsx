@@ -10,6 +10,13 @@ import ConfettiCannon from 'react-native-confetti-cannon';
 import { PropsClientWorkout } from "../Pages/private/Client/ClientWorkout";
 import databaseMethods from "../services/databaseMethods";
 
+export type FinishWorkoutType = Required<FitnessProgramOutput> & {
+  state: "finish";
+  workoutTime: Duration;
+  message: string;
+  completedExercises: Array<string>;
+};
+
 
 export type ProgramState = Required<FitnessProgramOutput> & ({
   state: "start";
@@ -19,12 +26,7 @@ export type ProgramState = Required<FitnessProgramOutput> & ({
   state: "stop";
   workoutTime: Duration;
   completedExercises: Array<string>;
-} | {
-  state: "finish";
-  workoutTime: Duration;
-  message: string;
-  completedExercises: Array<string>;
-} | {
+} | FinishWorkoutType | {
   state: "on",
   workoutTime: Duration,
   completedExercises: Array<string>;
@@ -43,7 +45,6 @@ export type ProgramActions = {
   payload?: ProgramState["exercises"][number]["id"];
   message?: string;
 };
-
 const programActions = (state: ProgramState, action: ProgramActions): ProgramState => {
   switch (action.type) {
     case "start":
@@ -323,7 +324,7 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
   )
 };
 
-export const FinishWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatch<ProgramActions>, navigation: PropsClientWorkout["navigation"]}> = ({program, dispatch, navigation }) => {
+export const FinishWorkout: React.FC<{program: FinishWorkoutType, dispatch: React.Dispatch<ProgramActions>, navigation: PropsClientWorkout["navigation"]}> = ({program, dispatch, navigation }) => {
   const parentHeight = 400;
   const parentWidth = Dimensions.get("window").width - 40;
   const rotation = useRef(new Animated.Value(30)).current;
