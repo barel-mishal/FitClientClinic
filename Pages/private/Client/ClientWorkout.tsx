@@ -7,10 +7,7 @@ import databaseMethods from "../../../services/databaseMethods";
 import RenderProgramTrack, { ProgramState } from "../../../Components/ProgramViewTrack";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 
-
 export type PropsClientWorkout = NativeStackScreenProps<RootStackParamList, 'ClientWorkout'>;
-
-
 
 type ComponentState = {
     data: null, 
@@ -46,7 +43,7 @@ const ClientWorkout: React.FC<PropsClientWorkout> = ({navigation, route: {params
                     workoutTime: "1s",
                     completedExercises: [] as string[],
                     message: "You have completed the program",
-                    userId: u?.user?.uid,
+                    clientId: u?.user?.uid,
                     startTime: Date.now(),
                 } as ProgramState,
                 state: "success",

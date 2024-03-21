@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions, ScrollView, Pressable, Easing } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions, ScrollView, Pressable, Easing, useAnimatedValue } from "react-native";
 import { RenderClock } from "./RenderClock";
 import { Duration, FitnessProgramOutput, formatClockDuration, formatTimerDuration } from "../types";
 import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -16,6 +16,7 @@ export type FinishWorkoutType = Required<FitnessProgramOutput> & {
   message: string;
   completedExercises: Array<string>;
   endTime: number;
+  startTime: number;
 };
 
 export type InitialProgramState = Required<FitnessProgramOutput> & {
@@ -24,8 +25,8 @@ export type InitialProgramState = Required<FitnessProgramOutput> & {
   startTime: number;
 };
 
-export type ProgramState = Required<FitnessProgramOutput> 
-& InitialProgramState & ({
+export type ProgramState = (Required<FitnessProgramOutput> 
+& InitialProgramState) & ({
   state: "start";
 } | {
   state: "stop";
@@ -106,7 +107,7 @@ const RenderProgramTrack: React.FC<{program: ProgramState, navigation: PropsClie
         <>
         {state.state === "start" && <StartWorkout program={state} dispatch={dispatch} />}
         {state.state === "on" && <OnWorkout program={state} dispatch={dispatch} />}
-        {state.state === "finish" && <FinishWorkout program={state} dispatch={dispatch} navigation={navigation} />}
+        {state.state === "finish" && <FinishWorkout program={state} navigation={navigation} />}
       </>
     )
 }
@@ -152,7 +153,7 @@ export const StartWorkout: React.FC<{program: ProgramState, dispatch: React.Disp
           <Text style={{ color: "#78350f", fontSize: 32 }}>Start</Text>
         </TouchableOpacity>
   </View>
-    </View>
+</View>
   )
 };
 
@@ -326,73 +327,119 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
   )
 };
 
-export const FinishWorkout: React.FC<{program: FinishWorkoutType, dispatch: React.Dispatch<ProgramActions>, navigation: PropsClientWorkout["navigation"]}> = ({program, dispatch, navigation }) => {
-  const parentHeight = 400;
-  const parentWidth = Dimensions.get("window").width - 40;
-  const rotation = useRef(new Animated.Value(30)).current;
+// export const FinishWorkout: React.FC<{program: FinishWorkoutType, dispatch: React.Dispatch<ProgramActions>, navigation: PropsClientWorkout["navigation"]}> = ({program, dispatch, navigation }) => {
+//   const parentHeight = 400;
+//   const parentWidth = Dimensions.get("window").width - 40;
+//   const rotation = useRef(new Animated.Value(30)).current;
+//   const confettiRef = useRef<ConfettiCannon>(null);
+//   const [countDown, setCountDown] = useState(5);
+//   const [workoutUpdated, setWorkoutUpdated] = useState(false);
+
+//   useEffect(() => {
+//     console.log("Workout finished\n\n", program);
+//     if (!workoutUpdated) {
+//       // update the workout to the database
+//       databaseMethods.addFitnessClientWorkout(program)
+//       .finally(() => {
+//         setWorkoutUpdated(true);
+//       });
+//     }
+
+//   }, []);
+
+//   useEffect(() => {
+//     const tick = () => {
+//       setCountDown((prev) => prev - 1);
+//     };
+//     if (countDown > 0) {
+//       const interval = setInterval(tick, 1000);
+//       return () => clearInterval(interval);
+//     } else {
+//       // fetch the workout to database. then navigate to the workout history. 
+//       if (workoutUpdated) navigation.navigate("ClientWorkouts");
+//     };
+//   }, [countDown, workoutUpdated, navigation]);
+
+//   useEffect(() => {
+//     Animated.timing(rotation, {
+//       toValue: 10, 
+//       duration: 1000, 
+//       useNativeDriver: true, 
+//       easing: Easing.inOut(Easing.ease), 
+//       delay: 0.5 * 1000, // Delay of 0.5 seconds
+//     }).start(() => {
+//       // Trigger confetti when the animation ends
+//       confettiRef.current && confettiRef.current.start();
+//     });
+//   }, [rotation]);
+
+//   const rotationInterpolate = rotation.interpolate({
+//     inputRange: [0, 30], 
+//     outputRange: ['0deg', '30deg'], 
+//   });
+
+//   return (
+//     <View style={{ backgroundColor: "#f0f9ff", height: Dimensions.get("screen").height, display: "flex", alignItems: "center", justifyContent: "center" }}>
+//       <View style={{ backgroundColor: "white", borderRadius: 24, padding: 24, display: "flex", gap: 3, position: "relative", height: parentHeight, width: parentWidth }}>
+//         {["You've reached the finish line! Great workout!"].map((message, index) => (
+//           <Text key={index} style={{ fontSize: 50, fontWeight: "bold", color: "#075985" }}>
+//             {message}
+//           </Text>
+//         ))}
+//         <Animated.View style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: -1, bottom: 0, display: "flex", alignItems: "center", justifyContent: "center", transform: [{ rotate: rotationInterpolate }] }}>
+//           <MaterialCommunityIcons name="arm-flex" size={200} color="#bae6fd" style={{ opacity: 0.7 }} />
+//         </Animated.View>
+//         <ConfettiCannon count={50} origin={{ x: -10, y: 0 }} ref={confettiRef} />
+//         <Text style={{ fontSize: 20, fontWeight: "bold", color: "#075985" }}>
+//           Congratulations! Let's move to your workout history. 😊 [{countDown}]
+//         </Text>
+
+//       </View>
+//     </View>
+//   );
+// };
+
+export const FinishWorkout: React.FC<{program: FinishWorkoutType, navigation: PropsClientWorkout["navigation"]}> = ({ program, navigation }) => {
+  const parentSize = { height: 400, width: Dimensions.get("window").width - 40 };
+  const rotation = useAnimatedValue(30);
   const confettiRef = useRef<ConfettiCannon>(null);
   const [countDown, setCountDown] = useState(5);
   const [workoutUpdated, setWorkoutUpdated] = useState(false);
 
   useEffect(() => {
-    console.log("Workout finished\n\n", program);
-    if (!workoutUpdated) {
-      // update the workout to the database
-      databaseMethods.addFitnessClientWorkout(program)
-      .finally(() => {
-        setWorkoutUpdated(true);
-      });
-    }
-
-  }, []);
+    databaseMethods.addFitnessClientWorkout(program).finally(() => setWorkoutUpdated(true));
+  }, [program]);
 
   useEffect(() => {
-    const tick = () => {
-      setCountDown((prev) => prev - 1);
-    };
     if (countDown > 0) {
-      const interval = setInterval(tick, 1000);
+      const interval = setInterval(() => setCountDown(count => count - 1), 1000);
       return () => clearInterval(interval);
-    } else {
-      // fetch the workout to database. then navigate to the workout history. 
-      if (workoutUpdated) navigation.navigate("ClientWorkouts");
-    };
+    } else if (workoutUpdated) {
+      navigation.navigate("ClientWorkouts");
+    }
   }, [countDown, workoutUpdated, navigation]);
 
   useEffect(() => {
     Animated.timing(rotation, {
-      toValue: 10, 
-      duration: 1000, 
-      useNativeDriver: true, 
-      easing: Easing.inOut(Easing.ease), 
-      delay: 0.5 * 1000, // Delay of 0.5 seconds
-    }).start(() => {
-      // Trigger confetti when the animation ends
-      confettiRef.current && confettiRef.current.start();
-    });
-  }, [rotation]);
+      toValue: 10, duration: 1000, useNativeDriver: true, easing: Easing.inOut(Easing.ease), delay: 500,
+    }).start(() => confettiRef.current?.start());
+  }, []);
 
-  const rotationInterpolate = rotation.interpolate({
-    inputRange: [0, 30], 
-    outputRange: ['0deg', '30deg'], 
-  });
+  const rotationInterpolate = rotation.interpolate({ inputRange: [0, 30], outputRange: ['0deg', '30deg'] });
 
   return (
-    <View style={{ backgroundColor: "#f0f9ff", height: Dimensions.get("screen").height, display: "flex", alignItems: "center", justifyContent: "center" }}>
-      <View style={{ backgroundColor: "white", borderRadius: 24, padding: 24, display: "flex", gap: 3, position: "relative", height: parentHeight, width: parentWidth }}>
-        {["You've reached the finish line! Great workout!"].map((message, index) => (
-          <Text key={index} style={{ fontSize: 50, fontWeight: "bold", color: "#075985" }}>
-            {message}
-          </Text>
-        ))}
-        <Animated.View style={{ position: "absolute", top: 0, left: 0, right: 0, zIndex: -1, bottom: 0, display: "flex", alignItems: "center", justifyContent: "center", transform: [{ rotate: rotationInterpolate }] }}>
+    <View style={{ backgroundColor: "#f0f9ff", height: Dimensions.get("screen").height, alignItems: "center", justifyContent: "center" }}>
+      <View style={{ backgroundColor: "white", borderRadius: 24, padding: 24, position: "relative", ...parentSize }}>
+        <Text style={{ fontSize: 50, fontWeight: "bold", color: "#075985" }}>
+          {"You've reached the finish line! Great workout!"}
+        </Text>
+        <Animated.View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, alignItems: "center", justifyContent: "center", transform: [{ rotate: rotationInterpolate }], zIndex: -1 }}>
           <MaterialCommunityIcons name="arm-flex" size={200} color="#bae6fd" style={{ opacity: 0.7 }} />
         </Animated.View>
         <ConfettiCannon count={50} origin={{ x: -10, y: 0 }} ref={confettiRef} />
         <Text style={{ fontSize: 20, fontWeight: "bold", color: "#075985" }}>
-          Congratulations! Let's move to your workout history. 😊 [{countDown}]
+          {`Congratulations! Let's move to your workout history. 😊 [${countDown}]`}
         </Text>
-
       </View>
     </View>
   );

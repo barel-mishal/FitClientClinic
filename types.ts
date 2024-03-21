@@ -144,9 +144,8 @@ export type DeepKeys<T> = T extends object
         : `${K}` 
       : never 
     }[keyof T] 
-  : never;
-
-
+  : never
+;
 
 // ***************** Constants *****************
 export const GENDER_OPTIONS = [
@@ -176,7 +175,6 @@ export const uniqueId = (ids: string[]) => {
         id = createRandomId();
     }
     return id;
-
 }
 
 export type StringfyValues<T> = {
@@ -213,6 +211,45 @@ export const firstCharUpperCase = (str: string | undefined) => {
 
 export function isUserLoggedIn(userSchema: UserSchema): userSchema is { user: FirebaseAuthTypes.User, data: ReturnUserProerties } {
     return userSchema.user !== null;
+}
+
+export function formatDateTimeRange(startDate: number, endDate: number, locale = 'en-US') {
+    const fullDateTimeOptions: Intl.DateTimeFormatOptions = {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    };
+    const timeOptions: Intl.DateTimeFormatOptions = {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    };
+
+    const formatter = new Intl.DateTimeFormat(locale, fullDateTimeOptions);
+    const formatter2 = new Intl.DateTimeFormat(locale, timeOptions);
+    const formattedStartDate = formatter.format(startDate);
+    const formattedEndDate = formatter2.format(endDate);
+
+    return `${formattedStartDate} - ${formattedEndDate}`;
+  }
+export const calculateDuration = (start: number, end: number) => {
+    return (end - start) / 1000 / 60;
+}
+
+export const durationToMin = (duration: Duration) => {
+    if (duration.includes('h')) {
+        return parseInt(duration) * SIXTY;
+    }
+    if (duration.includes('m')) {
+        return parseInt(duration);
+    }
+    if (duration.includes('s')) {
+        return parseInt(duration) / SIXTY;
+    }
+    return 0;
 }
 
 /**

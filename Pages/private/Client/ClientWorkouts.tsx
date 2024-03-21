@@ -1,61 +1,73 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
 
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
 import { RootStackParamList } from "../../../App";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 import { useQuery } from "react-query";
 import databaseMethods from "../../../services/databaseMethods";
+import { Duration, calculateDuration, durationToMin, formatDateTimeRange } from "../../../types";
+import { FinishWorkoutType } from "../../../Components/ProgramViewTrack";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ClientWorkouts'>;
 
 const ClientWorkouts: React.FC<Props> = () => {
     const u = useAuth();
     if (!u.user || u?.data?.role !== "client") return <Text>User is not logged in</Text>;
-    const { data: workouts, error, isLoading } = useQuery(['workouts', u.user.uid], () => databaseMethods.getUserClientWorkouts(u.user.uid));
+    const { data: workouts, error, isLoading } = useQuery(
+        ['workouts', u.user.uid], 
+        () => databaseMethods.getUserClientWorkouts(u.user.uid), 
+        { refetchOnWindowFocus: true, refetchOnMount: true, cacheTime: 0, staleTime: 0 }
+    );
 
-    if (isLoading) return <View><Text>Loading...</Text></View>;
+    if (isLoading) return <View style={{padding: 16, display: "flex", gap: 24, backgroundColor: "#172554", height: Dimensions.get("window").height}}><Text>Loading...</Text></View>;
     if (error && error instanceof Error) return <View><Text>An error occurred: {error.message}</Text></View>;
 
-    const calcScore = (workout: any) => {
-        const completedExercises = workout.completedExercises.length;
-        const totalExercises = workout.exercises.length;
-        return (completedExercises / totalExercises) * 100;
-    }
-
-    const calculateDuration = (start: string, end: string) => {
-        // calculate the difference between the start and end time
-        return 60;
-    }
-  
+    const calcScore = (workout: FinishWorkoutType) => {
+        const completedExercises = workout?.completedExercises?.length ?? 0; // Fallback to 0 if undefined
+        const totalExercises = workout?.exercises?.length ?? 0;
+        const workoutDuration = calculateDuration(workout?.startTime, workout?.endTime);
+        const goalDuration = durationToMin(workout?.duration as Duration);
+        
+        // Calculate scores, ensuring no division by zero
+        const durationScore = goalDuration > 0 ? (workoutDuration / goalDuration) * 100 : 0;
+        const exerciseScore = totalExercises > 0 ? (completedExercises / totalExercises) * 100 : 0;
+    
+        // Apply weights
+        const weightedDurationScore = durationScore * 0.3; // 70% weight
+        const weightedExerciseScore = exerciseScore * 0.7; // 30% weight
+    
+        // Calculate final score
+        const finalScore = Math.ceil(weightedDurationScore + weightedExerciseScore);
+        return finalScore;
+    };
+      
     return (
         <ScrollView>
-            <View style={{padding: 16, display: "flex", gap: 24, backgroundColor: "#172554"}}>
+            <View style={{padding: 16, display: "flex", gap: 24, backgroundColor: "#172554", height: Dimensions.get("window").height}}>
             {workouts?.map((workout, index) => (
                 <View key={index} style={styles.cardContainer}>
                     <View style={styles.timeContainer}>
-                        <Text style={styles.timeText}>Start: 07:00 AM</Text>
-                        <Text style={styles.timeText}>End: 08:00 AM</Text>
+                        <Text style={styles.timeText}>{formatDateTimeRange(workout.startTime, workout.endTime)}</Text>
                     </View>
                 {workout?.name && <Text style={styles.cardTitle}>{workout.name}</Text>}
                 {/* score */}
                 <Text style={styles.scoreText}>Score: {calcScore(workout)}</Text>
                 <View style={{display: "flex", gap: 20}}>
                     <View style={styles.progressBarContainer}>
-                        <View
-                        style={[styles.progressBar, { width: `${calcScore(workout)}%` }]}
-                        ></View>
+                        <View style={[styles.progressBar, { width: `${calcScore(workout)}%` }]}>
+
+                        </View>
                     </View>
                     {/* how much exercises completed */}
                     <View style={styles.warpContainer}>
                         <Text style={styles.scoreText}>Evaluation metrics</Text>
                         <Text style={styles.exercisesText}>Exercises completed: {workout?.completedExercises?.length}</Text>
                         <Text style={styles.exercisesText}>Total Exercises: {workout?.exercises?.length}</Text>
-                        <Text style={styles.durationText}>Actual Duration: {calculateDuration('07:00 AM', '08:00 AM')}</Text>
-                        <Text style={styles.durationText}>Goal Duration: {workout.duration}</Text>
+                        <Text style={styles.durationText}>Actual Duration: {calculateDuration(workout.startTime, workout.endTime).toPrecision(1)}  Minutes</Text>
+                        <Text style={styles.durationText}>Goal Duration: {parseFloat(workout?.duration) * 60} Minutes</Text>
                     </View>
                 </View>
-                {/*  */}
                 </View>
             ))}
             </View>

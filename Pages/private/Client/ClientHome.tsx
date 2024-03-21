@@ -1,11 +1,10 @@
 import React, {  } from "react";
 
-import { View, Text, StyleSheet, TouchableOpacity, StyleProp, ViewStyle, ScrollView } from "react-native";
+import { View, Text, TouchableOpacity, ScrollView } from "react-native";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../../../App";
 import databaseMethods from "../../../services/databaseMethods";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
-import { isUserLoggedIn } from "../../../types";
 import CardWrapper from "../../../Components/CardWrap";
 import styles from "../Both/StyleHome";
 import Stack from "../../../Components/Stack";
