@@ -30,7 +30,7 @@ const ClientWorkouts: React.FC<Props> = () => {
   
     return (
         <ScrollView>
-            <View style={{padding: 16, display: "flex", gap: 30}}>
+            <View style={{padding: 16, display: "flex", gap: 24, backgroundColor: "#172554"}}>
             {workouts?.map((workout, index) => (
                 <View key={index} style={styles.cardContainer}>
                     <View style={styles.timeContainer}>
@@ -47,9 +47,8 @@ const ClientWorkouts: React.FC<Props> = () => {
                         ></View>
                     </View>
                     {/* how much exercises completed */}
-                    <View style={styles.cardContainer}>
+                    <View style={styles.warpContainer}>
                         <Text style={styles.scoreText}>Evaluation metrics</Text>
-            
                         <Text style={styles.exercisesText}>Exercises completed: {workout?.completedExercises?.length}</Text>
                         <Text style={styles.exercisesText}>Total Exercises: {workout?.exercises?.length}</Text>
                         <Text style={styles.durationText}>Actual Duration: {calculateDuration('07:00 AM', '08:00 AM')}</Text>
@@ -66,40 +65,48 @@ const ClientWorkouts: React.FC<Props> = () => {
 
 const styles = StyleSheet.create({
     cardContainer: {
-      backgroundColor: '#f9f9f9',
-      borderRadius: 8,
+      backgroundColor: '#f0f9ff',
+      borderRadius: 20,
       padding: 16,
-      shadowColor: '#000',
+      shadowColor: '#172554',
       shadowOffset: { width: 0, height: 2 },
       shadowOpacity: 0.1,
       shadowRadius: 4,
       elevation: 3,
-
+    },
+    warpContainer: {
+      backgroundColor: '#f0f9ff',
+      borderRadius: 8,
+      padding: 16,
+      borderColor: '#6ee7b7',
+      borderWidth: 0.3,
+      elevation: 3,
     },
     cardTitle: {
       fontSize: 18,
       fontWeight: 'bold',
       marginBottom: 8,
+      color: '#172554',
     },
     scoreText: {
       fontSize: 16,
-      color: '#4CAF50',
+      color: '#059669',
       fontWeight: '500',
     },
     exercisesText: {
       fontSize: 14,
-      color: '#757575',
+      color: '#155e75',
     },
     progressBarContainer: {
       height: 20,
-      backgroundColor: '#e0e0e0',
+      backgroundColor: "rgba(2, 44, 34, 0.2)",
       borderRadius: 10,
       marginTop: 8,
     },
     progressBar: {
       height: '100%',
       borderRadius: 10,
-      backgroundColor: '#4CAF50',
+      backgroundColor: '#059669',
     },
     timeContainer: {
         flexDirection: 'row',
@@ -108,17 +115,11 @@ const styles = StyleSheet.create({
       },
       timeText: {
         fontSize: 12,
-        color: '#666', // choose a color that matches your app theme
-      },
-      scoreContainer: {
-        // additional styles for the score container
-      },
-      durationContainer: {
-        // styles for duration container
+        color: '#0284c7', // choose a color that matches your app theme
       },
       durationText: {
         fontSize: 14,
-        color: '#757575',
+        color: '#155e75',
       },
 
     // ...other styles

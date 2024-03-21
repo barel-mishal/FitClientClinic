@@ -47,6 +47,7 @@ const ClientWorkout: React.FC<PropsClientWorkout> = ({navigation, route: {params
                     completedExercises: [] as string[],
                     message: "You have completed the program",
                     userId: u?.user?.uid,
+                    startTime: Date.now(),
                 } as ProgramState,
                 state: "success",
                 error: null,

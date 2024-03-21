@@ -15,25 +15,25 @@ export type FinishWorkoutType = Required<FitnessProgramOutput> & {
   workoutTime: Duration;
   message: string;
   completedExercises: Array<string>;
+  endTime: number;
 };
 
-
-export type ProgramState = Required<FitnessProgramOutput> & ({
-  state: "start";
+export type InitialProgramState = Required<FitnessProgramOutput> & {
   workoutTime: Duration;
   completedExercises: Array<string>;
+  startTime: number;
+};
+
+export type ProgramState = Required<FitnessProgramOutput> 
+& InitialProgramState & ({
+  state: "start";
 } | {
   state: "stop";
-  workoutTime: Duration;
-  completedExercises: Array<string>;
-} | FinishWorkoutType | {
+} | FinishWorkoutType 
+| {
   state: "on",
-  workoutTime: Duration,
-  completedExercises: Array<string>;
 } | {
   state: "exercise",
-  workoutTime: Duration,
-  completedExercises: Array<string>;
 });
 
 export type ProgramActions = {
@@ -45,6 +45,7 @@ export type ProgramActions = {
   payload?: ProgramState["exercises"][number]["id"];
   message?: string;
 };
+
 const programActions = (state: ProgramState, action: ProgramActions): ProgramState => {
   switch (action.type) {
     case "start":
@@ -65,6 +66,7 @@ const programActions = (state: ProgramState, action: ProgramActions): ProgramSta
         state: "finish",
         workoutTime: action.payload ?? "0s",
         message: action.message ?? "Workout Finished",
+        endTime: Date.now(),
       };
     case "on":
       return {
