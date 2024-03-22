@@ -208,11 +208,6 @@ export const firstCharUpperCase = (str: string | undefined) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-
-export function isUserLoggedIn(userSchema: UserSchema): userSchema is { user: FirebaseAuthTypes.User, data: ReturnUserProerties, signOut: () => void} {
-    return userSchema.user !== null;
-}
-
 export function formatDateTimeRange(startDate: number, endDate: number, locale = 'en-US') {
     const fullDateTimeOptions: Intl.DateTimeFormatOptions = {
       year: 'numeric',
@@ -419,17 +414,11 @@ export type ReturnUserProerties = v.Output<typeof userPropertiesSchema>;
 // ----------------- User -----------------
 export type User = FirebaseAuthTypes.User;
 
-export type UserAction = {
-    getUser: (id: string) => User;
-    getUserProfile: (id: string) => Profile;
-    logout: () => void;
-    deleteUser: (id: string) => void;
-}
-
 export type UserSchema = {
     user: User;
     data: ReturnUserProerties,
     signOut: () => void;
+    deleteTrainerClient: (id: string) => void;
 } | {
     user: null
 }

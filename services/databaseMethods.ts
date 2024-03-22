@@ -19,7 +19,9 @@ const databaseMethods = {
   getAllTrainerPrograms,
   getAllTrainerClientsWithFitnessInfo,
   addFitnessClientWorkout,
-  getUserClientWorkouts
+  getUserClientWorkouts,
+  deleteTrainerClient,
+  getAllClientWorkouts
 }
 
 async function login(email: string, password: string) {
@@ -372,6 +374,48 @@ async function getAllTrainerPrograms(trainerId: string) {
     throw error;
   }
 }
+
+async function deleteTrainerClient(clientId: string) {
+  try {
+    // Fetch the client's profile document
+    const clientProfileRef = firestore().collection('profile').doc(clientId);
+
+    // Update the document by removing the trainerId
+    await clientProfileRef.update({
+      trainerId: firestore.FieldValue.delete(), // This removes the field from the document
+    });
+
+    console.log(`Trainer ID removed from client ${clientId} successfully.`);
+  } catch (error) {
+    console.error("Error removing trainer ID from client: ", error);
+    throw error; // Depending on your error handling strategy
+  }
+}
+
+async function getAllClientWorkouts(clientId: string) {
+  try {
+    // Query the FitnessWorkouts collection for workouts associated with the clientId
+    const workoutsQuerySnapshot = await firestore().collection('FitnessWorkouts').where('clientId', '==', clientId).get();
+
+    if (workoutsQuerySnapshot.empty) {
+      console.log(`No workouts found for client ${clientId}`);
+      return []; // Return an empty array if no workouts found
+    }
+
+    // Map over the documents to extract workout data
+    const workouts = workoutsQuerySnapshot.docs.map(doc => ({
+      id: doc.id, // Include the document ID (workout ID)
+      ...doc.data(), // Spread the document data
+    }));
+
+    console.log(`Retrieved workouts for client ${clientId}:`, workouts);
+    return workouts; // Return the array of workouts
+  } catch (error) {
+    console.error("Error retrieving client workouts: ", error);
+    throw error; // Depending on your error handling strategy
+  }
+}
+
 
 
 

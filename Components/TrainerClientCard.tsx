@@ -6,6 +6,7 @@ import { OutputClientProperties, calcBMI } from "../types";
 
 import { View, Text, StyleSheet, TouchableOpacity, Pressable } from "react-native";
 import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { useAuth } from "./ContextComopnents/AuthContext";
 
 type Props = {
     navigation: NativeStackNavigationProp<RootStackParamList, "TrainerClients", undefined>;
@@ -13,6 +14,7 @@ type Props = {
 }
 
 const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
+  const auth = useAuth()
     
     const client2 = {
         name: "John Doe",
@@ -25,12 +27,12 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
         numberOfWorkout: 10, 
         userId: "123"
     }
-    console.log(client.goals)
+    console.log({client})
     // TODO: bring the workout clients from the database
     // TODO: make phone number as a string
     // TODO: calculate number of workouts and average workout duration, and show name of the current program
     // TODO: add goals into the client object
-    // TODO:
+    // TODO: add functionality to delete the client
 
     return (
         <TouchableOpacity onPress={() => navigation.navigate("TrainerClient", {id: client?.userId ?? ""})}>
@@ -86,10 +88,12 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
                     </View>}                    
                 </View>
 
-                <TouchableOpacity style={styles.updateButton} onPress={() => { /* Implement update functionality */ }}>
+                <TouchableOpacity style={styles.updateButton} onPress={() => {
+                  (client.clientId && auth.user) && auth.deleteTrainerClient(client.clientId)
+                }}>
                     <MaterialIcons name="update" size={20} color="white" />
                     <Text style={styles.updateButtonText}>
-                        Update Program
+                        New Program
                     </Text>
                 </TouchableOpacity>
             </View>

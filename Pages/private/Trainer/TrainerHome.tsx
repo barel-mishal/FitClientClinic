@@ -7,7 +7,6 @@ import databaseMethods from "../../../services/databaseMethods";
 import CardWrapper from "../../../Components/CardWrap";
 import styles from "../Both/StyleHome";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
-import { isUserLoggedIn } from "../../../types";
 import { firstCharUpperCase } from "./TrainerPrograms";
 
 
@@ -16,7 +15,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'TrainerHome'>;
 const TrainerHome: React.FC<Props> = ({ navigation }) => {
     const userSchema = useAuth();
 
-    if (!isUserLoggedIn(userSchema)) {
+    if (!userSchema.user || userSchema.data?.role !== "trainer") {
         return <Text>User is not logged in</Text>;
     }
 

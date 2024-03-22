@@ -3,6 +3,7 @@ import auth from '@react-native-firebase/auth';
 import { Dimensions, Text, View } from 'react-native';
 import { ReturnUserProerties, type UserSchema } from '../../types';
 import databaseMethods from '../../services/databaseMethods';
+import { set } from 'valibot';
 
 
 const AuthContext = createContext<UserSchema>({
@@ -21,10 +22,8 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
             if (user) databaseMethods
                 .getUserProperties(user.uid)
                 .then((profile) => {
-
                     setProfile(profile);
                     setCurrentUser(user);
-                
                 })
                 .catch((error) => {console.error('error getting user properties', error);})
         });
@@ -42,9 +41,28 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
             });
     };
 
+    const deleteTrainerClient = (userId: string) => {
+        if (!profile) return console.error("Profile is not defined");
+        if (profile.role !== "trainer") return console.error("User is not a trainer");  
+        databaseMethods.deleteTrainerClient(userId)
+        .then(() => {
+            console.log("User deleted successfully");
+            setProfile((prev) => {
+                if (!prev || prev.role !== "trainer") {
+                    return prev;
+                }
+                const clients = prev.clients?.filter((c) => c.userId !== userId);
+                return {...prev, clients}
+            })
+        })
+        .catch((error) => {
+            console.error("Error deleting user", error);
+        })
+    }
+
 
     return (
-        <AuthContext.Provider value={(currentUser && profile) ? { user: currentUser, data: profile, signOut } : { user: null }}>
+        <AuthContext.Provider value={(currentUser && profile) ? { user: currentUser, data: profile, signOut, deleteTrainerClient } : { user: null }}>
             {!loading ? children : <View style={{display: "flex", height: Dimensions.get("window").height, width: Dimensions.get("window").width, justifyContent: "center", alignItems: "center"}}><Text >loading...</Text></View>}
         </AuthContext.Provider>
     );
