@@ -4,7 +4,7 @@ import { RootStackParamList } from "../App";
 import { OutputClientProperties, calcBMI } from "../types";
 
 
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Pressable } from "react-native";
 import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 
 type Props = {
@@ -36,12 +36,19 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
         <TouchableOpacity onPress={() => navigation.navigate("TrainerClient", {id: client?.userId ?? ""})}>
             <View style={styles.programCard}>
                 <View style={styles.headerRow}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                        <AntDesign name="user" size={24} color="#082f49" />
-                        <Text style={styles.clientName}>
-                            {client?.name}
-                        </Text>
+                  <View style={{ flexDirection: 'row', display: "flex", alignItems: 'center', gap: 8 }}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexGrow: 1 }}>
+                      <AntDesign name="user" size={24} color="#082f49" />
+                      <Text style={styles.clientName}>
+                          {client?.name}
+                      </Text>
                     </View>
+                    <View>
+                      <Pressable onPress={() => { /* Implement delete functionality */ }}>
+                          <AntDesign name="delete" size={16} color="#f43f5e" />
+                      </Pressable>
+                    </View>
+                </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16, display: "flex" }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                             <MaterialIcons name="email" size={20} color="#082f49" />

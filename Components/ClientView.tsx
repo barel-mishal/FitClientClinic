@@ -20,21 +20,20 @@ const ClientView = ({ client }: { client: any }) => {
             {/* current program */}
             {/* space with divider */}
             {/* workouts */}
-
             <View style={styles.statsRow}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                        <Entypo name="stopwatch" size={20} color="#082f49" />
-                        <Text style={styles.clientStats}>
-                            Avg workout Duration: {"avgWorkoutDuration"} mins
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                        <MaterialIcons name="fitness-center" size={20} color="#082f49" />
-                        <Text style={styles.clientStats}>
-                            Workouts: {"numberOfWorkout"}
-                        </Text>
-                    </View>
+              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                    <Entypo name="stopwatch" size={20} color="#082f49" />
+                    <Text style={styles.clientStats}>
+                        Avg workout Duration: {"avgWorkoutDuration"} mins
+                    </Text>
                 </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                    <MaterialIcons name="fitness-center" size={20} color="#082f49" />
+                    <Text style={styles.clientStats}>
+                        Workouts: {"numberOfWorkout"}
+                    </Text>
+                </View>
+            </View>
         </View>
       </View>
     )
