@@ -12,53 +12,8 @@ type Props = {
     client: OutputClientProperties
 }
 
-// const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
-//     return (
-//         <TouchableOpacity onPress={() => { navigation.navigate("TrainerClient", {id: client?.userId as string})} }>
-//             {/* Redesign this page */}
-//             <View style={styles.programCard}>
-//                 {/* 
-//                 ציון מתאמן,
-//                  תוכנית שלו לראות אותה,
-//                  מטרות ויעדים,
-//                  זמן אימון ממוצע,
-//                  פרטי התקשרות, אפשרות למחוק משתמש,
-//                  לערוך תוכנית על ידי לעשות אחת חדשה ,
-//                  BMI, 
-//                 גיל,
-//                 */}
-                
-//                 <View style={styles.headerRow}>
-//                     <View style={styles.titleContainer}>
-//                         <View style={{display: "flex", flexDirection: "row-reverse", alignItems: "center", gap: 2}}>
-//                             <Text style={styles.styleName}>{client?.name}</Text>
-//                             <AntDesign name="user" size={24} color="#082F49" />
-//                         </View>
-//                         <Text style={styles.trainerName}>{client?.email}</Text>
-//                         <AntDesign name="contacts" size={24} color="#082F49" />
-//                     </View>
-//                     <TouchableOpacity onPress={() => {console.log("menu")}}>
-//                         <Entypo name="dots-three-horizontal" size={24} color="#082F49" />
-//                     </TouchableOpacity>
-//                 </View>
-//                 <View>
-//                     <View style={styles.descriptionRow}>
-//                         <Text style={styles.descriptionLabel}>Description:</Text>
-//                         <View style={styles.durationContainer}>
-//                             <Entypo name="time-slot" size={16} color="#082F49" />
-//                             <Text style={styles.duration}>~{client?.gender}m</Text>
-//                         </View>
-//                     </View>
-//                     <Text style={styles.descriptionText}>{client?.goals?.[0]}</Text>
-//                 </View>
-//             </View>
-//         </TouchableOpacity>
-//     );
-// }
-
-
-const TrainerClientCard: React.FC<Props> = ({ navigation }) => {
-    const client = {
+const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
+    const client2 = {
         name: "John Doe",
         email: "barel@mail.com",
         phone: "054-1234567",
@@ -71,11 +26,11 @@ const TrainerClientCard: React.FC<Props> = ({ navigation }) => {
     }
 
     return (
-        <TouchableOpacity onPress={() => navigation.navigate("TrainerClient", {id: client.userId})}>
+        <TouchableOpacity onPress={() => navigation.navigate("TrainerClient", {id: client?.userId ?? ""})}>
             <View style={styles.programCard}>
                 <View style={styles.headerRow}>
                     <Text style={styles.clientName}>
-                        <AntDesign name="user" size={24} color="black" /> {client.name}
+                        <AntDesign name="user" size={24} color="black" /> {client?.name}
                     </Text>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16, display: "flex" }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -97,19 +52,19 @@ const TrainerClientCard: React.FC<Props> = ({ navigation }) => {
                     <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
                         <FontAwesome name="heartbeat" size={20} color="black" />
                         <Text style={styles.clientDetails}>
-                            Workout Score: {client.score}/10
+                            Workouts Score: {client2.score}/10
                         </Text>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
                         <MaterialCommunityIcons name="script-text-outline" size={20} color="black" />
                         <Text style={styles.clientDetails}>
-                            {client.description}
+                            {client?.age ?? ""} years old
                         </Text>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
                         <AntDesign name="staro" size={20} color="black" />
                         <Text style={styles.clientDetails}>
-                            Current Program: {client.currentFitnessProgramPlanName}
+                            Current Program: {client?.currentProgramId}
                         </Text>
                     </View>
                 </View>
@@ -118,13 +73,13 @@ const TrainerClientCard: React.FC<Props> = ({ navigation }) => {
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                         <Entypo name="stopwatch" size={20} color="black" />
                         <Text style={styles.clientStats}>
-                            Avg workout Duration: {client.avgWorkoutDuration} mins
+                            Avg workout Duration: {client2.avgWorkoutDuration} mins
                         </Text>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                         <MaterialIcons name="fitness-center" size={20} color="black" />
                         <Text style={styles.clientStats}>
-                            Workouts: {client.numberOfWorkout}
+                            Workouts: {client2.numberOfWorkout}
                         </Text>
                     </View>
                 </View>
