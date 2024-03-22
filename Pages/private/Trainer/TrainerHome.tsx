@@ -52,14 +52,6 @@ const TrainerHome: React.FC<Props> = ({ navigation }) => {
                     </Text>
                 </TouchableOpacity>
             </CardWrapper>
-            {/* <CardWrapper styleOption={{}}>
-                <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('TrainerAppointments')}>
-                    <Text style={styles.title2}>Appointments</Text>
-                    <Text>
-                        View your appointments and create new ones
-                    </Text>
-                </TouchableOpacity>
-            </CardWrapper> */}
 
             <CardWrapper styleOption={{justifyContent: "space-evenly", backgroundColor: "transparent"}}>
                 <TouchableOpacity style={styles.gap2} onPress={() => {
@@ -67,7 +59,7 @@ const TrainerHome: React.FC<Props> = ({ navigation }) => {
                 }}>
                     <Text style={styles.alertText}>Log Out</Text>
                 </TouchableOpacity>
-            </CardWrapper>        
+            </CardWrapper>
         </View>
         </ScrollView>
     );
