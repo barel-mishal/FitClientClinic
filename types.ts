@@ -253,6 +253,7 @@ export const durationToMin = (duration: Duration) => {
 }
 
 export const calcBMI = (weight: number, height: number) => {
+    if (height > 3) height = height / 100;
     return (weight / (height * height)).toFixed(2);
 }
 

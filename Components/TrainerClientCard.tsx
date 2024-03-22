@@ -5,7 +5,7 @@ import { OutputClientProperties, calcBMI } from "../types";
 
 
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { AntDesign, Entypo, FontAwesome, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, Entypo, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 
 type Props = {
     navigation: NativeStackNavigationProp<RootStackParamList, "TrainerClients", undefined>;
@@ -25,7 +25,7 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
         numberOfWorkout: 10, 
         userId: "123"
     }
-    console.log(client.age, client.weight, client.height)
+    console.log(client.goals)
 
     return (
         <TouchableOpacity onPress={() => navigation.navigate("TrainerClient", {id: client?.userId ?? ""})}>
@@ -64,9 +64,9 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
                         </Text>
                     </View>
                     {client?.age && (client?.age >= 18) && <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
-                        <MaterialCommunityIcons name="script-text-outline" size={20} color="black" />
+                        <Ionicons name="ios-body-outline" size={20} color="#082f49" />
                         <Text style={styles.clientDetails}>
-                            {calcBMI(client?.weight ?? 0, client?.height ?? 1)}
+                          BMI: {calcBMI(client?.weight ?? 0, client?.height ?? 1)}
                         </Text>
                     </View>}                    
                     <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
