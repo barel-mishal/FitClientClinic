@@ -15,6 +15,16 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
         <TouchableOpacity onPress={() => { navigation.navigate("TrainerClient", {id: client?.userId as string})} }>
             {/* Redesign this page */}
             <View style={styles.programCard}>
+                {/* 
+                ציון מתאמן,
+                 תוכנית שלו לראות אותה,
+                 מטרות ויעדים,
+                 זמן אימון ממוצע,
+                 פרטי התקשרות, אפשרות למחוק משתמש,
+                 לערוך תוכנית על ידי לעשות אחת חדשה ,
+                 BMI, 
+                גיל,
+                */}
                 
                 <View style={styles.headerRow}>
                     <View style={styles.titleContainer}>
