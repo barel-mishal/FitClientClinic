@@ -4,7 +4,6 @@ import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity, Dimens
 import { RootStackParamList } from "../App";
 import ImageUpload from "./ImageUploadComponent";
 import { FitnessProgram, FitnessProgramSchema, ReturnTrainerProerties, User, makeIssue, uniqueId } from "../types";
-import { useAuth } from "./ContextComopnents/AuthContext";
 import RadioButton from "./RadioComponent";
 import * as v from "valibot";
 import databaseMethods from "../services/databaseMethods";
