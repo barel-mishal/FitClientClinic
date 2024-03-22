@@ -5,7 +5,7 @@ import { OutputClientProperties, calcBMI } from "../types";
 
 
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { AntDesign, Entypo, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 
 type Props = {
     navigation: NativeStackNavigationProp<RootStackParamList, "TrainerClients", undefined>;
@@ -26,23 +26,31 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
         userId: "123"
     }
     console.log(client.goals)
+    // TODO: bring the workout clients from the database
+    // TODO: make phone number as a string
+    // TODO: calculate number of workouts and average workout duration, and show name of the current program
+    // TODO: add goals into the client object
+    // TODO:
 
     return (
         <TouchableOpacity onPress={() => navigation.navigate("TrainerClient", {id: client?.userId ?? ""})}>
             <View style={styles.programCard}>
                 <View style={styles.headerRow}>
-                    <Text style={styles.clientName}>
-                        <AntDesign name="user" size={24} color="black" /> {client?.name}
-                    </Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                        <AntDesign name="user" size={24} color="#082f49" />
+                        <Text style={styles.clientName}>
+                            {client?.name}
+                        </Text>
+                    </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16, display: "flex" }}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                            <MaterialIcons name="email" size={20} color="black" />
+                            <MaterialIcons name="email" size={20} color="#082f49" />
                             <Text style={styles.clientContact}>
                                 {client.email}
                             </Text>
                         </View>
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                            <MaterialIcons name="phone" size={20} color="black" />
+                            <MaterialIcons name="phone" size={20} color="#082f49" />
                             <Text style={styles.clientContact}>
                                 {client.phone}
                             </Text>
@@ -52,13 +60,13 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
 
                 <View style={styles.detailsRow}>
                     <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
-                        <FontAwesome name="heartbeat" size={20} color="black" />
+                        <FontAwesome name="heartbeat" size={20} color="#082f49" />
                         <Text style={styles.clientDetails}>
                             Workouts Score: {client2.score}/10
                         </Text>
                     </View>
                     <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
-                        <MaterialCommunityIcons name="script-text-outline" size={20} color="black" />
+                        <MaterialCommunityIcons name="script-text-outline" size={20} color="#082f49" />
                         <Text style={styles.clientDetails}>
                             {client?.age ?? ""} years old
                         </Text>
@@ -69,27 +77,6 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
                           BMI: {calcBMI(client?.weight ?? 0, client?.height ?? 1)}
                         </Text>
                     </View>}                    
-                    <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
-                        <AntDesign name="staro" size={20} color="black" />
-                        <Text style={styles.clientDetails}>
-                            Current Program: {client?.currentProgramId}
-                        </Text>
-                    </View>
-                </View>
-
-                <View style={styles.statsRow}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                        <Entypo name="stopwatch" size={20} color="black" />
-                        <Text style={styles.clientStats}>
-                            Avg workout Duration: {client2.avgWorkoutDuration} mins
-                        </Text>
-                    </View>
-                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                        <MaterialIcons name="fitness-center" size={20} color="black" />
-                        <Text style={styles.clientStats}>
-                            Workouts: {client2.numberOfWorkout}
-                        </Text>
-                    </View>
                 </View>
 
                 <TouchableOpacity style={styles.updateButton} onPress={() => { /* Implement update functionality */ }}>
@@ -109,6 +96,7 @@ const COLORS = {
     secondary: '#4CAF50', // Green color for buttons and highlights
     background: '#f0f9ff', // Light blue for card background
     text: '#082F49', // Primary text color
+
   };
   
   const SPACING = {
@@ -119,7 +107,7 @@ const COLORS = {
   
   const FONTS: StyleSheet.NamedStyles<any> = {
     title: {
-      fontSize: 20,
+      fontSize: 30,
       fontWeight: 'bold',
     },
     text: {
@@ -152,7 +140,7 @@ const COLORS = {
       flexDirection: 'column',
       justifyContent: 'space-between',
       gap: SPACING.medium,
-      alignItems: 'center',
+      alignItems: 'flex-start',
       marginBottom: SPACING.small,
     },
     clientName: {
