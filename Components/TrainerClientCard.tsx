@@ -46,7 +46,7 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
                       </Text>
                     </View>
                     <View>
-                      <Pressable onPress={() => { /* Implement delete functionality */ }}>
+                      <Pressable onPress={() => { (client.clientId && auth.user) && auth.deleteTrainerClient(client.clientId) }}>
                           <AntDesign name="delete" size={16} color="#f43f5e" />
                       </Pressable>
                     </View>
@@ -89,7 +89,7 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
                 </View>
 
                 <TouchableOpacity style={styles.updateButton} onPress={() => {
-                  (client.clientId && auth.user) && auth.deleteTrainerClient(client.clientId)
+                  navigation.navigate("TrainerCreateProgram")
                 }}>
                     <MaterialIcons name="update" size={20} color="white" />
                     <Text style={styles.updateButtonText}>

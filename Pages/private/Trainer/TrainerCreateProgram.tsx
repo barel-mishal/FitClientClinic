@@ -15,7 +15,8 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation, route }) => 
     <TrainerCreateProgramComponent 
       navigation={navigation} 
       trainer={auth.data} 
-      user={auth.user} route={route} />
+      user={auth.user} 
+      route={route} />
   );
 };
 
