@@ -10,12 +10,10 @@ type Props = NativeStackScreenProps<RootStackParamList, 'TrainerClient'>;
 const TrainerClient: React.FC<Props> = ({ navigation, route: { params: {id}} }) => {
     const auth = useAuth();
     if (!auth.user || auth.data.role !== "trainer") return <View></View>;
-    const c = auth.data.clients.filter((c) => c.userId! === id);
+    const c = auth.data.clients.find((c) => c.userId! === id);
     
-    return <ClientView client={c[0]} />;
+    return <ClientView client={c} />;
 }
-
-
 
 export default TrainerClient;
 
