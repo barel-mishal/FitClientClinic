@@ -94,29 +94,45 @@ const TrainerClientCard: React.FC<Props> = ({ navigation }) => {
                 </View>
 
                 <View style={styles.detailsRow}>
-                    <Text style={styles.clientDetails}>
-                        <FontAwesome name="heartbeat" size={20} color="black" /> Workout Score: {client.score}/10
-                    </Text>
-                    <Text style={styles.clientDetails}>
-                        <MaterialCommunityIcons name="script-text-outline" size={20} color="black" /> {client.description}
-                    </Text>
-                    <Text style={styles.clientDetails}>
-                        <AntDesign name="staro" size={20} color="black" /> Current Program: {client.currentFitnessProgramPlanName}
-                    </Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
+                        <FontAwesome name="heartbeat" size={20} color="black" />
+                        <Text style={styles.clientDetails}>
+                            Workout Score: {client.score}/10
+                        </Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
+                        <MaterialCommunityIcons name="script-text-outline" size={20} color="black" />
+                        <Text style={styles.clientDetails}>
+                            {client.description}
+                        </Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
+                        <AntDesign name="staro" size={20} color="black" />
+                        <Text style={styles.clientDetails}>
+                            Current Program: {client.currentFitnessProgramPlanName}
+                        </Text>
+                    </View>
                 </View>
 
                 <View style={styles.statsRow}>
-                    <Text style={styles.clientStats}>
-                        <Entypo name="stopwatch" size={20} color="black" /> Avg Duration: {client.avgWorkoutDuration} mins
-                    </Text>
-                    <Text style={styles.clientStats}>
-                        <MaterialIcons name="fitness-center" size={20} color="black" /> Workouts: {client.numberOfWorkout}
-                    </Text>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                        <Entypo name="stopwatch" size={20} color="black" />
+                        <Text style={styles.clientStats}>
+                            Avg workout Duration: {client.avgWorkoutDuration} mins
+                        </Text>
+                    </View>
+                    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                        <MaterialIcons name="fitness-center" size={20} color="black" />
+                        <Text style={styles.clientStats}>
+                            Workouts: {client.numberOfWorkout}
+                        </Text>
+                    </View>
                 </View>
 
                 <TouchableOpacity style={styles.updateButton} onPress={() => { /* Implement update functionality */ }}>
+                    <MaterialIcons name="update" size={20} color="white" />
                     <Text style={styles.updateButtonText}>
-                        <MaterialIcons name="update" size={20} color="white" /> Update Program
+                        Update Program
                     </Text>
                 </TouchableOpacity>
             </View>
@@ -128,7 +144,7 @@ const TrainerClientCard: React.FC<Props> = ({ navigation }) => {
 const COLORS = {
     primary: '#082f49', // Deep blue color for text and icons
     secondary: '#4CAF50', // Green color for buttons and highlights
-    background: '#e0f2fe', // Light blue for card background
+    background: '#f0f9ff', // Light blue for card background
     text: '#082F49', // Primary text color
   };
   
@@ -162,6 +178,9 @@ const COLORS = {
         width: 0,
         height: 2,
       },
+      display: 'flex',
+        flexDirection: 'column',
+        gap: 16,
       shadowOpacity: 0.25,
       shadowRadius: 3.84,
       elevation: 5,
@@ -169,7 +188,7 @@ const COLORS = {
     headerRow: {
       flexDirection: 'column',
       justifyContent: 'space-between',
-      gap: SPACING.small,
+      gap: SPACING.medium,
       alignItems: 'center',
       marginBottom: SPACING.small,
     },
@@ -198,8 +217,9 @@ const COLORS = {
       marginBottom: SPACING.small,
     },
     statsRow: {
-      flexDirection: 'row',
-      justifyContent: 'space-between',
+      flexDirection: 'column',
+      alignItems: 'flex-start',
+      gap: SPACING.small,
       marginTop: SPACING.small,
     },
     clientStats: {
@@ -212,6 +232,8 @@ const COLORS = {
       backgroundColor: COLORS.secondary,
       padding: SPACING.small,
       borderRadius: 10,
+      flexDirection: 'row',
+      gap: SPACING.small,
       marginTop: SPACING.medium,
       alignItems: 'center',
       justifyContent: 'center',
