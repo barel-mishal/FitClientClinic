@@ -63,8 +63,7 @@ const TrainerHome: React.FC<Props> = ({ navigation }) => {
 
             <CardWrapper styleOption={{justifyContent: "space-evenly", backgroundColor: "transparent"}}>
                 <TouchableOpacity style={styles.gap2} onPress={() => {
-                    databaseMethods.logout();
-                    navigation.navigate("GetStarted")
+                    userSchema.signOut();
                 }}>
                     <Text style={styles.alertText}>Log Out</Text>
                 </TouchableOpacity>

@@ -8,7 +8,7 @@ import databaseMethods from '../../services/databaseMethods';
 const AuthContext = createContext<UserSchema>({
     user: null
 });
-
+ 
 export const useAuth = () => useContext(AuthContext);
 
 const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
@@ -34,9 +34,17 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
         } 
     }, []);
 
+    const signOut = () => {
+        auth()
+            .signOut()
+            .then(() => {
+                setCurrentUser(null);
+            });
+    };
+
 
     return (
-        <AuthContext.Provider value={(currentUser && profile) ? { user: currentUser, data: profile } : { user: null }}>
+        <AuthContext.Provider value={(currentUser && profile) ? { user: currentUser, data: profile, signOut } : { user: null }}>
             {!loading ? children : <View style={{display: "flex", height: Dimensions.get("window").height, width: Dimensions.get("window").width, justifyContent: "center", alignItems: "center"}}><Text >loading...</Text></View>}
         </AuthContext.Provider>
     );

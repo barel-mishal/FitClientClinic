@@ -1,4 +1,4 @@
-import { OutputClientRegister, OutputTrainerRegister, TypeCientProfile, TypeClientPersonalFitnessInfo, InputClientRegister, InputTrainerRegister, TrainerProperties, TypeTrainerProfile, OutputCientProfile, ProfileSchemaOutput, ReturnUserProerties, FitnessProgram, FitnessProgramOutput, OutputClientPersonalFitnessInfo } from '../types';
+import { OutputClientRegister, OutputTrainerRegister, TypeClientPersonalFitnessInfo, TypeTrainerProfile, OutputCientProfile, ProfileSchemaOutput, ReturnUserProerties, FitnessProgram, FitnessProgramOutput, OutputClientPersonalFitnessInfo } from '../types';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { FinishWorkoutType } from '../Components/ProgramViewTrack';
@@ -6,12 +6,8 @@ import { FinishWorkoutType } from '../Components/ProgramViewTrack';
 const databaseMethods = {
   login,
   register,
-  getUsers: async (role: string, id: string) => {
-
-  },
   getUserProfile,
   updateClientProfile,
-  logout: userSignOut,
   addOrUpdateClientFitnessInfo,
   getUserProperties,
   getTrainerProgram,
@@ -180,14 +176,6 @@ async function getUserProfile(uid: FirebaseAuthTypes.User["uid"]): Promise<Profi
   }
 }
 
-async function userSignOut() {
-  try {
-      await auth()?.signOut();
-      console.log("User signed out");
-  } catch (error) {
-      console.error("Error signing out: ", error);
-  }
-}
 
 // Function to add/update client fitness information
 async function addOrUpdateClientFitnessInfo(fitnessInfo: Omit<TypeClientPersonalFitnessInfo, "MedicalCertificate">) {

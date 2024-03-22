@@ -62,7 +62,9 @@ const HomeClient: React.FC<Props> = ({ navigation }) => {
                         </CardWrapper>
 
                         <CardWrapper styleOption={{justifyContent: "space-evenly", backgroundColor: "transparent"}}>
-                            <TouchableOpacity style={styles.gap2} onPress={databaseMethods.logout}>
+                            <TouchableOpacity style={styles.gap2} onPress={() => {
+                                userSchema.signOut();
+                                }}>
                                 <Text style={styles.alertText}>Log Out</Text>
                             </TouchableOpacity>
                         </CardWrapper>

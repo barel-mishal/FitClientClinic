@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import AuthProvider, { useAuth } from './Components/ContextComopnents/AuthContext';
 import { PrivateNavigator, PublicNavigator } from './Pages/Routes';

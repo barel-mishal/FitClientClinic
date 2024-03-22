@@ -209,7 +209,7 @@ export const firstCharUpperCase = (str: string | undefined) => {
 }
 
 
-export function isUserLoggedIn(userSchema: UserSchema): userSchema is { user: FirebaseAuthTypes.User, data: ReturnUserProerties } {
+export function isUserLoggedIn(userSchema: UserSchema): userSchema is { user: FirebaseAuthTypes.User, data: ReturnUserProerties, signOut: () => void} {
     return userSchema.user !== null;
 }
 
@@ -424,6 +424,7 @@ export type UserAction = {
 export type UserSchema = {
     user: User;
     data: ReturnUserProerties,
+    signOut: () => void;
 } | {
     user: null
 }
