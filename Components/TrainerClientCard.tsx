@@ -1,7 +1,7 @@
 import React from "react";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../App";
-import { OutputClientProperties } from "../types";
+import { OutputClientProperties, calcBMI } from "../types";
 
 
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
@@ -65,7 +65,7 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
                     {client?.age && (client?.age >= 18) && <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
                         <MaterialCommunityIcons name="script-text-outline" size={20} color="black" />
                         <Text style={styles.clientDetails}>
-                            {client?.age ?? ""} years old
+                            {calcBMI(client?.weight ?? 0, client?.height ?? 1)}
                         </Text>
                     </View>}                    
                     <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>

@@ -252,6 +252,10 @@ export const durationToMin = (duration: Duration) => {
     return 0;
 }
 
+export const calcBMI = (weight: number, height: number) => {
+    return (weight / (height * height)).toFixed(2);
+}
+
 /**
  * @description - format the duration and substruct the substruct from the duration
  * @param duration - string with the format "mm:ss"
