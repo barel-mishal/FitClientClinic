@@ -13,6 +13,7 @@ type Props = {
 }
 
 const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
+    console.log(client);
     
     const client2 = {
         name: "John Doe",

@@ -252,8 +252,17 @@ async function getUserProperties(id: FirebaseAuthTypes.User["uid"]): Promise<Ret
   const isClient = profile?.role === "client";
   const fitness = isClient ? await getUserClientFitnessInfo(id) : {};
   const clients = !isClient ? await getAllTrainerClients(id) : [];
-  if (profile?.role === "trainer") return { ...profile, appointments: [], programs: await getAllTrainerPrograms(id), clients };
-  else if (profile?.role === "client") return { ...profile, ...fitness };
+  if (profile?.role === "trainer") {
+    return { 
+      ...profile, 
+      appointments: [], 
+      programs: await getAllTrainerPrograms(id), 
+      clients 
+    }
+  } else if (profile?.role === "client") return { 
+    ...profile, 
+    ...fitness 
+  };
   else throw new Error("Error parsing client properties");
 };
 
