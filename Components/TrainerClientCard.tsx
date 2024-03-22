@@ -13,6 +13,7 @@ type Props = {
 }
 
 const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
+    
     const client2 = {
         name: "John Doe",
         email: "barel@mail.com",
@@ -61,6 +62,12 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
                             {client?.age ?? ""} years old
                         </Text>
                     </View>
+                    {client?.age && (client?.age >= 18) && <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
+                        <MaterialCommunityIcons name="script-text-outline" size={20} color="black" />
+                        <Text style={styles.clientDetails}>
+                            {client?.age ?? ""} years old
+                        </Text>
+                    </View>}                    
                     <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
                         <AntDesign name="staro" size={20} color="black" />
                         <Text style={styles.clientDetails}>
