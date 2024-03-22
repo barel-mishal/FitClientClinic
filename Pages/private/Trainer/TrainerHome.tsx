@@ -52,14 +52,14 @@ const TrainerHome: React.FC<Props> = ({ navigation }) => {
                     </Text>
                 </TouchableOpacity>
             </CardWrapper>
-            <CardWrapper styleOption={{}}>
+            {/* <CardWrapper styleOption={{}}>
                 <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('TrainerAppointments')}>
                     <Text style={styles.title2}>Appointments</Text>
                     <Text>
                         View your appointments and create new ones
                     </Text>
                 </TouchableOpacity>
-            </CardWrapper>
+            </CardWrapper> */}
 
             <CardWrapper styleOption={{justifyContent: "space-evenly", backgroundColor: "transparent"}}>
                 <TouchableOpacity style={styles.gap2} onPress={() => {
