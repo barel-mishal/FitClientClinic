@@ -13,7 +13,6 @@ type Props = NativeStackScreenProps<RootStackParamList, 'TrainerClients'>;
 const TrainerClients: React.FC<Props> = ({ navigation }) => {
     const auth = useAuth()
     if (!auth.user || auth.data?.role !== "trainer") return <View></View>
-    console.log(auth.data.clients)
     return (
         <View>
             <ScrollView> 

@@ -25,6 +25,7 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
         numberOfWorkout: 10, 
         userId: "123"
     }
+    console.log(client.age, client.weight, client.height)
 
     return (
         <TouchableOpacity onPress={() => navigation.navigate("TrainerClient", {id: client?.userId ?? ""})}>

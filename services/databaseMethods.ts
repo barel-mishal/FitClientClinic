@@ -208,7 +208,7 @@ async function getAllTrainerClientsWithFitnessInfo(trainerId: string) {
       const fitnessInfoData = fitnessInfoSnapshot.docs[0]?.data();
       
       // Combine client data with their fitness info
-      return { ...clientData, fitnessInfo: fitnessInfoData || null };
+      return { ...clientData, ...fitnessInfoData || {} };
     }));
 
     return clientsData;
