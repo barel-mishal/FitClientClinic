@@ -360,7 +360,7 @@ export const ClientPersonalFitnessInfo = v.object({
     idealTrainingTime: v.string(),
     injuries: v.string(),
     currentProgramId: v.optional(v.string()),
-    userId: v.optional(v.string()),
+    clientId: v.optional(v.string()),
 });
 
 export type TypeClientPersonalFitnessInfo = v.Input<typeof ClientPersonalFitnessInfo>;
@@ -400,7 +400,7 @@ export const TrainerProperties = v.intersect([
     v.object({
         appointments: v.array(v.partial(TrinerClientAppointment)),
         programs: v.array(v.partial(FitnessProgramSchema)),
-        clients: v.array(v.partial(ClientProfile)),
+        clients: v.array(ClientProperties),
     })
 ]);
 

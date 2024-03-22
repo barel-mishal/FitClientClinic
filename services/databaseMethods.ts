@@ -201,11 +201,10 @@ async function addOrUpdateClientFitnessInfo(fitnessInfo: Omit<TypeClientPersonal
 
 async function getAllTrainerClientsWithFitnessInfo(trainerId: string) {
   try {
-    const clientsSnapshot = await firestore().collection('profile').where('trainerId', '==', trainerId).get();
+    const clientsSnapshot = await firestore().collection<OutputCientProfile>('profile').where('trainerId', '==', trainerId).get();
     const clientsData = await Promise.all(clientsSnapshot.docs.map(async (doc) => {
       const clientData = doc.data();
-      const fitnessInfoSnapshot = await firestore().collection<OutputClientPersonalFitnessInfo>('ClientFitnessInfo').where('userId', '==', doc.id).get();
-      
+      const fitnessInfoSnapshot = await firestore().collection<OutputClientPersonalFitnessInfo>('ClientFitnessInfo').where('clientId', '==', doc.id).get();
       const fitnessInfoData = fitnessInfoSnapshot.docs[0]?.data();
       
       // Combine client data with their fitness info
@@ -251,8 +250,7 @@ async function getUserProperties(id: FirebaseAuthTypes.User["uid"]): Promise<Ret
   const profile = await getUserProfile(id);
   const isClient = profile?.role === "client";
   const fitness = isClient ? await getUserClientFitnessInfo(id) : {};
-  const clients = !isClient ? await getAllTrainerClients(id) : [];
-  
+  const clients = !isClient ? await getAllTrainerClientsWithFitnessInfo(id) : [];
   if (profile?.role === "trainer") {
     return { 
       ...profile, 
