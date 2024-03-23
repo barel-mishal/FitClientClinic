@@ -24,36 +24,45 @@ const databaseMethods = {
   getUserClientWorkouts,
   deleteTrainerClient,
   getAllClientWorkouts,
-  uploadFileAndSaveLink: async (file: DocumentPickerResult) => {
-    if (!file || file.canceled) {
-      console.log('No file to upload.');
-      return null;
-    }
-
-    const { uri, name } = file.assets[0];
-    const uploadUri = uri;
-    const filename = name;
-    const storageRef = storage().ref(`uploads/${filename}`);
-
-    try {
-      // Upload the file to Firebase Storage
-      await storageRef.putFile(uploadUri);
-      // Get the download URL
-      const url = await storageRef.getDownloadURL();
-      // Save the URL to Firestore
-      const linkRef = await firestore().collection('fileLinks').add({
-        filename,
-        url,
-        createdAt: firestore.FieldValue.serverTimestamp(),
-      });
-      console.log('File uploaded and URL stored in Firestore!', linkRef.id);
-      return url; // You can return the URL if needed
-    } catch (e) {
-      console.error(e);
-      return null; // Return null in case of error
-    }
-  },
+  uploadFileAndSaveLink
 }
+
+// Asynchronously uploads a file and saves its download link.
+async function uploadFileAndSaveLink(file: DocumentPickerResult | null)  {
+  // Check if there's no file or if the operation was canceled.
+  if (!file || file.canceled) {
+    console.log('No file to upload.');
+    return null;
+  }
+
+  // Extract the URI and name from the file's first asset.
+  const { uri, name } = file.assets[0];
+
+  // Define the storage reference path.
+  const storageRef = storage().ref(`uploads/${name}`);
+
+  try {
+    // Upload the file to Firebase Storage.
+    await storageRef.putFile(uri);
+
+    // Retrieve the download URL.
+    const url = await storageRef.getDownloadURL();
+
+    // Save the download URL in Firestore.
+    const linkRef = await firestore().collection('fileLinks').add({
+      filename: name,
+      url,
+      createdAt: firestore.FieldValue.serverTimestamp(),
+    });
+
+    console.log(`File uploaded and URL stored in Firestore: ${linkRef.id}`);
+    return url; 
+  } catch (error) {
+    console.error(error);
+    return null; 
+  }
+};
+
 
 async function login(email: string, password: string) {
   try {
@@ -419,7 +428,8 @@ async function deleteTrainerClient(clientId: string) {
     console.log(`Trainer ID removed from client ${clientId} successfully.`);
   } catch (error) {
     console.error("Error removing trainer ID from client: ", error);
-    throw error; // Depending on your error handling strategy
+    throw error; 
+    
   }
 }
 
@@ -443,7 +453,7 @@ async function getAllClientWorkouts(clientId: string) {
     return workouts; // Return the array of workouts
   } catch (error) {
     console.error("Error retrieving client workouts: ", error);
-    throw error; // Depending on your error handling strategy
+    throw error; 
   }
 }
 

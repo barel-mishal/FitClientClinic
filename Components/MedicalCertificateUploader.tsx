@@ -4,6 +4,7 @@ import { FontAwesome } from '@expo/vector-icons'; // Make sure you have expo vec
 import OpenURLButton from './GoToSite';
 import FileUpload from './FileUploadComponent';
 import { DocumentPickerResult } from 'expo-document-picker';
+import databaseMethods from '../services/databaseMethods';
 
 const MedicalCertificateUploader = () => {
     const [file, setFile] = useState<DocumentPickerResult | null>(null);
@@ -13,9 +14,9 @@ const MedicalCertificateUploader = () => {
     };
 
     useEffect(() => {
-        if (file) {
-            console.log(JSON.stringify(file, null, 2));
-        }
+        if (!file) return;
+        const uri = databaseMethods.uploadFileAndSaveLink(file);
+        console.log({uri});
     }, [file]);
 
 
