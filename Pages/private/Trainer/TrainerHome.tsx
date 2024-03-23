@@ -23,45 +23,45 @@ const TrainerHome: React.FC<Props> = ({ navigation }) => {
 
 
     return (
-        <ScrollView>
+        <ScrollView style={{backgroundColor: "#f0f9ff"}}>
+            <View style={{...styles.container, padding: 16 }}>
+                <Text style={styles.title}>Wolcome Coach {firstCharUpperCase(data?.name)}</Text>
+                <CardWrapper styleOption={{}}>
+                    <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('TrainerClients')}>
+                        <Text style={styles.title2}>Clients</Text>
+                        <Text>
+                            View your clients and create new ones
+                        </Text>
+                    </TouchableOpacity>
+                </CardWrapper>
+                <CardWrapper styleOption={{}}>
+                    <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('TrainerCreateProgram')}>
+                        <Text style={styles.title2}>Create Program</Text>
+                        <Text>
+                            Create a new program for your clients
+                        </Text>
+                    </TouchableOpacity>
+                </CardWrapper>
+                <CardWrapper styleOption={{}}>
+                    <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('TrainerPrograms')}>
+                        <Text style={styles.title2}>Your Programs</Text>
+                        <Text>
+                            View your programs and create new ones
+                        </Text>
+                    </TouchableOpacity>
+                </CardWrapper>
 
-        <View style={{...styles.container, padding: 16}}>
-            <Text style={styles.title}>Wolcome Coach {firstCharUpperCase(data?.name)}</Text>
-            <CardWrapper styleOption={{}}>
-                <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('TrainerClients')}>
-                    <Text style={styles.title2}>Clients</Text>
-                    <Text>
-                        View your clients and create new ones
-                    </Text>
-                </TouchableOpacity>
-            </CardWrapper>
-            <CardWrapper styleOption={{}}>
-                <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('TrainerCreateProgram')}>
-                    <Text style={styles.title2}>Create Program</Text>
-                    <Text>
-                        Create a new program for your clients
-                    </Text>
-                </TouchableOpacity>
-            </CardWrapper>
-            <CardWrapper styleOption={{}}>
-                <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('TrainerPrograms')}>
-                    <Text style={styles.title2}>Your Programs</Text>
-                    <Text>
-                        View your programs and create new ones
-                    </Text>
-                </TouchableOpacity>
-            </CardWrapper>
-
-            <CardWrapper styleOption={{justifyContent: "space-evenly", backgroundColor: "transparent"}}>
-                <TouchableOpacity style={styles.gap2} onPress={() => {
-                    userSchema.signOut();
-                }}>
-                    <Text style={styles.alertText}>Log Out</Text>
-                </TouchableOpacity>
-            </CardWrapper>
-        </View>
+                <CardWrapper styleOption={{justifyContent: "space-evenly", backgroundColor: "transparent"}}>
+                    <TouchableOpacity style={styles.gap2} onPress={() => {
+                        userSchema.signOut();
+                    }}>
+                        <Text style={styles.alertText}>Log Out</Text>
+                    </TouchableOpacity>
+                </CardWrapper>
+            </View>
         </ScrollView>
     );
-}
+};
+
 
 export default TrainerHome;

@@ -24,7 +24,7 @@ const CustomSelectInput: React.FC<CustomSelectInputProps> = ({ options, onSelect
   return (
     <>
       <TouchableOpacity onPress={() => setVisible(true)} style={styles.button}>
-        <Text>{selected || 'Select an option'}</Text>
+        <Text style={{ color: '#bae6fd',}}>{selected || 'Select an option'}</Text>
       </TouchableOpacity>
 
       <Modal visible={visible} transparent={true} animationType="slide">
@@ -47,10 +47,9 @@ const CustomSelectInput: React.FC<CustomSelectInputProps> = ({ options, onSelect
 const styles = StyleSheet.create({
   button: {
     padding: 10,
-    backgroundColor: '#DDD',
+    backgroundColor: '#082f49',
     alignItems: 'center',
     borderRadius: 6,
-    
   },
   modalOverlay: {
     flex: 1,

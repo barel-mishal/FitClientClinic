@@ -47,22 +47,23 @@ const styles = StyleSheet.create({
     width: 24,
     borderRadius: 12,
     borderWidth: 2,
-    borderColor: '#000',
+    borderColor: '#082f49',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 10,
   },
   selectedOuterCircle: {
-    borderColor: 'blue',
+    borderColor: '#075985',
   },
   innerCircle: {
     height: 12,
     width: 12,
     borderRadius: 6,
-    backgroundColor: 'blue',
+    backgroundColor: '#075985',
   },
   label: {
     fontSize: 16,
+    color: '#082f49',
   },
 });
 

@@ -33,7 +33,11 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
     // TODO: calculate number of workouts and average workout duration, and show name of the current program
     // TODO: add goals into the client object
     // TODO: add functionality to delete the client
-
+    // TODO: FIX WORKOUTS VIEW IN TRAINER SIDE
+    // todo: CLIENT PROPERTIES DEISGN BRITHDATE AND FILES UPLOADS
+    // TODO: HOME PAGE DEISGN START WITHSOMETHING COOL 
+    // TODO: CHANGE THE NAME TO MOVE
+    // todo: update the deisgn of signup for the trainer and client
     return (
         <TouchableOpacity onPress={() => navigation.navigate("TrainerClient", {id: client?.userId ?? ""})}>
             <View style={styles.programCard}>

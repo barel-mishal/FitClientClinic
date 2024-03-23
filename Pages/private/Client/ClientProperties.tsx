@@ -50,7 +50,7 @@ const SignupClient = ({ navigation }: Props) => {
       const id = parsed2?.output?.trainerPhone 
       ? await databaseMethods.validateTrainerPhoneAndGetId(parsed2?.output?.trainerPhone) 
       : undefined;      
-      databaseMethods.addOrUpdateClientFitnessInfo({...parsed.output, userId: a.user.uid});
+      databaseMethods.addOrUpdateClientFitnessInfo({...parsed.output, clientId: a.user.uid});
       const result = id 
       ? {...parsed2.output, role: "client" as Client, trainerId: id} 
       : {...parsed2.output, role: "client" as Client};
@@ -71,7 +71,7 @@ const SignupClient = ({ navigation }: Props) => {
   
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Signup Client</Text>
+      <Text style={styles.title}>Client Ditail</Text>
         <View style={{ marginTop: 16, display: 'flex', gap: 20 }}>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Your name</Text>
@@ -178,10 +178,11 @@ const styles = StyleSheet.create({
     padding: 20,
     display: 'flex',
     gap: 10,
+    backgroundColor: '#f0f9ff',
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: "rgba(8, 47, 73, 0.3)",
     padding: 10,
     borderRadius: 6,
   },
@@ -207,17 +208,20 @@ const styles = StyleSheet.create({
     height: 17,
   },
   title: {
-    fontSize: 20,
+    fontSize: 30,
     fontWeight: 'bold',
+    color: "#082f49"
   },
   inputTitle: {
     fontSize: 16,
     fontWeight: 'bold',
+    color: "#075985"
   },
   columnsDisplay: {
     display: 'flex',
     flexDirection: 'row',
     gap: 10,
+    
   },
   space2: {
     display: 'flex',
