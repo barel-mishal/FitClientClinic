@@ -41,7 +41,13 @@ const ClientWorkouts: React.FC<Props> = () => {
         const finalScore = Math.ceil(weightedDurationScore + weightedExerciseScore);
         return finalScore;
     };
-      
+
+    const sortingWorkouts = (a: FinishWorkoutType, b: FinishWorkoutType) => {
+        return new Date(b.startTime).getTime() - new Date(a.startTime).getTime();
+    }
+
+    workouts?.sort(sortingWorkouts);
+    
     return (
         <ScrollView style={{backgroundColor: "#172554", }}>
             <View style={{padding: 16, display: "flex", gap: 24}}>

@@ -1,14 +1,14 @@
-import React from 'react';
-import { View, Button, Text } from 'react-native';
+import React, { ReactNode, useState } from 'react';
+import { View, Button, Text, Pressable } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 
 interface FileUploadProps {
     onFileUpload: (file: DocumentPicker.DocumentPickerResult) => void;
-    label: string;
-
+    children: ReactNode;
+    style: object;
 }
 
-const FileUpload: React.FC<FileUploadProps> = ({ onFileUpload, label }) => {
+const FileUpload: React.FC<FileUploadProps> = ({ onFileUpload, children, style }) => {
     const handleChooseFile = async () => {
         try {
             const file = await DocumentPicker.getDocumentAsync({
@@ -21,10 +21,10 @@ const FileUpload: React.FC<FileUploadProps> = ({ onFileUpload, label }) => {
             console.log('Error picking file', error);
         }
     };
-    return <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-            <Text>{label}</Text>
-            <Button title="Choose File" onPress={handleChooseFile} />
-        </View>;
+    return <Pressable onPress={handleChooseFile} style={style}>
+            {children}
+
+        </Pressable>
 };
 
 export default FileUpload;

@@ -2,6 +2,8 @@ import { OutputClientRegister, OutputTrainerRegister, TypeClientPersonalFitnessI
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { FinishWorkoutType } from '../Components/ProgramViewTrack';
+import { DocumentPickerResult } from 'expo-document-picker';
+import storage from '@react-native-firebase/storage';
 
 const databaseMethods = {
   login,
@@ -21,7 +23,36 @@ const databaseMethods = {
   addFitnessClientWorkout,
   getUserClientWorkouts,
   deleteTrainerClient,
-  getAllClientWorkouts
+  getAllClientWorkouts,
+  uploadFileAndSaveLink: async (file: DocumentPickerResult) => {
+    if (!file || file.canceled) {
+      console.log('No file to upload.');
+      return null;
+    }
+
+    const { uri, name } = file.assets[0];
+    const uploadUri = uri;
+    const filename = name;
+    const storageRef = storage().ref(`uploads/${filename}`);
+
+    try {
+      // Upload the file to Firebase Storage
+      await storageRef.putFile(uploadUri);
+      // Get the download URL
+      const url = await storageRef.getDownloadURL();
+      // Save the URL to Firestore
+      const linkRef = await firestore().collection('fileLinks').add({
+        filename,
+        url,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+      });
+      console.log('File uploaded and URL stored in Firestore!', linkRef.id);
+      return url; // You can return the URL if needed
+    } catch (e) {
+      console.error(e);
+      return null; // Return null in case of error
+    }
+  },
 }
 
 async function login(email: string, password: string) {
