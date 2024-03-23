@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Text, TouchableOpacity, Linking, StyleSheet} from 'react-native';
 
 type OpenURLButtonProps = {
     url: string;
-    children: string;
+    children: ReactNode;
     };
 
 
@@ -22,22 +22,10 @@ const OpenURLButton: React.FC<OpenURLButtonProps> = ({ url, children }) => {
   }, [url]);
 
   return (
-    <TouchableOpacity onPress={handlePress} >
-      <Text style={styles.linkText}>{children}</Text>
+    <TouchableOpacity onPress={handlePress} style={{display: "flex", flexDirection: "row", alignItems: "baseline"}} >
+      {children}
     </TouchableOpacity>
   );
 };
-
-const styles = StyleSheet.create({
-    linkText: {
-        color: '#0ea5e9',
-        fontSize: 20,
-        fontWeight: "600",
-        fontStyle: "italic",
-        textDecorationLine: "underline",
-        textAlign: "center",
-
-    }
-})
 
 export default OpenURLButton;
