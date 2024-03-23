@@ -17,12 +17,12 @@ const OpenURLButton: React.FC<OpenURLButtonProps> = ({ url, children }) => {
       // by some browser in the mobile
       await Linking.openURL(url);
     } else {
-      console.log(`Don't know how to open this URL: ${url}`);
+        console.log(`Don't know how to open this URL: ${url}`);
     }
   }, [url]);
 
   return (
-    <TouchableOpacity onPress={handlePress}>
+    <TouchableOpacity onPress={handlePress} >
       <Text style={styles.linkText}>{children}</Text>
     </TouchableOpacity>
   );
@@ -30,7 +30,13 @@ const OpenURLButton: React.FC<OpenURLButtonProps> = ({ url, children }) => {
 
 const styles = StyleSheet.create({
     linkText: {
-        color: 'blue',
+        color: '#0ea5e9',
+        fontSize: 20,
+        fontWeight: "600",
+        fontStyle: "italic",
+        textDecorationLine: "underline",
+        textAlign: "center",
+
     }
 })
 

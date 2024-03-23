@@ -11,6 +11,7 @@ import FileUpload from "../../../Components/FileUploadComponent";
 import OpenURLButton from "../../../Components/GoToSite";
 import CustomSelectInput from "../../../Components/PickerComponent";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
+import MedicalCertificateUploader from "../../../Components/MedicalCertificateUploader";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ClientProperties'>;
 
@@ -133,15 +134,8 @@ const SignupClient = ({ navigation }: Props) => {
           <CustomSelectInput onSelect={(value) => handleChange("activityLevel", value.value)} options={ACTIVITY_LEVEL_OPTIONS}/>
         </View>
         <View style={styles.space2}>
-          <Text style={styles.inputTitle}>Medical Certificate</Text>    
-          <View style={styles.space2}>
-            <FileUpload onFileUpload={function (file: DocumentPickerResult): void {
-                throw new Error("Function not implemented.");
-              } } label={"Upload Medical Certificat"} 
-              />
-            <Text>Please upload your medical certificate if you do not have one please go to this link to create one </Text>
-            <OpenURLButton url={"https://google.com"} children={"Please go to this site"} />
-          </View>
+          <Text style={styles.inputTitle}>Upload Your Medical Certificate</Text>
+          <MedicalCertificateUploader />
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Training Experience</Text>
@@ -165,7 +159,7 @@ const SignupClient = ({ navigation }: Props) => {
         </View >
         <Text style={styles.errorMessage}>{message}</Text>
 
-        <Button title="Signup" onPress={handleSubmit} />
+        <Button title="Submit" onPress={handleSubmit} />
       </View>
     </ScrollView>
   );
@@ -177,7 +171,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
     display: 'flex',
-    gap: 10,
+    gap: 20,
     backgroundColor: '#f0f9ff',
   },
   input: {
@@ -220,14 +214,43 @@ const styles = StyleSheet.create({
   columnsDisplay: {
     display: 'flex',
     flexDirection: 'row',
-    gap: 10,
+    gap: 16,
     
   },
   space2: {
     display: 'flex',
     flexDirection: 'column',
-    gap: 8,
+    gap: 12,
   }
+});
+
+const styles2 = StyleSheet.create({
+  space2: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 12,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: "#075985",
+    marginBottom: 10,
+  },
+  description: {
+    color: "#0369a1",
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  linkText: {
+    color: '#0ea5e9',
+    fontSize: 16,
+    fontWeight: "600",
+    fontStyle: "italic",
+    textDecorationLine: "underline",
+    textAlign: "center",
+    marginVertical: 10,
+  },
+  // ... other styles remain unchanged
 });
 
 export default SignupClient;
