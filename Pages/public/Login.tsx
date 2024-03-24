@@ -2,6 +2,7 @@ import React, { useState } from "react"
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, Dimensions } from "react-native"
 import databaseMethods from "../../services/databaseMethods";
 import { AntDesign } from "@expo/vector-icons";
+import Toast from 'react-native-toast-message'
 
 const init = {
     trainer: {
@@ -17,9 +18,29 @@ const init = {
 const Login: React.FC = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const [message, setMessage] = useState<string | undefined>(undefined);
-    const login = async () => setMessage(await databaseMethods.login(email, password));
     const isExampleClient = init.client.email === email;
+    const login = async () => {
+        const message = await databaseMethods.login(email, password);
+        if (message.includes("successfully")) {
+            Toast.show({
+                type: 'success',
+                position: 'top',
+                text1: 'Success',
+                text2: message,
+                visibilityTime: 4000,
+                autoHide: true,
+            });
+        } else {
+            Toast.show({
+                type: 'error',
+                position: 'top',
+                text1: 'Error',
+                text2: message,
+                visibilityTime: 4000,
+                autoHide: true,
+            });
+        }
+    };
     const isExampleTrainer = init.trainer.email === email;
     const onSelectedClientExampleStyle = isExampleClient ? {...styles.buttonLight, borderWidth: 0} : styles.button;
     const onSelectedClientExampleTextStyle = isExampleClient ? styles.buttonTextLight : styles.buttonText;
@@ -59,10 +80,9 @@ const Login: React.FC = () => {
             <View style={styles.stack}>
             <TouchableOpacity 
             style={styles.button}
-            onPress={async () => setMessage(await databaseMethods.login(email, password))}>
+            onPress={login}>
                 <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
-            <Text style={styles.message}>{message}</Text>
             </View>
 
         </View>
