@@ -28,7 +28,7 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
         userId: "123"
     }
     console.log({client})
-    // TODO: bring the workout clients from the database
+    // TODO: bring the workout clients from the database from trianer side
     // TODO: make phone number as a string
     // TODO: calculate number of workouts and average workout duration, and show name of the current program
     // TODO: add goals into the client object
