@@ -30,22 +30,22 @@ const styles = StyleSheet.create({
       alignItems: 'center',
       justifyContent: 'center',
       padding: 20,
-      backgroundColor: '#fff',
+      backgroundColor: '#f0f9ff',
     },
     title: {
       fontSize: 24,
       fontWeight: 'bold',
-      color: '#000',
+      color: '#082f49',
       marginBottom: 10,
     },
     subtitle: {
       fontSize: 16,
-      color: '#666',
+      color: '#075985',
       textAlign: 'center',
       marginBottom: 20,
     },
     optionButton: {
-      backgroundColor: '#f0f0f0',
+      backgroundColor: '#082f49',
       borderRadius: 10,
       padding: 15,
       marginBottom: 15,
@@ -55,11 +55,11 @@ const styles = StyleSheet.create({
     optionText: {
       fontSize: 18,
       fontWeight: 'bold',
-      color: '#000',
+      color: '#e0f2fe',
     },
     optionSubtext: {
       fontSize: 14,
-      color: '#666',
+      color: '#bae6fd',
     },
   });
   

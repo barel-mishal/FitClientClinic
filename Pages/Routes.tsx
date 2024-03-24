@@ -27,8 +27,8 @@ export function PublicNavigator() {
       header: () => <Header />
     }} />
     <Stack.Screen name={"GetStarted"} component={OnBoarding} options={{headerTitle: "Move"}} />
-    <Stack.Screen name={"SignupClient"} component={SignupClient} options={{headerTitle: "Client Sign up"}} />
-    <Stack.Screen name={"SignupTrainer"} component={SignupTrainer} options={{headerTitle: "Trainer Sign up"}} />
+    <Stack.Screen name={"SignupClient"} component={SignupClient} options={{headerTitle: "Signup Client"}} />
+    <Stack.Screen name={"SignupTrainer"} component={SignupTrainer} options={{headerTitle: "Signup Trainer"}} />
     <Stack.Screen name={"Login"} component={Login} options={{headerTitle: "Move Login"}} />
   </Stack.Navigator>
 }
