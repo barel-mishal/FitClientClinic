@@ -6,8 +6,6 @@ import { StyleSheet, View, Text, TextInput, Button, ScrollView } from "react-nat
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../App";
 import { TrainerRegisterData, InputTrainerRegister, makeIssue } from "../../types";
-import FileUpload from "../../Components/FileUploadComponent";
-import OpenURLButton from "../../Components/GoToSite";
 import databaseMethods from "../../services/databaseMethods";
 import * as v from "valibot";
 import TrainerCertificateUploader from "../../Components/TrainerCertificateUploader copy";
@@ -18,20 +16,19 @@ const SignupTrainer = ({navigation}: Props) => {
   
   const [message, setMessage] = useState<string | undefined>(undefined);
   const [form, setForm] = useState<Partial<InputTrainerRegister>>({
-    name: 'barel',
-    email: 'barel.trianer@mail.com',
-    phone: '0509042020',
-    password: 'sgslkfj',
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
     role: 'trainer',
     certification: '',
-    yearsOfExperience: "8",
+    yearsOfExperience: "",
   });
 
   // Function to handle input change
   const handleChange = (name: string, value: string | [string, string, string]) => {
     setForm(prev => ({ ...prev, [name]: value }));
   };
-
 
   const handleSubmit = () => {
     const parsed = v.safeParse(TrainerRegisterData, form);
