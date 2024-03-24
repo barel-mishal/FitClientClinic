@@ -142,10 +142,7 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation, trainer, use
     dispatch({type: "UPDATE_PROGRAM", payload: {key: "id", value: programId}});
     navigation.navigate('TrainerPrograms');
   };
-  // get all the clients from the database, and then set the state of the clients to choose from. 
-  // improve the multi select to be able to select multiple clients
   const clients = trainer.clients.filter(c => c.name || c.userId).map(c => ({label: c.name!, value: c.userId!}));
-  
   
   const styleDuration = (duration: string) => {
     return state.program.duration === duration ? styles.bigButtonSelected : styles.bigButton;
@@ -181,7 +178,6 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation, trainer, use
 
             <View style={styles.containerGapPaading}>
               <Text style={styles.inputTitle}>Client For Program</Text>
-              {/* <MultiSelectComponent items={clients} selected={selected} onChange={(i) => setSelected(i)} /> */}
               <ScrollView horizontal={true} >
                     {clients.map((i) => {
                       return (
