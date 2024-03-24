@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; // Make sure you have expo vector icons installed
-import OpenURLButton from './GoToSite';
 import FileUpload from './FileUploadComponent';
 import { DocumentPickerResult } from 'expo-document-picker';
 import databaseMethods from '../services/databaseMethods';
@@ -17,16 +16,13 @@ const TrainerCertificateUploader: React.FC<Props> = ({onUpload}) => {
         return file?.assets[0].name;
     };
 
-    
-
     useEffect(() => {
         if (!file) return;
         databaseMethods.uploadFileAndSaveLink(file).then(url => {
           if (url) onUpload(url);
         });
     }, [file]);
-
-
+    
   return (
     <View style={styles.container}>
       <FileUpload style={styles.uploadButton} onFileUpload={(file) => {
