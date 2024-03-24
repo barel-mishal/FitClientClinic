@@ -4,8 +4,6 @@ import { ScrollView, View } from "react-native";
 import { RootStackParamList } from "../../../App";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 import ClientView from "../../../Components/ClientView";
-import databaseMethods from "../../../services/databaseMethods";
-import { useQuery } from "react-query";
 import ViewWorkoutsComp from "../../../Components/ViewWorkoutsComp";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerClient'>;
@@ -18,7 +16,7 @@ const TrainerClient: React.FC<Props> = ({ navigation, route: { params: {id}} }) 
     if (!c) return <View></View>;
     return <ScrollView>
     <ClientView client={c} />
-    <ViewWorkoutsComp id={c?.userId!} />
+        <ViewWorkoutsComp id={c?.userId!} />
     </ScrollView>;
 }
 

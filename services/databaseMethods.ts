@@ -82,6 +82,8 @@ Error logging in. Please try again. Did you sign up?
 
 async function register(form: OutputClientRegister | OutputTrainerRegister) {
   try {
+    // TAKE CERTIFICATION INTO ACCOUNT FOR TRAINER USING URL
+    // THEN ADD THE URL TO THE TRAINER PROFILE
       const userCredential = await auth().createUserWithEmailAndPassword(form.email, form.password)
       const user = userCredential.user;
       

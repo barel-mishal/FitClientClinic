@@ -67,10 +67,11 @@ const SignupTrainer = ({navigation}: Props) => {
       />
       <View>
         <Text>Certifications</Text>
-          <FileUpload onFileUpload={function (file): void {
+          {/* <FileUpload onFileUpload={function (file): void {
             throw new Error("Function not implemented.");
           } } label={"Upload Certifications"}
-          />
+          /> */}
+          
         <Text>Please upload your certifications if you do not have one please go to this link to create one </Text>
         <OpenURLButton url={"https://google.com"} children={"Please go to this site"}  />
       </View>

@@ -16,7 +16,6 @@ const MedicalCertificateUploader = () => {
     useEffect(() => {
         if (!file) return;
         const uri = databaseMethods.uploadFileAndSaveLink(file);
-        console.log({uri});
     }, [file]);
 
 
