@@ -26,19 +26,19 @@ const TrainerHome: React.FC<Props> = ({ navigation }) => {
         <ScrollView style={{backgroundColor: "#f0f9ff"}}>
             <View style={{...styles.container, padding: 16 }}>
                 <Text style={styles.title}>Wolcome Coach {firstCharUpperCase(data?.name)}</Text>
+                <CardWrapper styleOption={{backgroundColor: "#166534"}}>
+                    <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('TrainerCreateProgram')}>
+                        <Text style={{color: "#f0fdf4", fontSize: 24,fontWeight: "bold",}}>Create Program</Text>
+                        <Text style={{color: "#f0fdf4"}}>
+                            Create a new program for your clients
+                        </Text>
+                    </TouchableOpacity>
+                </CardWrapper>
                 <CardWrapper styleOption={{}}>
                     <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('TrainerClients')}>
                         <Text style={styles.title2}>Clients</Text>
                         <Text>
                             View your clients and create new ones
-                        </Text>
-                    </TouchableOpacity>
-                </CardWrapper>
-                <CardWrapper styleOption={{}}>
-                    <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('TrainerCreateProgram')}>
-                        <Text style={styles.title2}>Create Program</Text>
-                        <Text>
-                            Create a new program for your clients
                         </Text>
                     </TouchableOpacity>
                 </CardWrapper>
