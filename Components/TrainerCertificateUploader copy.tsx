@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; // Make sure you have expo vector icons installed
 import FileUpload from './FileUploadComponent';
 import { DocumentPickerResult } from 'expo-document-picker';
@@ -21,18 +21,29 @@ const TrainerCertificateUploader: React.FC<Props> = ({onUpload}) => {
         databaseMethods.uploadFileAndSaveLink(file).then(url => {
           if (url) onUpload(url);
         });
+        return () => {
+          setFile(null);
+        }
     }, [file]);
     
   return (
     <View style={styles.container}>
-      <FileUpload style={styles.uploadButton} onFileUpload={(file) => {
+      <FileUpload 
+      style={styles.uploadButton} 
+      onFileUpload={(file) => {
         console.log(JSON.stringify(file, null, 2));
         setFile(file);
-      }} >
+      }} 
+      >
             <FontAwesome name="upload" size={20} color="#fff" />
             <Text style={styles.uploadButtonText}>Choose File to Upload</Text>
       </FileUpload>
-      <Text style={styles.fileName}>{getFileName()}</Text>
+      <View style={{display: "flex", flexDirection: "row", alignItems: "baseline", gap: 5, height: 24, justifyContent: "center", marginBottom: 12}}>
+        <Text style={styles.fileName}>{getFileName()}</Text>
+        {file?.assets && <Pressable onPress={() => {setFile(null)}} style={styles.linkButton}>
+          <FontAwesome name="close" size={20} color="#075985" />
+        </Pressable>}
+      </View>
       <Text style={styles.description}>
         If you haven't obtained a trainer certificate yet, you can signup as client.
       </Text>
@@ -78,8 +89,6 @@ const styles = StyleSheet.create({
   fileName: {
     fontSize: 20,
     color: "#082f49",
-    marginBottom: 15,
-    textAlign: 'center',
   },
   linkButton: {
     flexDirection: 'row',

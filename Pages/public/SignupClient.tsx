@@ -11,7 +11,6 @@ import Toast from 'react-native-toast-message'
 type Props = NativeStackScreenProps<RootStackParamList, 'SignupClient'>;
 
 const SignupClient = ({ navigation }: Props) => {
-  const [message, setMessage] = useState<string | undefined>(undefined);
   const [form, setForm] = useState<Partial<InputClientRegister>>();
 
   // Function to handle input change
