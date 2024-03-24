@@ -10,12 +10,12 @@ import { FitnessProgramOutput } from "../../../types";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerPrograms'>;
-type Program = Required<FitnessProgramOutput> & { trainerName: string }
+export type Program = Required<FitnessProgramOutput> & { trainerName: string }
 
 const TrainerPrograms: React.FC<Props> = ({ navigation }) => {
     const auth = useAuth()
     if (!auth.user || auth.data?.role !== "trainer") return <View></View>
-    const programs = (auth.data.programs || []) as Program[] 
+    const [programs, setPrograms] = useState<Program[]>(auth.data.programs as Program[])
 
     return (
         <View>
@@ -27,7 +27,7 @@ const TrainerPrograms: React.FC<Props> = ({ navigation }) => {
                 </TouchableOpacity>
                 {programs?.map((m, index) => {
                     const program = {...m, trainerName: firstCharUpperCase(auth?.data?.name)}
-                    return <TrainerProgramCard key={index} program={program} navigation={navigation} />
+                    return <TrainerProgramCard key={index} program={program} navigation={navigation} setPrograms={setPrograms} />
                 })}
                 </View>
             </ScrollView>

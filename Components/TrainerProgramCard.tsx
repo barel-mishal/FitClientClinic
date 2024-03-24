@@ -1,19 +1,38 @@
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, Modal, ScrollView } from "react-native";
 import { Entypo } from '@expo/vector-icons';
 import { useAuth } from "./ContextComopnents/AuthContext";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../App";
 import { FitnessProgramOutput } from "../types";
+import databaseMethods from "../services/databaseMethods";
+import { Program } from "../Pages/private/Trainer/TrainerPrograms";
 
 type Props = {
     program: Required<FitnessProgramOutput> & { trainerName: string };
     navigation: NativeStackNavigationProp<RootStackParamList, "TrainerPrograms" | "TrainerClients", undefined>;
+    setPrograms: React.Dispatch<React.SetStateAction<Program[]>>
 }
 
-const TrainerProgramCard: React.FC<Props> = ({ program, navigation }) => {
+const TrainerProgramCard: React.FC<Props> = ({ program, navigation, setPrograms }) => {
     const auth = useAuth();
     if (!auth?.user) return <View></View>;
+    const [visible, setVisible] = React.useState(false);
+    const options = [
+        { label: "Edit", value: "edit" },
+        { label: "Delete", value: "delete" },
+    ];
+
+    const handleSelect = (option: { label: string, value: string }) => {
+        setVisible(false);
+        if (option.value === "edit") {
+            // todo: implement edit program
+            // navigation.navigate("TrainerEditProgram", { id: program.id });
+        } else if (option.value === "delete") {
+            databaseMethods.deleteTrainerProgram(program.id);
+            setPrograms((prev) => prev.filter((p) => p.id !== program.id));
+        }
+    };
     
     return (
         <TouchableOpacity onPress={() => { navigation.navigate("TrainerProgram", {id: program.id})} }>
@@ -23,9 +42,22 @@ const TrainerProgramCard: React.FC<Props> = ({ program, navigation }) => {
                         <Text style={styles.programName}>{program.name}</Text>
                         <Text style={styles.trainerName}>Trainer: {program.trainerName}</Text>
                     </View>
-                    <TouchableOpacity onPress={() => {console.log("menu")}}>
+                    <TouchableOpacity onPress={() => {setVisible(true)}}>
                         <Entypo name="dots-three-horizontal" size={24} color="#082F49" />
                     </TouchableOpacity>
+                    <Modal visible={visible} transparent={true} animationType="slide">
+                        <TouchableOpacity style={styles.modalOverlay} onPress={() => setVisible(false)}>
+                        <View style={styles.modalContent}>
+                            <ScrollView>
+                            {options.map((option, index) => (
+                                <TouchableOpacity key={index} onPress={() => handleSelect(option)} style={styles.option}>
+                                <Text>{option.label}</Text>
+                                </TouchableOpacity>
+                            ))}
+                            </ScrollView>
+                        </View>
+                        </TouchableOpacity>
+                    </Modal>
                 </View>
                 <View>
                     <View style={styles.descriptionRow}>
@@ -101,6 +133,23 @@ const styles = StyleSheet.create({
         fontSize: 16,
         fontWeight: "400",
         color: "#082F49",
+    },
+    modalOverlay: {
+        flex: 1,
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "rgba(0, 0, 0, 0.5)",
+    },
+    modalContent: {
+        backgroundColor: "white",
+        padding: 20,
+        borderRadius: 8,
+        width: "80%",
+    },
+    option: {
+        padding: 16,
+        borderBottomWidth: 1,
+        borderBottomColor: "#ccc",
     },
 });
 

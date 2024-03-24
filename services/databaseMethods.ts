@@ -24,7 +24,8 @@ const databaseMethods = {
   getUserClientWorkouts,
   deleteTrainerClient,
   getAllClientWorkouts,
-  uploadFileAndSaveLink
+  uploadFileAndSaveLink,
+  deleteTrainerProgram
 }
 
 // Asynchronously uploads a file and saves its download link.
@@ -455,6 +456,21 @@ async function getAllClientWorkouts(clientId: string) {
     return workouts; // Return the array of workouts
   } catch (error) {
     console.error("Error retrieving client workouts: ", error);
+    throw error; 
+  }
+}
+
+async function deleteTrainerProgram(programId: string) {
+  try {
+    // Reference the program document
+    const programRef = firestore().collection('FitnessPrograms').doc(programId);
+
+    // Delete the document
+    await programRef.delete();
+
+    console.log(`Program ${programId} deleted successfully.`);
+  } catch (error) {
+    console.error("Error deleting program: ", error);
     throw error; 
   }
 }

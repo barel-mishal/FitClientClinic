@@ -16,28 +16,19 @@ type Props = {
 const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
   const auth = useAuth()
     
-    const client2 = {
-        name: "John Doe",
-        email: "barel@mail.com",
-        phone: "054-1234567",
-        score: 9,
-        description: "I am a beginner",
-        currentFitnessProgramPlanName: "Weight Loss",
-        avgWorkoutDuration: 30,
-        numberOfWorkout: 10, 
-        userId: "123"
-    }
+
     console.log({client})
-    // TODO: bring the workout clients from the database from trianer side
     // TODO: make phone number as a string
     // TODO: calculate number of workouts and average workout duration, and show name of the current program
     // TODO: add goals into the client object
-    // TODO: add functionality to delete the client
     // TODO: FIX WORKOUTS VIEW IN TRAINER SIDE
     // todo: CLIENT PROPERTIES DEISGN BRITHDATE AND FILES UPLOADS
     // TODO: HOME PAGE DEISGN START WITHSOMETHING COOL 
     // TODO: CHANGE THE NAME TO MOVE
-    // todo: update the deisgn of signup for the trainer and client
+    // TODO: EDIT PROGRAMS
+    // TODO: VIEW PROGRAMS
+    // TODO: DELETE PROGRAMS
+    // todo: add client 
     return (
         <TouchableOpacity onPress={() => navigation.navigate("TrainerClient", {id: client?.userId ?? ""})}>
             <View style={styles.programCard}>
@@ -72,12 +63,12 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
                 </View>
 
                 <View style={styles.detailsRow}>
-                    <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
+                    {/* <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
                         <FontAwesome name="heartbeat" size={20} color="#082f49" />
                         <Text style={styles.clientDetails}>
                             Workouts Score: {client2.score}/10
                         </Text>
-                    </View>
+                    </View> */}
                     <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
                         <MaterialCommunityIcons name="script-text-outline" size={20} color="#082f49" />
                         <Text style={styles.clientDetails}>
