@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useReducer, useState } from "react";
-import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity, Dimensions, ViewStyle, StyleProp, Button } from 'react-native';
+import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity, Dimensions, ViewStyle, StyleProp, Button, Pressable } from 'react-native';
 import { RootStackParamList } from "../App";
 import ImageUpload from "./ImageUploadComponent";
 import { FitnessProgram, FitnessProgramSchema, ReturnTrainerProerties, User, makeIssue, uniqueId } from "../types";
@@ -140,12 +140,15 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation, trainer, use
   }
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
+      <View style={styles.stickyContainer}>
+        <Pressable onPress={handleSubmit} style={styles.stickyButton}>
+          <Text style={styles.stickyButtonText}>Save And Close Program</Text>
+        </Pressable>
+      </View>
+      <ScrollView>
       <View style={styles.containerGapPaading}>
         <View style={{paddingHorizontal: 10, display: "flex", gap: 30}}>
-          <TouchableOpacity onPress={handleSubmit} style={{display: "flex", width: "100%" , flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center", padding: 12, marginTop: 14, borderRadius: 20, backgroundColor: "#7DD3FC", opacity: 50, }}>
-              <Text style={{ fontSize: 16, fontWeight: "700", color: "#082F49" }}>Save And Close Program</Text>
-          </TouchableOpacity>
           <Text style={styles.errorMessage}>{message}</Text>
 
           <View style={styles.containerGapPaading}>
@@ -204,7 +207,7 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation, trainer, use
           </View>
         </View>
       </View>
-          {state.program?.exercises?.map((exercise, index) => {
+        {state.program?.exercises?.map((exercise, index) => {
             return (
               <View key={exercise.id} style={{...styles.containerGapPaading, paddingHorizontal: 10, paddingVertical: 15, borderColor: "#bae6fd", borderStyle: "solid", borderWidth: 2, borderRadius: 20, margin: 10}}>
                 <Text style={styles.inputTitle}>Name</Text>
@@ -278,18 +281,13 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation, trainer, use
               </View>
             );
           })}
-          <View style={{height: 100}}></View>
-    </ScrollView>
+        <View style={{height: 100}}></View>
+      </ScrollView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    display: 'flex',
-    flexDirection: 'column',
-    height: Dimensions.get('window').height,
-    backgroundColor: '#f0f9ff',
-  },
   navigation: {
     display: 'flex',
     justifyContent: 'space-between',
@@ -298,6 +296,7 @@ const styles = StyleSheet.create({
   containerGapPaading: {
     display: 'flex',
     flexDirection: 'column',
+    position: 'relative',
     gap: 10,
     
   },
@@ -336,7 +335,34 @@ const styles = StyleSheet.create({
         display: 'flex',
         flexDirection: 'row',
         width: Dimensions.get('window').width,
-    }
+    },
+    stickyContainer: {
+      position: 'absolute',
+      top: 0,
+      width: '100%',
+      zIndex: 1000, // Ensure the sticky element is above the ScrollView content
+    },
+    stickyButton: {
+      display: 'flex',
+      width: '90%',
+      flexDirection: 'row',
+      justifyContent: 'center',
+      alignItems: 'center',
+      padding: 12,
+      marginTop: 14,
+      borderRadius: 20,
+      backgroundColor: '#7DD3FC',
+      alignSelf: 'center',
+    },
+    stickyButtonText: {
+      fontSize: 16,
+      fontWeight: '700',
+      color: '#082F49',
+    },
+    container: {
+      flex: 1,
+      backgroundColor: '#f0f9ff',
+    },
 });
   
 
