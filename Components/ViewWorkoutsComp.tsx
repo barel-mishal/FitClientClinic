@@ -5,18 +5,17 @@ import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
 import { RootStackParamList } from "../App";
 import { useQuery } from "react-query";
 import databaseMethods from "../services/databaseMethods";
-import { Duration, UserSchema, calculateDuration, durationToMin, formatDateTimeRange } from "../types";
+import { Duration, User, UserSchema, calculateDuration, durationToMin, formatDateTimeRange } from "../types";
 import { FinishWorkoutType } from "./ProgramViewTrack";
 
 interface Props  {
-    user: UserSchema
+    id: User["uid"]
 }
 
-const ClientWorkouts: React.FC<Props> = ({user}) => {
-    if (!user.user || user?.data?.role !== "client") return <Text>User is not logged in</Text>;
+const ClientWorkouts: React.FC<Props> = ({id}) => {
     const { data: workouts, error, isLoading } = useQuery(
-        ['workouts', user.user.uid], 
-        () => databaseMethods.getUserClientWorkouts(user.user.uid), 
+        ['workouts', id], 
+        () => databaseMethods.getUserClientWorkouts(id), 
         { refetchOnWindowFocus: true, refetchOnMount: true, cacheTime: 0, staleTime: 0 }
     );
 
