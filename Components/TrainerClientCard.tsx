@@ -5,7 +5,7 @@ import { OutputClientProperties, calcBMI } from "../types";
 
 
 import { View, Text, StyleSheet, TouchableOpacity, Pressable } from "react-native";
-import { AntDesign, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
+import { AntDesign, Ionicons, MaterialCommunityIcons, MaterialIcons } from '@expo/vector-icons';
 import { useAuth } from "./ContextComopnents/AuthContext";
 
 type Props = {
@@ -15,7 +15,7 @@ type Props = {
 
 const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
   const auth = useAuth()
-        // TODO: calculate number of workouts and average workout duration, and show name of the current program
+    // TODO: calculate number of workouts and average workout duration, and show name of the current program
     // TODO: add goals into the client object
     // TODO: FIX WORKOUTS VIEW IN TRAINER SIDE
     // todo: CLIENT PROPERTIES DEISGN BRITHDATE AND FILES UPLOADS
@@ -25,6 +25,10 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
     // TODO: VIEW PROGRAMS
     // todo: add client 
     // todo: add search functionality for exercises
+    // todo: exercise images upload and view
+    // todo: add indication for submit in client properties
+    // todo: link to google site in create program
+    // todo: udpating the new program in the list of trianer after finish creating the program
     return (
         <TouchableOpacity onPress={() => navigation.navigate("TrainerClient", {id: client?.userId ?? ""})}>
             <View style={styles.programCard}>
