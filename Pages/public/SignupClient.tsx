@@ -6,6 +6,7 @@ import { InputClientRegister, ClientRegisterData, makeIssue } from "../../types"
 import databaseMethods from "../../services/databaseMethods";
 import * as v from "valibot";
 
+
 type Props = NativeStackScreenProps<RootStackParamList, 'SignupClient'>;
 
 const SignupClient = ({ navigation }: Props) => {

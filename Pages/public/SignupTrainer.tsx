@@ -2,19 +2,20 @@
 
 
 import React, { useState } from "react";
-import { StyleSheet, View, Text, TextInput, Button, ScrollView } from "react-native";
+import { StyleSheet, View, Text, TextInput, Button, ScrollView, Pressable } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../App";
 import { TrainerRegisterData, InputTrainerRegister, makeIssue } from "../../types";
 import databaseMethods from "../../services/databaseMethods";
 import * as v from "valibot";
 import TrainerCertificateUploader from "../../Components/TrainerCertificateUploader copy";
+import Toast from 'react-native-toast-message'
+
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SignupTrainer'>;
 
 const SignupTrainer = ({navigation}: Props) => {
   
-  const [message, setMessage] = useState<string | undefined>(undefined);
   const [form, setForm] = useState<Partial<InputTrainerRegister>>({
     name: '',
     email: '',
@@ -33,7 +34,16 @@ const SignupTrainer = ({navigation}: Props) => {
   const handleSubmit = () => {
     const parsed = v.safeParse(TrainerRegisterData, form);
     if (parsed.success) databaseMethods.register(parsed.output);
-    else setMessage(makeIssue(parsed.issues));
+    else {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: makeIssue(parsed.issues),
+        visibilityTime: 4000,
+        autoHide: true,
+      });
+    }
   };
   
   return (
@@ -99,8 +109,9 @@ const SignupTrainer = ({navigation}: Props) => {
             onChangeText={(value) => handleChange('yearsOfExperience', value)}
           />
         </View>
-        <Text style={styles.errorMessage}>{message}</Text>
-        <Button title="Submit" onPress={handleSubmit} />
+        <Pressable onPress={handleSubmit} style={{ backgroundColor: "#0c4a6e", padding: 10, borderRadius: 6, }}>
+          <Text style={{fontSize: 16, color: "#f0f9ff", textAlign: "center", fontWeight: "700"}}>Submit</Text>
+        </Pressable>
       </View>
     </ScrollView>
 

@@ -3,6 +3,8 @@ import { NavigationContainer } from '@react-navigation/native';
 import AuthProvider, { useAuth } from './Components/ContextComopnents/AuthContext';
 import { PrivateNavigator, PublicNavigator } from './Pages/Routes';
 import { QueryClient, QueryClientProvider } from 'react-query';
+import Toast from 'react-native-toast-message'
+
 
 export type RootStackTrainerParamList = {
   TrainerHome: undefined;
@@ -58,6 +60,13 @@ export default function App() {
           <MyNavigator />
         </NavigationContainer>
       </AuthProvider>
+      <Toast
+          position='top'
+          bottomOffset={20}
+          autoHide={true}
+          visibilityTime={4000}
+          topOffset={20}
+        />
     </QueryClientProvider>
   );
 }
