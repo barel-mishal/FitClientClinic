@@ -7,6 +7,7 @@ import { FitnessProgram, FitnessProgramSchema, ReturnTrainerProerties, User, mak
 import RadioButton from "./RadioComponent";
 import * as v from "valibot";
 import databaseMethods from "../services/databaseMethods";
+import Toast from 'react-native-toast-message';
 
 interface Props extends NativeStackScreenProps<RootStackParamList, 'TrainerCreateProgram'> {
   trainer: ReturnTrainerProerties;
@@ -102,12 +103,40 @@ function reducer(state: ProgramState, action: Actions) {
 
 const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation, trainer, user }) => {
   const [state, dispatch] = useReducer(reducer, initialState(user.uid));
-  const [message, setMessage] = useState<string | undefined>(undefined);
   const [selected, setSelected] = useState<string[]>([]); 
   const handleSubmit = async () => {
     const parsed = v.safeParse(FitnessProgramSchema, state.program);
-    if (!parsed.success) return setMessage(makeIssue(parsed.issues));
-    setMessage(undefined);
+    if (!parsed.success) {
+      const message = makeIssue(parsed.issues);
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: message,
+        visibilityTime: 4000,
+        autoHide: true,
+      });
+      return 
+    };
+    if (selected.length === 0) {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: "Please select a client to assign the program to",
+        visibilityTime: 4000,
+        autoHide: true,
+      });
+      return 
+    }
+    Toast.show({
+      type: 'success',
+      position: 'top',
+      text1: 'Success',
+      text2: "Program has been saved",
+      visibilityTime: 4000,
+      autoHide: true,
+    });
     const programId = await databaseMethods.addOrUpdateFitnessProgram(parsed.output);
     await databaseMethods.assignProgramToClients(programId, selected);
     dispatch({type: "UPDATE_PROGRAM", payload: {key: "id", value: programId}});
@@ -146,67 +175,66 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation, trainer, use
           <Text style={styles.stickyButtonText}>Save And Close Program</Text>
         </Pressable>
       </View>
-      <ScrollView>
-      <View style={styles.containerGapPaading}>
-        <View style={{paddingHorizontal: 10, display: "flex", gap: 30}}>
-          <Text style={styles.errorMessage}>{message}</Text>
+      <ScrollView style={{marginTop: 30}}>
+        <View style={styles.containerGapPaading}>
+          <View style={{paddingHorizontal: 10, display: "flex", gap: 30}}>
 
-          <View style={styles.containerGapPaading}>
-            <Text style={styles.inputTitle}>Client For Program</Text>
-            {/* <MultiSelectComponent items={clients} selected={selected} onChange={(i) => setSelected(i)} /> */}
-            <ScrollView horizontal={true} >
-                  {clients.map((i) => {
-                    return (
-                      <TouchableOpacity  
-                      key={i.value} 
-                      style={{padding: 10, paddingHorizontal: 25, justifyContent: "center", alignItems: "center", borderColor: "#7dd3fc", borderWidth: 2, borderRadius: 20, margin: 10, backgroundColor: selected.includes(i.value) ? "#7dd3fc" : "#bae6fd"}}
-                      onPress={() => setSelected([i.value])}>
-                        <Text>{i.label.toString()}</Text>
-                      </TouchableOpacity>
-                    );
-                  })}
-              </ScrollView>  
-          </View>
-          <View style={styles.containerGapPaading}>
-            <Text style={styles.inputTitle}>Program Name</Text>
-            <TextInput style={styles.input} placeholder="Name" onChangeText={text => dispatch({type: "UPDATE_PROGRAM", payload: {key: "name", value: text}})} value={state.program?.name}/>
-          </View>
-          <View style={styles.containerGapPaading}>
-            <Text style={styles.inputTitle}>Description</Text>
-            <TextInput style={styles.input} placeholder="Description" onChangeText={text => dispatch({type: "UPDATE_PROGRAM", payload: {key: "description", value: text}})} value={state.program?.description}/>
-          </View>
-          <View style={styles.containerGapPaading}>
-            <Text style={styles.inputTitle}>Duration</Text>
-            <ScrollView horizontal={true} style={styles.horizantalBlocks}>
-              <TouchableOpacity style={styleDuration("2h")} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "2h"}})}>
-                <Text>Hour +</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styleDuration("1h")} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "1h"}})}>
-                <Text>Hour</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styleDuration("45m")} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "45m"}})}>
-                <Text>45 minutes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styleDuration("30m")} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "30m"}})}>
-                <Text>30 minutes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styleDuration("20m")} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "20m"}})}>
-                <Text>20 minutes</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styleDuration("10m")} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "10m"}})}>
-                <Text>10 minutes</Text>
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
-          <View>
-            <View style={styles.navigation}>
-              <TouchableOpacity onPress={() => dispatch({ type: 'ADD_EXERCISE' })} style={{display: "flex" , flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center", padding: 12, marginTop: 14, borderRadius: 20, backgroundColor: "#7DD3FC", opacity: 50, }}>
-                    <Text style={{ fontSize: 16, fontWeight: "700", color: "#082F49" }}>Add New Exercise</Text>
-              </TouchableOpacity>
+            <View style={styles.containerGapPaading}>
+              <Text style={styles.inputTitle}>Client For Program</Text>
+              {/* <MultiSelectComponent items={clients} selected={selected} onChange={(i) => setSelected(i)} /> */}
+              <ScrollView horizontal={true} >
+                    {clients.map((i) => {
+                      return (
+                        <TouchableOpacity  
+                        key={i.value} 
+                        style={{padding: 10, paddingHorizontal: 25, justifyContent: "center", alignItems: "center", borderColor: "#7dd3fc", borderWidth: 2, borderRadius: 20, margin: 10, backgroundColor: selected.includes(i.value) ? "#7dd3fc" : "#bae6fd"}}
+                        onPress={() => setSelected([i.value])}>
+                          <Text>{i.label.toString()}</Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                </ScrollView>  
+            </View>
+            <View style={styles.containerGapPaading}>
+              <Text style={styles.inputTitle}>Program Name</Text>
+              <TextInput style={styles.input} placeholder="Name" onChangeText={text => dispatch({type: "UPDATE_PROGRAM", payload: {key: "name", value: text}})} value={state.program?.name}/>
+            </View>
+            <View style={styles.containerGapPaading}>
+              <Text style={styles.inputTitle}>Description</Text>
+              <TextInput style={styles.input} placeholder="Description" onChangeText={text => dispatch({type: "UPDATE_PROGRAM", payload: {key: "description", value: text}})} value={state.program?.description}/>
+            </View>
+            <View style={styles.containerGapPaading}>
+              <Text style={styles.inputTitle}>Duration</Text>
+              <ScrollView horizontal={true} style={styles.horizantalBlocks}>
+                <TouchableOpacity style={styleDuration("2h")} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "2h"}})}>
+                  <Text>Hour +</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styleDuration("1h")} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "1h"}})}>
+                  <Text>Hour</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styleDuration("45m")} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "45m"}})}>
+                  <Text>45 minutes</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styleDuration("30m")} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "30m"}})}>
+                  <Text>30 minutes</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styleDuration("20m")} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "20m"}})}>
+                  <Text>20 minutes</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styleDuration("10m")} onPress={() => dispatch({type: "UPDATE_PROGRAM", payload: {key: "duration", value: "10m"}})}>
+                  <Text>10 minutes</Text>
+                </TouchableOpacity>
+              </ScrollView>
+            </View>
+            <View>
+              <View style={styles.navigation}>
+                <TouchableOpacity onPress={() => dispatch({ type: 'ADD_EXERCISE' })} style={{display: "flex" , flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center", padding: 12, marginTop: 14, borderRadius: 20, backgroundColor: "#7DD3FC", opacity: 50, }}>
+                      <Text style={{ fontSize: 16, fontWeight: "700", color: "#082F49" }}>Add New Exercise</Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
-      </View>
         {state.program?.exercises?.map((exercise, index) => {
             return (
               <View key={exercise.id} style={{...styles.containerGapPaading, paddingHorizontal: 10, paddingVertical: 15, borderColor: "#bae6fd", borderStyle: "solid", borderWidth: 2, borderRadius: 20, margin: 10}}>
