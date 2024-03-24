@@ -311,7 +311,7 @@ export type FitnessProgramOutput = v.Output<typeof FitnessProgramSchema>;
 export const profileSchema = v.object({
     name: v.string([v.minLength(2)]),
     email: v.string([v.email()]),
-    phone: NumberSchema,
+    phone: v.string(),
     userId: v.optional(v.string()),
 })
 
@@ -319,7 +319,7 @@ export const ClientProfile = v.merge([
     profileSchema,
     v.object({
     role: v.literal('client'),
-    trainerPhone: v.optional(NumberSchema),
+    trainerPhone: v.optional(v.string()),
     userId: v.optional(v.string()),
     trainerId: v.optional(v.string()),
 })])

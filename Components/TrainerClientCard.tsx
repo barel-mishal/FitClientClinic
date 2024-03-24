@@ -29,6 +29,7 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
     // TODO: VIEW PROGRAMS
     // TODO: DELETE PROGRAMS
     // todo: add client 
+    // todo: add search functionality for exercises
     return (
         <TouchableOpacity onPress={() => navigation.navigate("TrainerClient", {id: client?.userId ?? ""})}>
             <View style={styles.programCard}>
