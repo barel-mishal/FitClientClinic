@@ -15,11 +15,7 @@ type Props = {
 
 const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
   const auth = useAuth()
-    
-
-    console.log({client})
-    // TODO: make phone number as a string
-    // TODO: calculate number of workouts and average workout duration, and show name of the current program
+        // TODO: calculate number of workouts and average workout duration, and show name of the current program
     // TODO: add goals into the client object
     // TODO: FIX WORKOUTS VIEW IN TRAINER SIDE
     // todo: CLIENT PROPERTIES DEISGN BRITHDATE AND FILES UPLOADS
@@ -27,7 +23,6 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
     // TODO: CHANGE THE NAME TO MOVE
     // TODO: EDIT PROGRAMS
     // TODO: VIEW PROGRAMS
-    // TODO: DELETE PROGRAMS
     // todo: add client 
     // todo: add search functionality for exercises
     return (
@@ -64,12 +59,6 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
                 </View>
 
                 <View style={styles.detailsRow}>
-                    {/* <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
-                        <FontAwesome name="heartbeat" size={20} color="#082f49" />
-                        <Text style={styles.clientDetails}>
-                            Workouts Score: {client2.score}/10
-                        </Text>
-                    </View> */}
                     <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
                         <MaterialCommunityIcons name="script-text-outline" size={20} color="#082f49" />
                         <Text style={styles.clientDetails}>
