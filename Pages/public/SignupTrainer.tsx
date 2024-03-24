@@ -85,15 +85,6 @@ const SignupTrainer = ({navigation}: Props) => {
           />
         </View>
         <View style={{display: "flex", gap: 4}}>
-          <Text style={{fontSize: 16, color: "#0284c7", fontWeight: "500"}}>Password</Text>
-          <TextInput
-            placeholder="Password"
-            style={styles.input}
-            value={form.password}
-            onChangeText={(value) => handleChange('password', value)}
-          />
-        </View>
-        <View style={{display: "flex", gap: 4}}>
           <Text style={{fontSize: 16, color: "#0284c7", fontWeight: "500"}}>Certifications</Text>
           <TrainerCertificateUploader
             onUpload={(url) => handleChange('certification', url)}
