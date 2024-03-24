@@ -172,7 +172,7 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation, trainer, use
           <Text style={styles.stickyButtonText}>Save And Close Program</Text>
         </Pressable>
       </View>
-      <ScrollView style={{marginTop: 30}}>
+      <ScrollView style={{marginTop: 100}}>
         <View style={styles.containerGapPaading}>
           <View style={{paddingHorizontal: 10, display: "flex", gap: 30}}>
 
