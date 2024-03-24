@@ -3,14 +3,13 @@ import React from "react";
 
 import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
 import { RootStackParamList } from "../App";
-import { useAuth } from "./ContextComopnents/AuthContext";
 import { useQuery } from "react-query";
 import databaseMethods from "../services/databaseMethods";
 import { Duration, UserSchema, calculateDuration, durationToMin, formatDateTimeRange } from "../types";
 import { FinishWorkoutType } from "./ProgramViewTrack";
 
-interface Props extends NativeStackScreenProps<RootStackParamList, 'ClientWorkouts'> {
-    user: UserSchema;
+interface Props  {
+    user: UserSchema
 }
 
 const ClientWorkouts: React.FC<Props> = ({user}) => {
