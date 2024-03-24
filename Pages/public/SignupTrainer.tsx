@@ -53,7 +53,7 @@ const SignupTrainer = ({navigation}: Props) => {
         <View style={{display: "flex", gap: 4}}>
           <Text style={{fontSize: 16, color: "#0284c7", fontWeight: "500"}}>Your name</Text>
           <TextInput
-            placeholder="Name"
+            placeholder="Eli Mor"
             style={styles.input}
             value={form.name}
             onChangeText={(value) => handleChange('name', value)}
@@ -151,13 +151,7 @@ const styles = StyleSheet.create({
     height: 40,
     fontSize: 16,
   },
-  errorMessage: {
-    color: 'red',
-    height: 40,
-    flexWrap: 'wrap',
-    display: 'flex',
-  },
-  });
+});
   
 
 export default SignupTrainer;

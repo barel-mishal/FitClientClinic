@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { StyleSheet, TextInput, Button, ScrollView, Text } from "react-native";
+import { StyleSheet, TextInput, Button, ScrollView, Text, Pressable, View } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../App";
 import { InputClientRegister, ClientRegisterData, makeIssue } from "../../types";
 import databaseMethods from "../../services/databaseMethods";
 import * as v from "valibot";
+import Toast from 'react-native-toast-message'
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'SignupClient'>;
@@ -21,28 +22,84 @@ const SignupClient = ({ navigation }: Props) => {
   const handleSubmit = () => {
     const parsed = v.safeParse(ClientRegisterData, form);
     if (parsed.success) databaseMethods.register(parsed.output);
-    else setMessage(makeIssue(parsed.issues));
+    else {
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: makeIssue(parsed.issues),
+        visibilityTime: 4000,
+        autoHide: true,
+      });
+    }
   };
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Signup Client</Text>
-      <Text style={styles.inputTitle}>Your name</Text>
-      <TextInput style={styles.input} placeholder="Name" onChangeText={text => handleChange('name', text)} value={form?.name}/>
-      <Text style={styles.inputTitle}>Email</Text>
-      <TextInput style={styles.input} placeholder="Email" secureTextEntry={false} onChangeText={text => handleChange('email', text)}  value={form?.email}/>
-      <Text style={styles.inputTitle}>Phone</Text>
-      <TextInput style={styles.input} placeholder="Phone" onChangeText={text => handleChange('phone', text)} value={form?.phone}/>
-      <Text style={styles.inputTitle}>Password</Text>
-      <TextInput style={styles.input} placeholder="Password" secureTextEntry={true} onChangeText={text => handleChange('password', text)} value={form?.password}/>
-      <Text style={styles.inputTitle}>Trainer ID (Phone Number)</Text>
-      <TextInput style={styles.input} placeholder="Trainer ID (if any)" onChangeText={text => handleChange('trainerId', text)} value={form?.trainerId}/>
-      <Text style={styles.errorMessage}>{message}</Text>
+      <Text style={{fontSize: 30, fontWeight: "600", color: "#082f49"}}>Signup Client</Text>
+      <View style={{display: "flex", gap: 4}}>
+          <Text style={{fontSize: 16, color: "#0284c7", fontWeight: "500"}}>Your name</Text>
+          <TextInput
+            placeholder="Eli Mor"
+            style={styles.input}
+            value={form?.name}
+            onChangeText={(value) => handleChange('name', value)}
+            cursorColor={"#0c4a6e"}
+            selectionColor={"#0284c7"}
+          />
+      </View>
+      <View style={{display: "flex", gap: 4}}>
+          <Text style={{fontSize: 16, color: "#0284c7", fontWeight: "500"}}>Email</Text>
+          <TextInput
+            placeholder="eli-mor@gmail.com"
+            style={styles.input}
+            value={form?.email}
+            onChangeText={(value) => handleChange('email', value)}
+            cursorColor={"#0c4a6e"}
+            selectionColor={"#0284c7"}
+          />
+      </View>
+      <View style={{display: "flex", gap: 4}}>
+          <Text style={{fontSize: 16, color: "#0284c7", fontWeight: "500"}}>Phone</Text>
+          <TextInput
+            placeholder="054-1234567"
+            style={styles.input}
+            value={form?.phone}
+            onChangeText={(value) => handleChange('phone', value)}
+            cursorColor={"#0c4a6e"}
+            selectionColor={"#0284c7"}
+          />
+      </View>
+      <View style={{display: "flex", gap: 4}}>
+          <Text style={{fontSize: 16, color: "#0284c7", fontWeight: "500"}}>Password</Text>
+          <TextInput
+            placeholder="Password"
+            style={styles.input}
+            value={form?.password}
+            onChangeText={(value) => handleChange('password', value)}
+            cursorColor={"#0c4a6e"}
+            selectionColor={"#0284c7"}
+          />
+      </View>
+      <View style={{display: "flex", gap: 4}}>
+          <Text style={{fontSize: 16, color: "#0284c7", fontWeight: "500"}}>Trainer ID (Phone Number)</Text>
+          <TextInput
+            placeholder="Trainer ID (if any)"
+            style={styles.input}
+            value={form?.trainerId}
+            onChangeText={(value) => handleChange('trainerId', value)}
+            cursorColor={"#0c4a6e"}
+            selectionColor={"#0284c7"}
+          />
+      </View>
 
-      <Button title="Signup" onPress={handleSubmit} />
+      <Pressable onPress={handleSubmit} style={{ backgroundColor: "#0c4a6e", padding: 10, borderRadius: 6, }}>
+          <Text style={{fontSize: 16, color: "#f0f9ff", textAlign: "center", fontWeight: "700"}}>Submit</Text>
+      </Pressable>
     </ScrollView>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -50,13 +107,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     padding: 20,
     display: 'flex',
-    gap: 10,
+    gap: 20,
+    backgroundColor: "#f0f9ff",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: 'rgba(125, 211, 252, 0.5)',
     padding: 10,
     borderRadius: 6,
+    color: "#082f49",
   },
   icon: {
     marginRight: 5,
@@ -74,18 +133,6 @@ const styles = StyleSheet.create({
   inputSearchStyle: {
     height: 40,
     fontSize: 16,
-  },
-  errorMessage: {
-    color: 'red',
-    height: 17,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: 'bold',
-  },
-  inputTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
 

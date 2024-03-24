@@ -26,10 +26,10 @@ export function PublicNavigator() {
     <Stack.Screen name={"FitClientClinic"} component={LandingPage} options={{
       header: () => <Header />
     }} />
-    <Stack.Screen name={"GetStarted"} component={OnBoarding} options={{}} />
-    <Stack.Screen name={"SignupClient"} component={SignupClient} options={{}} />
-    <Stack.Screen name={"SignupTrainer"} component={SignupTrainer} options={{}} />
-    <Stack.Screen name={"Login"} component={Login} options={{}} />
+    <Stack.Screen name={"GetStarted"} component={OnBoarding} options={{headerTitle: "Move"}} />
+    <Stack.Screen name={"SignupClient"} component={SignupClient} options={{headerTitle: "Client Sign up"}} />
+    <Stack.Screen name={"SignupTrainer"} component={SignupTrainer} options={{headerTitle: "Trainer Sign up"}} />
+    <Stack.Screen name={"Login"} component={Login} options={{headerTitle: "Move Login"}} />
   </Stack.Navigator>
 }
 
@@ -41,14 +41,14 @@ export const PrivateNavigator: React.FC<PrivateNavigatorProps> = ({ role })  =>{
     console.log(role);
     if (role === 'client') {
         return <Stack.Navigator>
-            <Stack.Screen name={"ClientHome"} component={ClientHome} options={{}} />
-            <Stack.Screen name={"ClientWorkouts"} component={ClientWorkouts} options={{}} />
+            <Stack.Screen name={"ClientHome"} component={ClientHome} options={{headerTitle: "Home"}} />
+            <Stack.Screen name={"ClientWorkouts"} component={ClientWorkouts} options={{headerTitle: "Client Workouts"}} />
             <Stack.Screen name={"ClientWorkout"} component={ClientWorkout} options={{headerTitle: "Workout"}} />
-            <Stack.Screen name={"ClientProperties"} component={ClientProperties} options={{}} />
+            <Stack.Screen name={"ClientProperties"} component={ClientProperties} options={{headerTitle: "Client Properties"}} />
         </Stack.Navigator>
     } else if (role === 'trainer') {
         return <Stack.Navigator>
-            <Stack.Screen name={"TrainerHome"} component={TrainerHome} options={{}} />
+            <Stack.Screen name={"TrainerHome"} component={TrainerHome} options={{headerTitle: "Home"}} />
             <Stack.Screen name={"TrainerAppointments"} component={TrainerAppointment} options={{}} />
             <Stack.Screen name={"TrainerClients"} component={TrainerClients} options={{}} />
             <Stack.Screen name={"TrainerClient"} component={TrainerClient} options={{}} />
