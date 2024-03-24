@@ -28,7 +28,7 @@ const Login: React.FC = () => {
     return (
         <View style={styles.container}>
             <View style={styles.stack}>
-                <Text style={styles.title}>Fit Client Clinic</Text>
+                <Text style={styles.title}>Move</Text>
                 <Text style={styles.subTitle}>Connect With Your Fitness</Text>
             </View>
             <View style={styles.stackHorizontal}>

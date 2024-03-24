@@ -6,7 +6,7 @@ function Header() {
     const navigation = useNavigation() as { navigate: (arg0: string) => void };
     
     return <View style={styles.header}>
-        <Text style={styles.headerText}>Fit Client Clinic</Text>
+        <Text style={styles.headerText}>Move</Text>
         <TouchableOpacity onPress={() => navigation.navigate("Login")}><Text>login</Text></TouchableOpacity>
     </View>    
   }

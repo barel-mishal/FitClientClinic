@@ -33,7 +33,7 @@ const SignupTrainer = ({navigation}: Props) => {
 
 
   const handleSubmit = () => {
-    const parsed = v.safeParse(v.omit(TrainerRegisterData, ["certification"]), form);
+    const parsed = v.safeParse(TrainerRegisterData, form);
     if (parsed.success) databaseMethods.register(parsed.output);
     else setMessage(makeIssue(parsed.issues));
   };
@@ -67,13 +67,9 @@ const SignupTrainer = ({navigation}: Props) => {
       />
       <View>
         <Text>Certifications</Text>
-          {/* <FileUpload onFileUpload={function (file): void {
-            throw new Error("Function not implemented.");
-          } } label={"Upload Certifications"}
-          /> */}
           
         <Text>Please upload your certifications if you do not have one please go to this link to create one </Text>
-        <OpenURLButton url={"https://google.com"} children={"Please go to this site"}  />
+        <OpenURLButton url={"https://google.com"} children={<Text>"Please go to this site"</Text>}  />
       </View>
       <TextInput
         placeholder="Years of Experience"

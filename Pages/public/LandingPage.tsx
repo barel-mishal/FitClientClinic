@@ -56,11 +56,11 @@ const LandingPage = ({ navigation }: PropsLandingPage) => {
           <StatusBar style="auto" />
           <View  style={{...styles.MainContentContainer, ...styles.borderBottom}}>
             <View>
-              <Text style={styles.lightTitle}>Connect with your ideal fitness coach through FitClientClinic:</Text>
+              <Text style={styles.lightTitle}>Connect with your ideal fitness coach through Move:</Text>
               <Text style={styles.title}>where health goals meet expert guidance.</Text>
             </View>
             <Text style={styles.smallTtitle}>
-              At FitClientClinic, we bridge the gap between you and personalized fitness coaching, ensuring your wellness journey is as unique as you are. Dive into a world where finding the perfect fitness trainer is not just easy, but tailored to fit your individual needs and aspirations. Whether you aim to lose weight, build muscle, or enhance your overall fitness, FitClientClinic is your go-to platform for achieving your health goals with the support of professional trainers. Embark on your fitness journey with us today and turn your wellness dreams into reality.
+              At Move, we bridge the gap between you and personalized fitness coaching, ensuring your wellness journey is as unique as you are. Dive into a world where finding the perfect fitness trainer is not just easy, but tailored to fit your individual needs and aspirations. Whether you aim to lose weight, build muscle, or enhance your overall fitness, move is your go-to platform for achieving your health goals with the support of professional trainers. Embark on your fitness journey with us today and turn your wellness dreams into reality.
             </Text>
             <View style={styles.buttom}>
                 <Button title={'Get Started'} onPress={() => navigation.navigate("GetStarted")} />
