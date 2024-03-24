@@ -73,7 +73,6 @@ const SignupClient = ({ navigation }: Props) => {
   
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.title}>Client Ditail</Text>
         <View style={{ marginTop: 16, display: 'flex', gap: 20 }}>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Your name</Text>

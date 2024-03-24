@@ -124,7 +124,7 @@ async function updateClientProfile(user: FirebaseAuthTypes.User, form: OutputCie
   }
 }
 
-async function validateTrainerPhoneAndGetId(phone: number) {
+async function validateTrainerPhoneAndGetId(phone: string) {
   try {
       // Query profiles where the role is 'trainer' and the phone number matches the input
       const docRef = firestore().collection('profile').where('role', '==', 'trainer').where('phone', '==', phone);

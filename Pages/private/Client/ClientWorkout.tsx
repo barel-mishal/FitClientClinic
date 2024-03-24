@@ -1,11 +1,12 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
 
-import { Text, StyleSheet } from "react-native";
+import { Text, StyleSheet, View } from "react-native";
 import { RootStackParamList } from "../../../App";
 import databaseMethods from "../../../services/databaseMethods";
 import RenderProgramTrack, { ProgramState } from "../../../Components/ProgramViewTrack";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
+import LoadingComp from "../../../Components/LoadingComp";
 
 export type PropsClientWorkout = NativeStackScreenProps<RootStackParamList, 'ClientWorkout'>;
 
@@ -57,11 +58,18 @@ const ClientWorkout: React.FC<PropsClientWorkout> = ({navigation, route: {params
                 state: "error",
                 error: {message: "An error occured while fetching the program"},
             });
+        }).finally(() => {;
+            setProgram({
+            data: null,
+            state: "loading",
+            error: null,
+        });
         });
     }, []);
+    
     return (
         <>
-            {program?.state === "loading" && <Text>Loading...</Text>}
+            {program?.state === "loading" && <View style={styles.container}><LoadingComp /></View>}
             {program?.state === "error" && <Text>{program.error?.message}</Text>}
             {program?.state === "success" && <RenderProgramTrack program={program.data} navigation={navigation} />}
         </>
@@ -73,7 +81,13 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        
     },
+    icon: {
+    }
+
 });
 
 export default ClientWorkout;
+
+
