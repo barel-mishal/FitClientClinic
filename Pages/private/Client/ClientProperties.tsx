@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, TextInput, Button, ScrollView, Text, View } from "react-native";
+import { StyleSheet, TextInput, Button, ScrollView, Text, View, Pressable, Modal } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../../App";
 import { makeIssue, GENDER_OPTIONS, ACTIVITY_LEVEL_OPTIONS, InputClientProperties, Client, ClientPersonalFitnessInfo, ClientProfile } from "../../../types";
@@ -41,7 +41,6 @@ const SignupClient = ({ navigation }: Props) => {
     idealTrainingTime: a.data?.idealTrainingTime,
     injuries: a.data?.injuries,
   });
-
   // Function to handle input change
   const handleChange = (name: keyof typeof form, value: string | [string, string, string] | number) => {
     setForm(prev => ({ ...(prev ?? {}), [name]: value }));
@@ -49,7 +48,6 @@ const SignupClient = ({ navigation }: Props) => {
 
   const handleSubmit = async () => {
     const parsed = v.safeParse(ClientPersonalFitnessInfo, form);
-    console.log(parsed)
     const parsed2 = v.safeParse(v.omit(ClientProfile, ["role"]), form);
     
     if (parsed.success && parsed2.success) {
@@ -106,6 +104,8 @@ const SignupClient = ({ navigation }: Props) => {
     }
 
   }, [form.MedicalCertificate]);
+
+  console.log({form});
   
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -170,9 +170,10 @@ const SignupClient = ({ navigation }: Props) => {
           <CustomSelectInput onSelect={(value) => handleChange("activityLevel", value.value)} options={ACTIVITY_LEVEL_OPTIONS}/>
         </View>
         <View style={styles.space2}>
-          <Text style={styles.inputTitle}>Upload Your Medical Certificate</Text>
-          <MedicalCertificateUploader onHandleChange={(uri) => handleChange("MedicalCertificate", uri)} />
-          <MyPDFViewer uri={form.MedicalCertificate} key={"google"} />
+          <Pressable onPress={() => navigation.navigate("TrainerCreateProgram")}>
+            <Text style={styles.inputTitle}>Upload Your Medical Certificate</Text>
+          </Pressable>
+          <MedicalCertificateUploader onHandleChange={(uri) => handleChange("MedicalCertificate", uri)} medicalCertificate={form?.MedicalCertificate} />
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Training Experience</Text>

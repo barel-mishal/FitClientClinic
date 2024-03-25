@@ -1,19 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, Modal, Pressable } from 'react-native';
 import { FontAwesome } from '@expo/vector-icons'; // Make sure you have expo vector icons installed
 import OpenURLButton from './GoToSite';
 import FileUpload from './FileUploadComponent';
 import { DocumentPickerResult } from 'expo-document-picker';
 import databaseMethods from '../services/databaseMethods';
+import MyPDFViewer from './MyPDFViewer';
 
 interface Props {
   onHandleChange: (uri: string) => void;
+  medicalCertificate: string | undefined;
+  
 }
 
-const MedicalCertificateUploader: React.FC<Props> = ({onHandleChange}) => {
+const MedicalCertificateUploader: React.FC<Props> = ({onHandleChange, medicalCertificate}) => {
     const [file, setFile] = useState<DocumentPickerResult | null>(null);
+    const [visible, setVisible] = useState(false);
+
     const getFileName = () => {
-        if (file?.canceled) return ""
+      console.log("file", medicalCertificate);  
+        if (medicalCertificate) return "View Certificate";
+        if (file?.canceled) return "";
         return file?.assets[0].name;
     };
 
@@ -35,14 +42,21 @@ const MedicalCertificateUploader: React.FC<Props> = ({onHandleChange}) => {
             <FontAwesome name="upload" size={20} color="#fff" />
             <Text style={styles.uploadButtonText}>Choose File to Upload</Text>
       </FileUpload>
-      <Text style={styles.fileName}>{getFileName()}</Text>
+      <Pressable onPress={() => setVisible(true)}>
+        <Text style={styles.title}>Medical Certificate</Text>
+        <Text style={styles.fileName}>{getFileName()}</Text>
+      </Pressable>
+      
       <Text style={styles.description}>
         If you haven't obtained a medical certificate yet, you can apply for one online.
       </Text>
       <OpenURLButton url="https://google.com">
         <FontAwesome name="external-link" size={20} color="#0ea5e9" />
         <Text style={styles.linkText}>Apply for a Medical Certificate</Text>
-        </OpenURLButton>
+      </OpenURLButton>
+        <Modal visible={visible} transparent={true} animationType="slide">
+            <MyPDFViewer uri={medicalCertificate} key={"google"} />
+        </Modal>
     </View>
   );
 };
@@ -84,7 +98,7 @@ const styles = StyleSheet.create({
   },
   fileName: {
     fontSize: 20,
-    color: "#082f49",
+    color: "black",
     marginBottom: 15,
     textAlign: 'center',
   },
