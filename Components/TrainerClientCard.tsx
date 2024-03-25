@@ -29,7 +29,8 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
     // todo: add indication for submit in client properties
     // todo: link to google site in create program
     // todo: udpating the new program in the list of trianer after finish creating the program
-    // loading state show in each page and where needed
+    // todo: loading state show in each page and where needed
+    // todo: laod back the tofas when needed and show it
     return (
         <TouchableOpacity onPress={() => navigation.navigate("TrainerClient", {id: client?.userId ?? ""})}>
             <View style={styles.programCard}>
