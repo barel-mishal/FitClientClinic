@@ -42,7 +42,6 @@ const MedicalCertificateUploader: React.FC<Props> = ({onHandleChange, medicalCer
             <Text style={styles.uploadButtonText}>Choose File to Upload</Text>
       </FileUpload>
       <Pressable onPress={() => setVisible(true)}>
-        <Text style={styles.title}>Medical Certificate</Text>
         <Text style={styles.fileName}>{getFileName()}</Text>
       </Pressable>
       

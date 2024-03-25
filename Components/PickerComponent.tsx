@@ -9,11 +9,12 @@ interface Option {
 interface CustomSelectInputProps {
     options: Option[];
     onSelect: (option: Option) => void;
+    selected: null | string;
 }
 
-const CustomSelectInput: React.FC<CustomSelectInputProps> = ({ options, onSelect }) => {
+const CustomSelectInput: React.FC<CustomSelectInputProps> = ({ options, onSelect, selected }) => {
   const [visible, setVisible] = useState(false);
-  const [selected, setSelected] = useState<string | null>(null);
+  const [select, setSelected] = useState<string | null>(selected);
 
   const handleSelect = (option: Option) => {
     onSelect(option);
@@ -24,7 +25,7 @@ const CustomSelectInput: React.FC<CustomSelectInputProps> = ({ options, onSelect
   return (
     <>
       <TouchableOpacity onPress={() => setVisible(true)} style={styles.button}>
-        <Text style={{ color: '#bae6fd',}}>{selected || 'Select an option'}</Text>
+        <Text style={{ color: '#bae6fd',}}>{select || 'Select an option'}</Text>
       </TouchableOpacity>
 
       <Modal visible={visible} transparent={true} animationType="slide">

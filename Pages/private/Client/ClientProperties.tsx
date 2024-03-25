@@ -167,7 +167,7 @@ const SignupClient = ({ navigation }: Props) => {
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Activity Level</Text>
-          <CustomSelectInput onSelect={(value) => handleChange("activityLevel", value.value)} options={ACTIVITY_LEVEL_OPTIONS}/>
+          <CustomSelectInput onSelect={(value) => handleChange("activityLevel", value.value)} options={ACTIVITY_LEVEL_OPTIONS} selected={form.activityLevel as any}/>
         </View>
         <View style={styles.space2}>
           <Pressable onPress={() => navigation.navigate("TrainerCreateProgram")}>
