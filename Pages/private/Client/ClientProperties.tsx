@@ -47,7 +47,7 @@ const SignupClient = ({ navigation }: Props) => {
   };
 
   const handleSubmit = async () => {
-    const parsed = v.safeParse(ClientPersonalFitnessInfo, form);
+    const parsed = v.safeParse(v.partial(ClientPersonalFitnessInfo), form);
     const parsed2 = v.safeParse(v.omit(ClientProfile, ["role"]), form);
     
     if (parsed.success && parsed2.success) {

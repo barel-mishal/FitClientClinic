@@ -31,6 +31,8 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
     // todo: udpating the new program in the list of trianer after finish creating the program
     // todo: loading state show in each page and where needed
     // todo: laod back the tofas when needed and show it
+    // todo: view trainer certificate and edit it user can view it also. 
+    // todo: 
     return (
         <TouchableOpacity onPress={() => navigation.navigate("TrainerClient", {id: client?.userId ?? ""})}>
             <View style={styles.programCard}>

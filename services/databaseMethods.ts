@@ -223,7 +223,7 @@ async function getUserProfile(uid: FirebaseAuthTypes.User["uid"]): Promise<Profi
 
 
 // Function to add/update client fitness information
-async function addOrUpdateClientFitnessInfo(fitnessInfo: Omit<TypeClientPersonalFitnessInfo, "MedicalCertificate">) {
+async function addOrUpdateClientFitnessInfo(fitnessInfo:Partial<TypeClientPersonalFitnessInfo>) {
   const user = auth().currentUser;
 
   if (!user) {
