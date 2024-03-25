@@ -39,6 +39,7 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
                 <View style={styles.headerRow}>
                   <View style={{ flexDirection: 'row', display: "flex", alignItems: 'center', gap: 8 }}>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flexGrow: 1 }}>
+                      {/* Name */}
                       <AntDesign name="user" size={24} color="#082f49" />
                       <Text style={styles.clientName}>
                           {client?.name}
@@ -51,12 +52,14 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
                     </View>
                 </View>
                     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 16, display: "flex" }}>
+                        {/* Email */}
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                             <MaterialIcons name="email" size={20} color="#082f49" />
                             <Text style={styles.clientContact}>
                                 {client.email}
                             </Text>
                         </View>
+                        {/* Phone */}
                         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                             <MaterialIcons name="phone" size={20} color="#082f49" />
                             <Text style={styles.clientContact}>
