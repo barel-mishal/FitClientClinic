@@ -103,7 +103,6 @@ const COLORS = {
     secondary: '#4CAF50', // Green color for buttons and highlights
     background: '#f0f9ff', // Light blue for card background
     text: '#082F49', // Primary text color
-
   };
   
   const SPACING = {

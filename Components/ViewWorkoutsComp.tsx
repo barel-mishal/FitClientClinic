@@ -9,18 +9,10 @@ import { Duration, User, UserSchema, calculateDuration, durationToMin, formatDat
 import { FinishWorkoutType } from "./ProgramViewTrack";
 
 interface Props  {
-    id: User["uid"]
+    workouts: FinishWorkoutType[] | undefined
 }
 
-const ClientWorkouts: React.FC<Props> = ({id}) => {
-    const { data: workouts, error, isLoading } = useQuery(
-        ['workouts', id], 
-        () => databaseMethods.getUserClientWorkouts(id), 
-        { refetchOnWindowFocus: true, refetchOnMount: true, cacheTime: 0, staleTime: 0 }
-    );
-
-    if (isLoading) return <View style={{padding: 16, display: "flex", gap: 24, backgroundColor: "#172554", height: Dimensions.get("window").height}}><Text>Loading...</Text></View>;
-    if (error && error instanceof Error) return <View><Text>An error occurred: {error.message}</Text></View>;
+const ClientWorkouts: React.FC<Props> = ({workouts}) => {
 
     const calcScore = (workout: FinishWorkoutType) => {
         const completedExercises = workout?.completedExercises?.length ?? 0; // Fallback to 0 if undefined

@@ -1,40 +1,39 @@
 import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
+import { OutputClientProperties } from "../types";
 
-/*
-This component is used to render the program details for the trainer
-To avoid fetching the program each time it change state 
-*/
-const ClientView = ({ client }: { client: any }) => {
+interface Props { client: OutputClientProperties; numberOfWorkout: number; }
 
+
+const ClientView: React.FC<Props> = ({ client, numberOfWorkout }) => {
+  
 
     return (
         <View style={styles.container}>
-
-        <View key={client.id} style={styles.ClientContainer}>
-          {/* profile image and name */}
-            <Text style={styles.ClientTitle}>{client?.name}</Text>
-            <Text style={styles.ClientDescription}>{client?.description}</Text>
-            {/* profile description summary as text */}
-            {/* space with divider */}
-            {/* current program */}
-            {/* space with divider */}
-            {/* workouts */}
-            <View style={styles.statsRow}>
-              <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                    <Entypo name="stopwatch" size={20} color="#082f49" />
-                    <Text style={styles.clientStats}>
-                        Avg workout Duration: {"avgWorkoutDuration"} mins
-                    </Text>
-                </View>
+          <View key={client.clientId} style={styles.ClientContainer}>
+            {/* profile image and name */}
+              <Text style={styles.ClientTitle}>{client?.name}</Text>
+              <Text style={styles.ClientDescription}>{client?.name}</Text>
+              {/* profile description summary as text */}
+              {/* space with divider */}
+              {/* current program */}
+              {/* space with divider */}
+              {/* workouts */}
+              <View style={styles.statsRow}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                    <MaterialIcons name="fitness-center" size={20} color="#082f49" />
-                    <Text style={styles.clientStats}>
-                        Workouts: {"numberOfWorkout"}
-                    </Text>
-                </View>
-            </View>
-        </View>
+                      <Entypo name="stopwatch" size={20} color="#082f49" />
+                      <Text style={styles.clientStats}>
+                          Avg workout Duration: {"avgWorkoutDuration"} mins
+                      </Text>
+                  </View>
+                  <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                      <MaterialIcons name="fitness-center" size={20} color="#082f49" />
+                      <Text style={styles.clientStats}>
+                          Workouts: {numberOfWorkout}
+                      </Text>
+                  </View>
+              </View>
+          </View>
       </View>
     )
 }
