@@ -59,11 +59,6 @@ const ClientWorkout: React.FC<PropsClientWorkout> = ({navigation, route: {params
                 error: {message: "An error occured while fetching the program"},
             });
         }).finally(() => {;
-            setProgram({
-            data: null,
-            state: "loading",
-            error: null,
-        });
         });
     }, []);
     
@@ -81,6 +76,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
+        backgroundColor: "#f0f9ff",
+
         
     },
     icon: {

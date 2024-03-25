@@ -185,6 +185,11 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
     }
   };
 
+  const selectExerciseAndClose = (index: number) => {
+    setExerciseIndex(index);
+    setModalVisible(!modalVisible)
+  }
+
   useEffect(() => {
     if (modalVisible) {
       setPaused(true);
@@ -193,6 +198,8 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
     }
     
   }, [modalVisible]);
+
+  
 
   return (
     <>
@@ -307,7 +314,7 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
                     const n = i + 1;
                     const textReps = e.repetitionType === "time" ? formatClockDuration({duration: e.time as Duration ?? "0s", step: "0s"}) : `${e.sets}x${e.reps}`;
                     return (
-                      <Pressable key={e.id} style={{ flexDirection: "row", gap: 4 }} onPress={() => setExerciseIndex(i)}>
+                      <Pressable key={e.id} style={{ flexDirection: "row", gap: 4 }} onPress={() => selectExerciseAndClose(i)}>
                         <View key={e.id} style={{ flexDirection: "row", gap: 7, backgroundColor: "#082f49", padding: 12, borderRadius: 12 }}>
                           <Text style={{color: "#f0f9ff", fontSize: 16}}>{n}.</Text>
                           <Text style={{color: "#f0f9ff", fontSize: 16}}>{e.name}</Text>
