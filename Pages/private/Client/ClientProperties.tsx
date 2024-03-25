@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, TextInput, Button, ScrollView, Text, View } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../../App";
@@ -12,6 +12,8 @@ import OpenURLButton from "../../../Components/GoToSite";
 import CustomSelectInput from "../../../Components/PickerComponent";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 import MedicalCertificateUploader from "../../../Components/MedicalCertificateUploader";
+import MyPDFViewer from "../../../Components/MyPDFViewer";
+import Toast from "react-native-toast-message";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ClientProperties'>;
 
@@ -32,6 +34,7 @@ const SignupClient = ({ navigation }: Props) => {
     goals: a.data?.goals,
     activityLevel: a.data?.activityLevel,
     gender: a.data?.gender,
+    MedicalCertificate: a.data?.MedicalCertificate,
     trainingExperience: a.data?.trainingExperience,
     idealTrainingFrequency: a.data?.idealTrainingFrequency,
     idealTrainingDuration: a.data?.idealTrainingDuration,
@@ -40,12 +43,13 @@ const SignupClient = ({ navigation }: Props) => {
   });
 
   // Function to handle input change
-  const handleChange = (name: string, value: string | [string, string, string] | number) => {
+  const handleChange = (name: keyof typeof form, value: string | [string, string, string] | number) => {
     setForm(prev => ({ ...(prev ?? {}), [name]: value }));
   };
 
   const handleSubmit = async () => {
-    const parsed = v.safeParse(v.omit(ClientPersonalFitnessInfo, ["MedicalCertificate"]), form);
+    const parsed = v.safeParse(ClientPersonalFitnessInfo, form);
+    console.log(parsed)
     const parsed2 = v.safeParse(v.omit(ClientProfile, ["role"]), form);
     
     if (parsed.success && parsed2.success) {
@@ -59,10 +63,28 @@ const SignupClient = ({ navigation }: Props) => {
       databaseMethods.updateClientProfile(a.user, result);
       
     } else if (!parsed.success) {
-      setMessage(makeIssue(parsed.issues))
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: makeIssue(parsed.issues),
+        visibilityTime: 4000,
+        autoHide: true,
+      });
+      return 
     } else if (!parsed2.success) {
-      setMessage(makeIssue(parsed2.issues))
+      Toast.show({
+        type: 'error',
+        position: 'top',
+        text1: 'Error',
+        text2: makeIssue(parsed2.issues),
+        visibilityTime: 4000,
+        autoHide: true,
+      });
+      return 
     }
+
+    navigation.navigate('ClientHome');
   };
 
   const updateGoal = (index: number, text: string) => {
@@ -70,6 +92,20 @@ const SignupClient = ({ navigation }: Props) => {
     updatedGoals[index] = text;
     handleChange('goals', updatedGoals);
   };
+
+  useEffect(() => {
+    if (form?.MedicalCertificate) {
+      Toast.show({
+        type: 'success',
+        position: 'top',
+        text1: 'Success',
+        text2: 'Medical Certificate Uploaded',
+        visibilityTime: 4000,
+        autoHide: true,
+      });
+    }
+
+  }, [form.MedicalCertificate]);
   
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -135,7 +171,8 @@ const SignupClient = ({ navigation }: Props) => {
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Upload Your Medical Certificate</Text>
-          <MedicalCertificateUploader />
+          <MedicalCertificateUploader onHandleChange={(uri) => handleChange("MedicalCertificate", uri)} />
+          <MyPDFViewer uri={form.MedicalCertificate} key={"google"} />
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Training Experience</Text>

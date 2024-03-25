@@ -6,7 +6,11 @@ import FileUpload from './FileUploadComponent';
 import { DocumentPickerResult } from 'expo-document-picker';
 import databaseMethods from '../services/databaseMethods';
 
-const MedicalCertificateUploader = () => {
+interface Props {
+  onHandleChange: (uri: string) => void;
+}
+
+const MedicalCertificateUploader: React.FC<Props> = ({onHandleChange}) => {
     const [file, setFile] = useState<DocumentPickerResult | null>(null);
     const getFileName = () => {
         if (file?.canceled) return ""
@@ -15,7 +19,10 @@ const MedicalCertificateUploader = () => {
 
     useEffect(() => {
         if (!file) return;
-        const uri = databaseMethods.uploadFileAndSaveLink(file);
+        databaseMethods.uploadFileAndSaveLink(file).then((uri) => {
+          if (!uri) return;
+            onHandleChange(uri);
+        }); 
     }, [file]);
 
 

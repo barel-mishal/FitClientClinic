@@ -3,9 +3,14 @@ import React from 'react';
 import { StyleSheet, Dimensions, View } from 'react-native';
 import Pdf from 'react-native-pdf';
 
-export default class PDFExample extends React.Component {
-    render() {
-        const source = { uri: 'http://samples.leanpub.com/thereactnativebook-sample.pdf', cache: true };
+type Props = {
+    uri: string | undefined;
+}
+
+const PDFExample: React.FC<Props> = ({uri}) => {
+        if (!uri) return <View></View>;
+
+    
         //const source = require('./test.pdf');  // ios only
         //const source = {uri:'bundle-assets://test.pdf' };
         //const source = {uri:'file:///sdcard/test.pdf'};
@@ -16,7 +21,7 @@ export default class PDFExample extends React.Component {
         return (
             <View style={styles.container}>
                 <Pdf
-                    source={source}
+                    source={{uri, }}
                     onLoadComplete={(numberOfPages,filePath) => {
                         console.log(`Number of pages: ${numberOfPages}`);
                     }}
@@ -33,7 +38,9 @@ export default class PDFExample extends React.Component {
             </View>
         )
     }
-}
+
+export default PDFExample;
+
 
 const styles = StyleSheet.create({
     container: {
