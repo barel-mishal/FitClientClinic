@@ -13,8 +13,17 @@ const ClientView: React.FC<Props> = ({ client, numberOfWorkout }) => {
           <View key={client.clientId} style={styles.ClientContainer}>
             {/* profile image and name */}
               <Text style={styles.ClientTitle}>{client?.name}</Text>
-              <Text style={styles.ClientDescription}>{client?.name}</Text>
-              {/* profile description summary as text */}
+              <View style={{display: "flex", gap: 4, marginTop: 20}}>
+                <Text style={{fontSize: 20, fontWeight: "500", }}>
+                    Goals
+                </Text>
+
+                {client.goals && client.goals.map((goal, index) => (
+                  <Text key={index} style={styles.ClientDescription}>
+                      {goal}
+                  </Text>
+                ))}
+              </View>
               {/* space with divider */}
               {/* current program */}
               {/* space with divider */}
@@ -74,23 +83,24 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     gap: 12,
-    padding: 8,
   },
   ClientContainer: {
+
     backgroundColor: COLORS.background,
+
     padding: SPACING.medium,
-    borderRadius: 20,
-    shadowColor: '#082f49',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    display: 'flex',
-      flexDirection: 'column',
-      gap: 16,
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
+    // borderRadius: 20,
+    // shadowColor: '#082f49',
+    // shadowOffset: {
+    //   width: 0,
+    //   height: 2,
+    // },
+    // display: 'flex',
+    //   flexDirection: 'column',
+    //   gap: 16,
+    // shadowOpacity: 0.25,
+    // shadowRadius: 3.84,
+    // elevation: 5,
   },
   ClientTitle: {
     ...FONTS.title,
