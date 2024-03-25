@@ -18,7 +18,6 @@ const MedicalCertificateUploader: React.FC<Props> = ({onHandleChange, medicalCer
     const [visible, setVisible] = useState(false);
 
     const getFileName = () => {
-      console.log("file", medicalCertificate);  
         if (medicalCertificate) return "View Certificate";
         if (file?.canceled) return "";
         return file?.assets[0].name;
@@ -54,7 +53,10 @@ const MedicalCertificateUploader: React.FC<Props> = ({onHandleChange, medicalCer
         <FontAwesome name="external-link" size={20} color="#0ea5e9" />
         <Text style={styles.linkText}>Apply for a Medical Certificate</Text>
       </OpenURLButton>
-        <Modal visible={visible} transparent={true} animationType="slide">
+        <Modal visible={visible} transparent={true} animationType="slide" style={{position: "relative"}}>
+            <Pressable style={{position: "absolute", zIndex:1000, backgroundColor: "#075985", padding: 30, borderRadius: 60, margin: 5, bottom: 0}} onPress={() => setVisible(false)}>
+              <FontAwesome name="close" size={30} color="#fff" />
+            </Pressable>
             <MyPDFViewer uri={medicalCertificate} key={"google"} />
         </Modal>
     </View>
@@ -98,7 +100,7 @@ const styles = StyleSheet.create({
   },
   fileName: {
     fontSize: 20,
-    color: "black",
+    color: "#0369a1",
     marginBottom: 15,
     textAlign: 'center',
   },
@@ -112,6 +114,15 @@ const styles = StyleSheet.create({
     fontSize: 18,
     textDecorationLine: "underline",
     marginLeft: 10,
+  },
+  modalOverlay: {
+    backgroundColor: "#075985",
+    zIndex: 1000,
+  },
+  modalContent: {
+    backgroundColor: 'white',
+    padding: 20,
+    borderRadius: 8,
   },
 });
 
