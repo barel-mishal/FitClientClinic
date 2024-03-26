@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, TextInput, Button, ScrollView, Text, View, Pressable, Modal } from "react-native";
+import { StyleSheet, TextInput, Button, ScrollView, Text, View, Pressable } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../../App";
 import { makeIssue, GENDER_OPTIONS, ACTIVITY_LEVEL_OPTIONS, InputClientProperties, Client, ClientPersonalFitnessInfo, ClientProfile } from "../../../types";
 import databaseMethods from "../../../services/databaseMethods";
 import * as v from "valibot";
 import RadioButton from "../../../Components/RadioComponent";
-import { DocumentPickerResult } from "expo-document-picker";
-import FileUpload from "../../../Components/FileUploadComponent";
-import OpenURLButton from "../../../Components/GoToSite";
 import CustomSelectInput from "../../../Components/PickerComponent";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 import MedicalCertificateUploader from "../../../Components/MedicalCertificateUploader";
-import MyPDFViewer from "../../../Components/MyPDFViewer";
 import Toast from "react-native-toast-message";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ClientProperties'>;
