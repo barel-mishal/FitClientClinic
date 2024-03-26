@@ -273,7 +273,7 @@ export const calcScore = (workout: FinishWorkoutType) => {
 };
 
 /**
- * @description - format the duration and substruct the substruct from the duration
+ * @description - Format the duration and substruct the substruct from the duration
  * @param duration - string with the format "mm:ss"
  * @param substruct - string with the format "mm:ss"
  * @returns string with the format "hh:mm"
@@ -290,7 +290,6 @@ export const formatTimerDuration: DurationFormatter = ({step = "0s", duration}: 
 export const formatClockDuration: DurationFormatter = ({step = "0s", duration}: {step: `${number}s`, duration: Duration}): `${string}:${string}` => {
     return `${Math.floor(parseInt(step)/60).toString().padStart(2, "0")}:${(parseInt(step)%60).toString().padStart(2, "0")}`;
 };
-
 
 // ----------------- Fitness Program -----------------
 export type Duration = `${number}m` | `${number}h` | `${number}s`;

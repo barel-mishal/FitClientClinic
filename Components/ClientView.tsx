@@ -1,4 +1,4 @@
-import { Entypo, MaterialIcons } from "@expo/vector-icons";
+import { AntDesign, Entypo, FontAwesome, MaterialIcons, SimpleLineIcons } from "@expo/vector-icons";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { OutputClientProperties } from "../types";
 
@@ -18,29 +18,30 @@ const ClientView: React.FC<Props> = ({ client, numberOfWorkout, avgScore }) => {
           <View key={client.clientId} style={styles.ClientContainer}>
             {/* profile image and name */}
               <Text style={styles.ClientTitle}>{client?.name}</Text>
-              <View style={{display: "flex", gap: 4, marginTop: 20}}>
-                <Text style={{fontSize: 20, fontWeight: "500", }}>
-                    Goals
-                </Text>
+              <View style={{display: "flex", gap: 8, marginTop: 20}}>
+                
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+                  <SimpleLineIcons name="target" size={16} color="#082f49" />
+                  <Text style={styles.clientStats}>
+                      Goals
+                  </Text>
+                </View>
+
                 {client.goals && client.goals.map((goal, index) => (
                   <Text key={index} style={styles.ClientDescription}>
-                      {index + 1}. {goal}
+                      {"      " + (index + 1)}. {goal}
                   </Text>
                 ))}
               </View>
-              {/* space with divider */}
-              {/* current program */}
-              {/* space with divider */}
-              {/* workouts */}
               <View style={styles.statsRow}>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                      <Entypo name="stopwatch" size={20} color="#082f49" />
+                      <Entypo name="stopwatch" size={16} color="#082f49" />
                       <Text style={styles.clientStats}>
                           Avg score: {avgScore} mins
                       </Text>
                   </View>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-                      <MaterialIcons name="fitness-center" size={20} color="#082f49" />
+                      <MaterialIcons name="fitness-center" size={16} color="#082f49" />
                       <Text style={styles.clientStats}>
                           Workouts: {numberOfWorkout}
                       </Text>
@@ -93,6 +94,9 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.background,
 
     padding: SPACING.medium,
+    display: 'flex',
+    flexDirection: 'column',
+    gap: 16,
     // borderRadius: 20,
     // shadowColor: '#082f49',
     // shadowOffset: {
@@ -175,6 +179,7 @@ const styles = StyleSheet.create({
   },
   clientStats: {
     ...FONTS.text,
+    fontSize: 20,
     color: COLORS.text,
     flexDirection: 'row',
     alignItems: 'center',
