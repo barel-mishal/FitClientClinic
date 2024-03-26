@@ -15,18 +15,18 @@ type Props = {
 
 const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
   const auth = useAuth()
-    // todo: CLIENT PROPERTIES DEISGN BRITHDATE AND FILES UPLOADS
-    // TODO: HOME PAGE DEISGN START WITHSOMETHING COOL 
-    // TODO: CHANGE THE NAME TO MOVE
-    // TODO: EDIT PROGRAMS
-    // todo: add search functionality for exercises
-    // todo: exercise images upload and view
-    // todo: add indication for submit in client properties
-    // todo: link to google site in create program
-    // todo: udpating the new program in the list of trianer after finish creating the program
-    // todo: view trainer certificate and edit it user can view it also. 
-    // TODO: 
-    // todo: TOFES CLOSE BUTTON FIX
+  // TODO: HOME PAGE DEISGN START WITHSOMETHING COOL 
+  // TODO: CHANGE THE NAME TO MOVE
+  // TODO: EDIT PROGRAMS
+  // todo: add search functionality for exercises
+  // todo: exercise images upload and view
+  // todo: add indication for submit in client properties
+  // todo: link to google site in create program
+  // todo: udpating the new program in the list of trianer after finish creating the program
+  // todo: view trainer certificate and edit it user can view it also. 
+  // todo: TOFES CLOSE BUTTON FIX
+  // todo: when updating the properties of the client the currentProgram should be kept
+  // todo: CLIENT PROPERTIES DEISGN BRITHDATE AND FILES UPLOADS
     return (
         <TouchableOpacity onPress={() => navigation.navigate("TrainerClient", {id: client?.userId ?? ""})}>
             <View style={styles.programCard}>

@@ -40,6 +40,7 @@ const SignupClient = ({ navigation }: Props) => {
     idealTrainingDuration: a.data?.idealTrainingDuration,
     idealTrainingTime: a.data?.idealTrainingTime,
     injuries: a.data?.injuries,
+    currentProgramId: a.data?.currentProgramId,
   });
   // Function to handle input change
   const handleChange = (name: keyof typeof form, value: string | [string, string, string] | number) => {
