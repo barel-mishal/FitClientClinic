@@ -15,7 +15,7 @@ export type Program = Required<FitnessProgramOutput> & { trainerName: string }
 const TrainerPrograms: React.FC<Props> = ({ navigation }) => {
     const auth = useAuth()
     if (!auth.user || auth.data?.role !== "trainer") return <View></View>
-    const [programs, setPrograms] = useState<Program[]>(auth.data.programs as Program[])
+    const [programs, setPrograms] = useState<Program[]>(auth.data.programs as Program[]);
 
     return (
         <View>

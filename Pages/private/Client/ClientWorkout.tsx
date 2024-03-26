@@ -1,4 +1,4 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
 
 import { Text, StyleSheet, View } from "react-native";
@@ -27,6 +27,18 @@ type ComponentState = {
 
 const ClientWorkout: React.FC<PropsClientWorkout> = ({navigation, route: {params: {programId, trainerId}}}) => {
     const u = useAuth();
+    if (!u.user) return <View></View>;
+    return <UserProgarmStart programId={programId} trainerId={trainerId} userId={u.user.uid} navigation={navigation} />;
+}
+
+interface UserProgramProps {
+    programId: string;
+    trainerId: string;
+    userId: string;
+    navigation: NativeStackNavigationProp<RootStackParamList, "ClientWorkout", undefined>
+}
+
+const UserProgarmStart: React.FC<UserProgramProps> = ({programId, trainerId, userId, navigation}) => {
     const [program, setProgram] = React.useState<ComponentState>();
     useEffect(() => {
         setProgram({
@@ -42,7 +54,7 @@ const ClientWorkout: React.FC<PropsClientWorkout> = ({navigation, route: {params
                 state: "start",
                 workoutTime: "1s",
                 completedExercises: [] as string[],
-                clientId: u?.user?.uid!,
+                clientId: userId!,
                 startTime: Date.now(),
             };
             setProgram({
@@ -61,7 +73,7 @@ const ClientWorkout: React.FC<PropsClientWorkout> = ({navigation, route: {params
         }).finally(() => {;
     });
     }, []);
-    
+
     return (
         <>
             {program?.state === "loading" && <View style={styles.container}><LoadingComp /></View>}
@@ -69,6 +81,8 @@ const ClientWorkout: React.FC<PropsClientWorkout> = ({navigation, route: {params
             {program?.state === "success" && <RenderProgramTrack program={program.data} navigation={navigation} />}
         </>
     );
+        
+    
 }
 
 const styles = StyleSheet.create({

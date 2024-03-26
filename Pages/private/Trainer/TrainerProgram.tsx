@@ -8,7 +8,7 @@ import { FitnessProgramOutput } from "../../../types";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerProgram'>;
 
-const TrainerProgram: React.FC<Props> = ({ navigation, route: { params: {id}} }) => {
+const TrainerProgram: React.FC<Props> = ({ route: { params: { id }} }) => {
     const auth = useAuth();
     if (!auth.user || auth.data.role !== "trainer") return <View></View>;
     const p = auth.data.programs.filter((p) => p.id! === id);

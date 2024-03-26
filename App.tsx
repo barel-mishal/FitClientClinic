@@ -12,7 +12,7 @@ export type RootStackTrainerParamList = {
   TrainerClients: undefined;
   TrainerPrograms: undefined;
   TrainerProgram: { id: string };
-  TrainerCreateProgram: undefined;
+  TrainerCreateProgram: undefined | { programId: string };
   TrainerClient: { id: string };
 };
 

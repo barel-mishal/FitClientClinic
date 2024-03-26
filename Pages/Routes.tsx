@@ -21,7 +21,6 @@ import ClientWorkout from "./private/Client/ClientWorkout";
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function PublicNavigator() {
-    console.log('public');
   return <Stack.Navigator>
     <Stack.Screen name={"FitClientClinic"} component={LandingPage} options={{
       header: () => <Header />
