@@ -1,63 +1,70 @@
 import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
 import {  calcScore, calculateDuration,  formatDateTimeRange } from "../types";
 import { FinishWorkoutType } from "./ProgramViewTrack";
 import { FontAwesome } from "@expo/vector-icons";
+import databaseMethods from "../services/databaseMethods";
 
 interface Props  {
     workouts: FinishWorkoutType[] | undefined
-}
+};
 
 const ClientWorkouts: React.FC<Props> = ({workouts}) => {
 
     const sortingWorkouts = (a: FinishWorkoutType, b: FinishWorkoutType) => {
         return new Date(b.startTime).getTime() - new Date(a.startTime).getTime();
-    }
+    };
 
     workouts?.sort(sortingWorkouts);
     
     return (
         <ScrollView style={{backgroundColor: "#f0f9ff", }}>
             <View style={{padding: 16, display: "flex", gap: 24}}>
-            {workouts?.map((workout, index) => {
-                const newWorkoutToDay = new Date(workout.startTime).toDateString() === new Date().toDateString();
-                return (
-                    <View key={index} style={[newWorkoutToDay ? stylesNew.cardContainer : styles.cardContainer]}>
-                        {newWorkoutToDay && <View style={{position: "absolute", backgroundColor: "#fb923c", padding: 8, borderRadius: 10, right: -6, top: -6}}><Text style={{color: "#431407", fontSize: 16}}>New</Text></View>}
-                        <View style={[newWorkoutToDay ? stylesNew.timeContainer : styles.timeContainer]}>
-                            <Text style={styles.timeText}>{formatDateTimeRange(workout.startTime, workout.endTime)}</Text>
-                        </View>
-                    {workout?.name && <Text style={[newWorkoutToDay ? stylesNew.cardTitle : styles.cardTitle]}>
-                        {workout.name}
-                        </Text>}
-                    {/* score */}
-                    <Text style={[newWorkoutToDay ? stylesNew.scoreText : styles.scoreText]}>
-                        Score: {calcScore(workout)}</Text>
-                    <View style={[{display: "flex", gap: 20}]}>
-                        <View style={[newWorkoutToDay ? stylesNew.progressBarContainer : styles.progressBarContainer]}>
-                            <View style={[newWorkoutToDay ? stylesNew.progressBar : styles.progressBar, { width: `${calcScore(workout)}%` }]}>
-
-                            </View>
-                        </View>
-                        {/* how much exercises completed */}
-                        <View style={[newWorkoutToDay ? stylesNew.warpContainer : styles.warpContainer]} >
-                            <Text style={[newWorkoutToDay ? stylesNew.cardTitle : styles.cardTitle]}>
-                                Evaluation metrics</Text>
-                            <Text style={[newWorkoutToDay ? stylesNew.exercisesText : styles.exercisesText]}>
-                                Exercises completed: {workout?.completedExercises?.length}</Text>
-                            <Text style={[newWorkoutToDay ? stylesNew.exercisesText : styles.exercisesText]}>Total Exercises: {workout?.exercises?.length}</Text>
-                            <Text style={[newWorkoutToDay ? stylesNew.durationText : styles.durationText]}>Actual Duration: {calculateDuration(workout.startTime, workout.endTime).toFixed(2)}  Minutes</Text>
-                            <Text style={[newWorkoutToDay ? stylesNew.durationText : styles.durationText]}>Goal Duration: {parseFloat(workout?.duration) * 60} Minutes</Text>
-                        </View>
-                    </View>
-                    <View style={{padding: 12, display: "flex", alignItems: "center", justifyContent: "center"}}><FontAwesome name="trash-o" size={24} color={"#ef4444"}  /></View>
-                    </View>
-                )
-            })}
+            {workouts?.map((workout, index) => 
+            <RenderWorkout workout={workout} index={index} />)}
             </View>
         </ScrollView>
       );
     };
+
+export const RenderWorkout: React.FC<{workout: FinishWorkoutType, index: number}> = ({workout, index}) => {
+  const newWorkoutToDay = new Date(workout.startTime).toDateString() === new Date().toDateString();
+  return (
+      <View key={index} style={[newWorkoutToDay ? stylesNew.cardContainer : styles.cardContainer]}>
+          {newWorkoutToDay && <View style={{position: "absolute", backgroundColor: "#fb923c", padding: 8, borderRadius: 10, right: -6, top: -6}}><Text style={{color: "#431407", fontSize: 16}}>New</Text></View>}
+          <View style={[newWorkoutToDay ? stylesNew.timeContainer : styles.timeContainer]}>
+              <Text style={styles.timeText}>{formatDateTimeRange(workout.startTime, workout.endTime)}</Text>
+          </View>
+      {workout?.name && <Text style={[newWorkoutToDay ? stylesNew.cardTitle : styles.cardTitle]}>
+          {workout.name}
+          </Text>}
+      {/* score */}
+      <Text style={[newWorkoutToDay ? stylesNew.scoreText : styles.scoreText]}>
+          Score: {calcScore(workout)}</Text>
+      <View style={[{display: "flex", gap: 20}]}>
+          <View style={[newWorkoutToDay ? stylesNew.progressBarContainer : styles.progressBarContainer]}>
+              <View style={[newWorkoutToDay ? stylesNew.progressBar : styles.progressBar, { width: `${calcScore(workout)}%` }]}>
+
+              </View>
+          </View>
+          {/* how much exercises completed */}
+          <View style={[newWorkoutToDay ? stylesNew.warpContainer : styles.warpContainer]} >
+              <Text style={[newWorkoutToDay ? stylesNew.cardTitle : styles.cardTitle]}>
+                  Evaluation metrics</Text>
+              <Text style={[newWorkoutToDay ? stylesNew.exercisesText : styles.exercisesText]}>
+                  Exercises completed: {workout?.completedExercises?.length}</Text>
+              <Text style={[newWorkoutToDay ? stylesNew.exercisesText : styles.exercisesText]}>Total Exercises: {workout?.exercises?.length}</Text>
+              <Text style={[newWorkoutToDay ? stylesNew.durationText : styles.durationText]}>Actual Duration: {calculateDuration(workout.startTime, workout.endTime).toFixed(2)}  Minutes</Text>
+              <Text style={[newWorkoutToDay ? stylesNew.durationText : styles.durationText]}>Goal Duration: {parseFloat(workout?.duration) * 60} Minutes</Text>
+          </View>
+      </View>
+      <Pressable onPress={() => databaseMethods.deleteWorkout(workout.id)} style={{padding: 12, display: "flex", alignItems: "center", justifyContent: "center"}}>
+        <FontAwesome name="trash-o" size={24} color={"#ef4444"}  />
+      </Pressable>
+      </View>
+  )
+}
+
 
 const styles = StyleSheet.create({
     cardContainer: {
