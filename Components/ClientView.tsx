@@ -2,7 +2,11 @@ import { Entypo, MaterialIcons } from "@expo/vector-icons";
 import { View, Text, StyleSheet, Dimensions } from "react-native";
 import { OutputClientProperties } from "../types";
 
-interface Props { client: OutputClientProperties; numberOfWorkout: number; }
+interface Props { 
+  client: OutputClientProperties; 
+  numberOfWorkout: number; 
+  avgWorkoutDuration: number;
+}
 
 
 const ClientView: React.FC<Props> = ({ client, numberOfWorkout }) => {
@@ -52,7 +56,7 @@ const ClientView: React.FC<Props> = ({ client, numberOfWorkout }) => {
 const COLORS = {
   primary: '#082f49', // Deep blue color for text and icons
   secondary: '#4CAF50', // Green color for buttons and highlights
-  background: '#f0f9ff', // Light blue for card background
+  background: '#f0f9ff', // Sky color for card background
   text: '#082F49', // Primary text color
 
 };

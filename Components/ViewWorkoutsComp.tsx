@@ -1,11 +1,6 @@
-import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import React from "react";
-
-import { View, Text, StyleSheet, ScrollView, Dimensions } from "react-native";
-import { RootStackParamList } from "../App";
-import { useQuery } from "react-query";
-import databaseMethods from "../services/databaseMethods";
-import { Duration, User, UserSchema, calculateDuration, durationToMin, formatDateTimeRange } from "../types";
+import { View, Text, StyleSheet, ScrollView } from "react-native";
+import {  calcScore, calculateDuration,  formatDateTimeRange } from "../types";
 import { FinishWorkoutType } from "./ProgramViewTrack";
 
 interface Props  {
@@ -14,25 +9,6 @@ interface Props  {
 
 const ClientWorkouts: React.FC<Props> = ({workouts}) => {
 
-    const calcScore = (workout: FinishWorkoutType) => {
-        const completedExercises = workout?.completedExercises?.length ?? 0; // Fallback to 0 if undefined
-        const totalExercises = workout?.exercises?.length ?? 0;
-        const workoutDuration = calculateDuration(workout?.startTime, workout?.endTime);
-        const goalDuration = durationToMin(workout?.duration as Duration);
-        
-        // Calculate scores, ensuring no division by zero
-        const durationScore = goalDuration > 0 ? (workoutDuration / goalDuration) * 100 : 0;
-        const exerciseScore = totalExercises > 0 ? (completedExercises / totalExercises) * 100 : 0;
-    
-        // Weights
-        const weightedDurationScore = durationScore * 0.3; 
-        const weightedExerciseScore = exerciseScore * 0.7;
-    
-        // Calculate final score
-        const finalScore = Math.ceil(weightedDurationScore + weightedExerciseScore);
-        return finalScore;
-    };
-
     const sortingWorkouts = (a: FinishWorkoutType, b: FinishWorkoutType) => {
         return new Date(b.startTime).getTime() - new Date(a.startTime).getTime();
     }
@@ -40,7 +16,7 @@ const ClientWorkouts: React.FC<Props> = ({workouts}) => {
     workouts?.sort(sortingWorkouts);
     
     return (
-        <ScrollView style={{backgroundColor: "#172554", }}>
+        <ScrollView style={{backgroundColor: "#f0f9ff", }}>
             <View style={{padding: 16, display: "flex", gap: 24}}>
             {workouts?.map((workout, index) => {
                 const newWorkoutToDay = new Date(workout.startTime).toDateString() === new Date().toDateString();
@@ -86,17 +62,15 @@ const styles = StyleSheet.create({
       backgroundColor: '#f0f9ff',
       borderRadius: 20,
       padding: 16,
-      shadowColor: '#172554',
-      shadowOffset: { width: 0, height: 2 },
-      shadowOpacity: 0.1,
-      shadowRadius: 4,
+      borderColor: 'rgba(2, 44, 34, 0.2)',
+      borderWidth: 0.3,
       elevation: 3,
     },
     warpContainer: {
       backgroundColor: '#f0f9ff',
       borderRadius: 8,
       padding: 16,
-      borderColor: '#6ee7b7',
+      borderColor: 'rgba(2, 44, 34, 0.2)',
       borderWidth: 0.3,
       elevation: 3,
     },

@@ -1,6 +1,7 @@
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import * as v from "valibot";
 import { DurationFormatter } from './Components/RenderClock';
+import { FinishWorkoutType } from './Components/ProgramViewTrack';
 
 
 // ***************** Roles *****************
@@ -251,6 +252,25 @@ export const calcBMI = (weight: number, height: number) => {
     if (height > 3) height = height / 100;
     return (weight / (height * height)).toFixed(2);
 }
+
+export const calcScore = (workout: FinishWorkoutType) => {
+    const completedExercises = workout?.completedExercises?.length ?? 0; // Fallback to 0 if undefined
+    const totalExercises = workout?.exercises?.length ?? 0;
+    const workoutDuration = calculateDuration(workout?.startTime, workout?.endTime);
+    const goalDuration = durationToMin(workout?.duration as Duration);
+    
+    // Calculate scores, ensuring no division by zero
+    const durationScore = goalDuration > 0 ? (workoutDuration / goalDuration) * 100 : 0;
+    const exerciseScore = totalExercises > 0 ? (completedExercises / totalExercises) * 100 : 0;
+
+    // Weights
+    const weightedDurationScore = durationScore * 0.3; 
+    const weightedExerciseScore = exerciseScore * 0.7;
+
+    // Calculate final score
+    const finalScore = Math.ceil(weightedDurationScore + weightedExerciseScore);
+    return finalScore;
+};
 
 /**
  * @description - format the duration and substruct the substruct from the duration
