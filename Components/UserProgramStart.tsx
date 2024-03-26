@@ -1,4 +1,4 @@
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { NativeStackNavigationProp, NativeStackScreenProps } from "@react-navigation/native-stack";
 import React, { useEffect } from "react";
 
 import { Text, StyleSheet, View } from "react-native";
@@ -22,14 +22,17 @@ export type ComponentState = {
     error: null
 };
 
+export type NevigationProgramType = NativeStackScreenProps<RootStackParamList, 'TrainerProgram'> | NativeStackNavigationProp<RootStackParamList, "ClientWorkout", undefined>;
+
 interface UserProgramProps {
     programId: string;
     trainerId: string;
     userId: string;
-    navigation: NativeStackNavigationProp<RootStackParamList, "ClientWorkout", undefined>
+    navigation: NevigationProgramType;
+    rediract: "ClientWorkout" | "TrainerClient";
 }
 
-const UserProgarmStart: React.FC<UserProgramProps> = ({programId, trainerId, userId, navigation}) => {
+const UserProgarmStart: React.FC<UserProgramProps> = ({programId, trainerId, userId, navigation, rediract}) => {
     const [program, setProgram] = React.useState<ComponentState>();
     useEffect(() => {
         setProgram({

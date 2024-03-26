@@ -9,6 +9,7 @@ import { useElapsedTime } from "./temp";
 import ConfettiCannon from 'react-native-confetti-cannon';
 import { PropsClientWorkout } from "../Pages/private/Client/ClientWorkout";
 import databaseMethods from "../services/databaseMethods";
+import { NevigationProgramType } from "./UserProgramStart";
 
 export type FinishWorkoutType = Required<FitnessProgramOutput> & {
   state: "finish";
@@ -113,7 +114,7 @@ const programActions = (state: ProgramState, action: ProgramActions): ProgramSta
   }
 }
 
-const RenderProgramTrack: React.FC<{program: ProgramState, navigation: PropsClientWorkout["navigation"]}> = ({ program, navigation }) => {
+const RenderProgramTrack: React.FC<{program: ProgramState, navigation: NevigationProgramType}> = ({ program, navigation }) => {
     // useReducer to manage the state of the program. 
     // This simplifies the state management and makes it easier to manage the state of the program.
     const [state, dispatch] = useReducer(programActions, program);
@@ -348,7 +349,7 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
   )
 };
 
-export const FinishWorkout: React.FC<{program: FinishWorkoutType, navigation: PropsClientWorkout["navigation"], dispatch: React.Dispatch<ProgramActions>}> = ({ program, navigation, dispatch }) => {
+export const FinishWorkout: React.FC<{program: FinishWorkoutType, navigation: NevigationProgramType, dispatch: React.Dispatch<ProgramActions>}> = ({ program, navigation, dispatch }) => {
   const parentSize = { height: 400, width: Dimensions.get("window").width - 40 };
   const rotation = useAnimatedValue(30);
   const confettiRef = useRef<ConfettiCannon>(null);
