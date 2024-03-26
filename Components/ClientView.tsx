@@ -22,10 +22,9 @@ const ClientView: React.FC<Props> = ({ client, numberOfWorkout, avgScore }) => {
                 <Text style={{fontSize: 20, fontWeight: "500", }}>
                     Goals
                 </Text>
-
                 {client.goals && client.goals.map((goal, index) => (
                   <Text key={index} style={styles.ClientDescription}>
-                      {goal}
+                      {index + 1}. {goal}
                   </Text>
                 ))}
               </View>
