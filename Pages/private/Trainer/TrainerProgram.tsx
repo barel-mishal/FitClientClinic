@@ -21,7 +21,7 @@ const TrainerProgram: React.FC<Props> = ({ route: { params: { id }}, navigation 
         })}
     </View> 
     : <UserProgarmStart 
-        navigate={() => navigation.navigate("TrainerClient", { id: id } )} 
+        navigate={() => navigation.navigate("TrainerClient", { id: userId } )} 
         programId={id} 
         trainerId={auth.user.uid} 
         userId={userId} 
