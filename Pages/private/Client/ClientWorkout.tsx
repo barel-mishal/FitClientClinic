@@ -12,7 +12,14 @@ const ClientWorkout: React.FC<PropsClientWorkout> = ({navigation, route: {params
     const { programId, trainerId } = params as { programId: string, trainerId: string };
     const u = useAuth();
     if (!u.user) return <View></View>;
-    return <UserProgarmStart programId={programId} trainerId={trainerId} userId={u.user.uid} navigation={navigation} rediract="ClientWorkout" />;
+    return <UserProgarmStart 
+    programId={programId} 
+    trainerId={trainerId} 
+    userId={u.user.uid} 
+    navigate={() => navigation.navigate("ClientWorkout", {
+        programId: programId,
+        trainerId: trainerId,
+    })}  />;
 }
 
 

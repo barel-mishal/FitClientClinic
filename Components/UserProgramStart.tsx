@@ -22,17 +22,15 @@ export type ComponentState = {
     error: null
 };
 
-export type NevigationProgramType = NativeStackScreenProps<RootStackParamList, 'TrainerProgram'> | NativeStackNavigationProp<RootStackParamList, "ClientWorkout", undefined>;
 
 interface UserProgramProps {
     programId: string;
     trainerId: string;
     userId: string;
-    navigation: NevigationProgramType;
-    rediract: "ClientWorkout" | "TrainerClient";
+    navigate: () => void;
 }
 
-const UserProgarmStart: React.FC<UserProgramProps> = ({programId, trainerId, userId, navigation, rediract}) => {
+const UserProgarmStart: React.FC<UserProgramProps> = ({programId, trainerId, userId, navigate}) => {
     const [program, setProgram] = React.useState<ComponentState>();
     useEffect(() => {
         setProgram({
@@ -72,7 +70,7 @@ const UserProgarmStart: React.FC<UserProgramProps> = ({programId, trainerId, use
         <>
             {program?.state === "loading" && <View style={styles.container}><LoadingComp /></View>}
             {program?.state === "error" && <Text>{program.error?.message}</Text>}
-            {program?.state === "success" && <RenderProgramTrack program={program.data} navigation={navigation} />}
+            {program?.state === "success" && <RenderProgramTrack program={program.data} navigate={navigate} />}
         </>
     );
 }

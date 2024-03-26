@@ -3,7 +3,7 @@ import React from "react";
 import { View, Text } from "react-native";
 import { RootStackParamList } from "../../../App";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
-import UserProgarmStart, { NevigationProgramType } from "../../../Components/UserProgramStart";
+import UserProgarmStart, { } from "../../../Components/UserProgramStart";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerProgram', undefined>;
 
@@ -21,12 +21,11 @@ const TrainerProgram: React.FC<Props> = ({ route: { params: { id }}, navigation 
         })}
     </View> 
     : <UserProgarmStart 
-        navigation={navigation as NevigationProgramType} 
+        navigate={() => navigation.navigate("TrainerClient", { id: id } )} 
         programId={id} 
         trainerId={auth.user.uid} 
         userId={userId} 
         key={userId + auth.user.uid}
-        rediract="TrainerClient"
     />}
     </>
     // return <RenderProgram program={p[0] as FitnessProgramOutput} />;

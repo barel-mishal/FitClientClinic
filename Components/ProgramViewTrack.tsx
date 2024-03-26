@@ -7,9 +7,7 @@ import { BlurView } from "@react-native-community/blur";
 import { Modal } from "react-native-paper";
 import { useElapsedTime } from "./temp";
 import ConfettiCannon from 'react-native-confetti-cannon';
-import { PropsClientWorkout } from "../Pages/private/Client/ClientWorkout";
 import databaseMethods from "../services/databaseMethods";
-import { NevigationProgramType } from "./UserProgramStart";
 
 export type FinishWorkoutType = Required<FitnessProgramOutput> & {
   state: "finish";
@@ -114,7 +112,7 @@ const programActions = (state: ProgramState, action: ProgramActions): ProgramSta
   }
 }
 
-const RenderProgramTrack: React.FC<{program: ProgramState, navigation: NevigationProgramType}> = ({ program, navigation }) => {
+const RenderProgramTrack: React.FC<{program: ProgramState, navigate: () => void}> = ({ program, navigate }) => {
     // useReducer to manage the state of the program. 
     // This simplifies the state management and makes it easier to manage the state of the program.
     const [state, dispatch] = useReducer(programActions, program);
@@ -122,7 +120,7 @@ const RenderProgramTrack: React.FC<{program: ProgramState, navigation: Nevigatio
         <>
         {state.state === "start" && <StartWorkout program={state} dispatch={dispatch} />}
         {state.state === "on" && <OnWorkout program={state} dispatch={dispatch} />}
-        {state.state === "finish" && <FinishWorkout program={state} navigation={navigation} dispatch={dispatch} />}
+        {state.state === "finish" && <FinishWorkout program={state} navigate={navigate} />}
       </>
     )
 }
@@ -349,7 +347,7 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
   )
 };
 
-export const FinishWorkout: React.FC<{program: FinishWorkoutType, navigation: NevigationProgramType, dispatch: React.Dispatch<ProgramActions>}> = ({ program, navigation, dispatch }) => {
+export const FinishWorkout: React.FC<{program: FinishWorkoutType, navigate: () => void}> = ({ program, navigate }) => {
   const parentSize = { height: 400, width: Dimensions.get("window").width - 40 };
   const rotation = useAnimatedValue(30);
   const confettiRef = useRef<ConfettiCannon>(null);
@@ -365,9 +363,9 @@ export const FinishWorkout: React.FC<{program: FinishWorkoutType, navigation: Ne
       const interval = setInterval(() => setCountDown(count => count - 1), 1000);
       return () => clearInterval(interval);
     } else if (workoutUpdated) {
-      dispatch({type: "saved", payload: true});
+      navigate();
     }
-  }, [countDown, workoutUpdated, navigation]);
+  }, [countDown, workoutUpdated, navigate]);
 
   useEffect(() => {
     Animated.timing(rotation, {
