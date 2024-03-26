@@ -20,7 +20,6 @@ const ClientWorkouts: React.FC<Props> = () => {
     );
     if (isLoading) return <View style={{padding: 16, display: "flex", gap: 24, backgroundColor: "#172554", height: Dimensions.get("window").height}}><Text>Loading...</Text></View>;
     if (error && error instanceof Error) return <View><Text>An error occurred: {error.message}</Text></View>;
-    console.log(u.user.uid);
     return <ViewWorkoutsComp workouts={workouts} />;
 }
 
