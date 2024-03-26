@@ -5,11 +5,11 @@ import { OutputClientProperties } from "../types";
 interface Props { 
   client: OutputClientProperties; 
   numberOfWorkout: number; 
-  avgWorkoutDuration: number;
+  avgScore: number;
 }
 
 
-const ClientView: React.FC<Props> = ({ client, numberOfWorkout, avgWorkoutDuration }) => {
+const ClientView: React.FC<Props> = ({ client, numberOfWorkout, avgScore }) => {
   
 
     return (
@@ -37,7 +37,7 @@ const ClientView: React.FC<Props> = ({ client, numberOfWorkout, avgWorkoutDurati
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                       <Entypo name="stopwatch" size={20} color="#082f49" />
                       <Text style={styles.clientStats}>
-                          Avg score: {avgWorkoutDuration} mins
+                          Avg score: {avgScore} mins
                       </Text>
                   </View>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
