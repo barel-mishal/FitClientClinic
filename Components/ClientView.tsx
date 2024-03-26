@@ -9,11 +9,12 @@ interface Props {
 }
 
 
-const ClientView: React.FC<Props> = ({ client, numberOfWorkout }) => {
+const ClientView: React.FC<Props> = ({ client, numberOfWorkout, avgWorkoutDuration }) => {
   
 
     return (
         <View style={styles.container}>
+
           <View key={client.clientId} style={styles.ClientContainer}>
             {/* profile image and name */}
               <Text style={styles.ClientTitle}>{client?.name}</Text>
@@ -36,7 +37,7 @@ const ClientView: React.FC<Props> = ({ client, numberOfWorkout }) => {
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                       <Entypo name="stopwatch" size={20} color="#082f49" />
                       <Text style={styles.clientStats}>
-                          Avg workout Duration: {"avgWorkoutDuration"} mins
+                          Avg score: {avgWorkoutDuration} mins
                       </Text>
                   </View>
                   <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
