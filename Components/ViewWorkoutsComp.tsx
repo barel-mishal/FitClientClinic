@@ -2,6 +2,7 @@ import React from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
 import {  calcScore, calculateDuration,  formatDateTimeRange } from "../types";
 import { FinishWorkoutType } from "./ProgramViewTrack";
+import { FontAwesome } from "@expo/vector-icons";
 
 interface Props  {
     workouts: FinishWorkoutType[] | undefined
@@ -49,6 +50,7 @@ const ClientWorkouts: React.FC<Props> = ({workouts}) => {
                             <Text style={[newWorkoutToDay ? stylesNew.durationText : styles.durationText]}>Goal Duration: {parseFloat(workout?.duration) * 60} Minutes</Text>
                         </View>
                     </View>
+                    <View style={{padding: 12, display: "flex", alignItems: "center", justifyContent: "center"}}><FontAwesome name="trash-o" size={24} color={"#ef4444"}  /></View>
                     </View>
                 )
             })}
@@ -62,6 +64,7 @@ const styles = StyleSheet.create({
       backgroundColor: '#f0f9ff',
       borderRadius: 20,
       padding: 16,
+      paddingBottom: 0,
       borderColor: 'rgba(2, 44, 34, 0.2)',
       borderWidth: 0.3,
       elevation: 3,
