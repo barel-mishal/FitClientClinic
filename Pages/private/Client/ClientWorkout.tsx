@@ -37,16 +37,16 @@ const ClientWorkout: React.FC<PropsClientWorkout> = ({navigation, route: {params
         databaseMethods
         .getTrainerProgram(trainerId, programId)
         .then((res) => {
+            const ps: Partial<ProgramState> = {
+                ...res,
+                state: "start",
+                workoutTime: "1s",
+                completedExercises: [] as string[],
+                clientId: u?.user?.uid!,
+                startTime: Date.now(),
+            };
             setProgram({
-                data: {
-                    ...res,
-                    state: "start",
-                    workoutTime: "1s",
-                    completedExercises: [] as string[],
-                    message: "You have completed the program",
-                    clientId: u?.user?.uid,
-                    startTime: Date.now(),
-                } as ProgramState,
+                data: ps as ProgramState,
                 state: "success",
                 error: null,
             });
@@ -59,7 +59,7 @@ const ClientWorkout: React.FC<PropsClientWorkout> = ({navigation, route: {params
                 error: {message: "An error occured while fetching the program"},
             });
         }).finally(() => {;
-        });
+    });
     }, []);
     
     return (
@@ -76,13 +76,8 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: "center",
         alignItems: "center",
-        backgroundColor: "#f0f9ff",
-
-        
+        backgroundColor: "#f0f9ff",   
     },
-    icon: {
-    }
-
 });
 
 export default ClientWorkout;
