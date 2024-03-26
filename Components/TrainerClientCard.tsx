@@ -15,24 +15,18 @@ type Props = {
 
 const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
   const auth = useAuth()
-    // TODO: calculate number of workouts and average workout duration, and show name of the current program
-    // TODO: add goals into the client object
-    // TODO: FIX WORKOUTS VIEW IN TRAINER SIDE
     // todo: CLIENT PROPERTIES DEISGN BRITHDATE AND FILES UPLOADS
     // TODO: HOME PAGE DEISGN START WITHSOMETHING COOL 
     // TODO: CHANGE THE NAME TO MOVE
     // TODO: EDIT PROGRAMS
-    // TODO: VIEW PROGRAMS
-    // todo: add client 
     // todo: add search functionality for exercises
     // todo: exercise images upload and view
     // todo: add indication for submit in client properties
     // todo: link to google site in create program
     // todo: udpating the new program in the list of trianer after finish creating the program
-    // todo: loading state show in each page and where needed
-    // todo: laod back the tofas when needed and show it
     // todo: view trainer certificate and edit it user can view it also. 
-    // todo: 
+    // TODO: 
+    // todo: TOFES CLOSE BUTTON FIX
     return (
         <TouchableOpacity onPress={() => navigation.navigate("TrainerClient", {id: client?.userId ?? ""})}>
             <View style={styles.programCard}>
