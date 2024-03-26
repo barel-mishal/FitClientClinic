@@ -4,6 +4,7 @@ import {  calcScore, calculateDuration,  formatDateTimeRange } from "../types";
 import { FinishWorkoutType } from "./ProgramViewTrack";
 import { FontAwesome } from "@expo/vector-icons";
 import databaseMethods from "../services/databaseMethods";
+import Loading from "./LoadingComp";
 
 interface Props  {
     workouts: FinishWorkoutType[] | undefined
@@ -32,15 +33,19 @@ const ClientWorkouts: React.FC<Props> = ({workouts}) => {
 
 export const RenderWorkout: React.FC<{workout: FinishWorkoutType, index: number, setWorkout: React.Dispatch<React.SetStateAction<FinishWorkoutType[] | undefined>>}> = ({workout, index, setWorkout}) => {
   const newWorkoutToDay = new Date(workout.startTime).toDateString() === new Date().toDateString();
+  const [loading, setLoading] = React.useState<boolean>(false);
   const deleteWorkout = async (id: string) => {
+    setLoading(true);
     await databaseMethods.deleteWorkout(id);
+    setLoading(false);
     setWorkout((prev) => {
       if (!prev) return prev;
       return prev.filter((w) => w.id !== id);
     });
   }
   return (
-      <View key={index} style={[newWorkoutToDay ? stylesNew.cardContainer : styles.cardContainer]}>
+    <>
+      {loading ? <View style={[newWorkoutToDay ? stylesNew.cardContainer : styles.cardContainer]}><Loading /></View> : <View key={index} style={[newWorkoutToDay ? stylesNew.cardContainer : styles.cardContainer]}>
           {newWorkoutToDay && <View style={{position: "absolute", backgroundColor: "#fb923c", padding: 8, borderRadius: 10, right: -6, top: -6}}><Text style={{color: "#431407", fontSize: 16}}>New</Text></View>}
           <View style={[newWorkoutToDay ? stylesNew.timeContainer : styles.timeContainer]}>
               <Text style={styles.timeText}>{formatDateTimeRange(workout.startTime, workout.endTime)}</Text>
@@ -71,7 +76,8 @@ export const RenderWorkout: React.FC<{workout: FinishWorkoutType, index: number,
       <Pressable onPress={() => deleteWorkout(workout.id)} style={{padding: 12, display: "flex", alignItems: "center", justifyContent: "center"}}>
         <FontAwesome name="trash-o" size={24} color={"#ef4444"}  />
       </Pressable>
-      </View>
+      </View>}
+      </>
   )
 }
 
