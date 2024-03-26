@@ -102,7 +102,8 @@ const programActions = (state: ProgramState, action: ProgramActions): ProgramSta
 }
 
 const RenderProgramTrack: React.FC<{program: ProgramState, navigation: PropsClientWorkout["navigation"]}> = ({ program, navigation }) => {
-    // useReducer to manage the state of the program
+    // useReducer to manage the state of the program. 
+    // This simplifies the state management and makes it easier to manage the state of the program.
     const [state, dispatch] = useReducer(programActions, program);
     return (
         <>
@@ -381,9 +382,6 @@ export const FinishWorkout: React.FC<{program: FinishWorkoutType, navigation: Pr
   );
 };
 
-
-
-
 export const styles = StyleSheet.create({
     container: {
       flex: 1,
@@ -561,8 +559,6 @@ export const stylesOnWorkOut = StyleSheet.create({
     right: 0,
   },
 });
-
-
 
 const stylesModal = StyleSheet.create({
   centeredView: {
