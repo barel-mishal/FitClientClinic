@@ -112,6 +112,8 @@ const styles = StyleSheet.create({
   },
   ClientTitle: {
     ...FONTS.title,
+    fontSize: 40,
+    marginBottom: -20,
     color: COLORS.text,
     flexDirection: 'row',
     alignItems: 'center',
