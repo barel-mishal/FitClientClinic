@@ -30,7 +30,7 @@ const HomeClient: React.FC<Props> = ({ navigation }) => {
         <ScrollView>
                 <View style={{backgroundColor: "#f0f9ff"}}>
                     <Stack>
-                        <Text style={{...styles.title}}>Wolcome {data?.name}</Text>
+                        <Text style={{...styles.title}}>Welcome {data?.name}</Text>
                         <Text style={{fontSize: 20, color: "#0891b2", fontWeight: "bold"}}>Where focus goes energy flows</Text>
                     </Stack>
                     <Stack styleOption={{gap: 32}}>

@@ -25,7 +25,7 @@ const TrainerHome: React.FC<Props> = ({ navigation }) => {
     return (
         <ScrollView style={{backgroundColor: "#f0f9ff"}}>
             <View style={{...styles.container, padding: 16 }}>
-                <Text style={styles.title}>Wolcome Coach {firstCharUpperCase(data?.name)}</Text>
+                <Text style={styles.title}>Welcome Coach {firstCharUpperCase(data?.name)}</Text>
                 <CardWrapper styleOption={{backgroundColor: "#166534"}}>
                     <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('TrainerCreateProgram')}>
                         <Text style={{color: "#f0fdf4", fontSize: 24,fontWeight: "bold",}}>Create Program</Text>
