@@ -7,7 +7,6 @@ import databaseMethods from "../services/databaseMethods";
 import RenderProgramTrack, { ProgramState } from "./ProgramViewTrack";
 import LoadingComp from "./LoadingComp";
 
-
 export type ComponentState = {
     data: null, 
     state: "loading", 
@@ -22,8 +21,6 @@ export type ComponentState = {
     state: "success", 
     error: null
 };
-
-
 
 interface UserProgramProps {
     programId: string;
@@ -75,8 +72,6 @@ const UserProgarmStart: React.FC<UserProgramProps> = ({programId, trainerId, use
             {program?.state === "success" && <RenderProgramTrack program={program.data} navigation={navigation} />}
         </>
     );
-        
-    
 }
 
 const styles = StyleSheet.create({
