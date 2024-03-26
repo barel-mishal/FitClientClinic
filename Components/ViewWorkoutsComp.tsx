@@ -10,25 +10,35 @@ interface Props  {
 };
 
 const ClientWorkouts: React.FC<Props> = ({workouts}) => {
+    
 
     const sortingWorkouts = (a: FinishWorkoutType, b: FinishWorkoutType) => {
         return new Date(b.startTime).getTime() - new Date(a.startTime).getTime();
     };
 
     workouts?.sort(sortingWorkouts);
+
+    const [ws, setWs] = React.useState<FinishWorkoutType[] | undefined>(workouts?.concat([]));
     
     return (
         <ScrollView style={{backgroundColor: "#f0f9ff", }}>
             <View style={{padding: 16, display: "flex", gap: 24}}>
-            {workouts?.map((workout, index) => 
-            <RenderWorkout workout={workout} index={index} />)}
+            {ws?.map((workout, index) => 
+            <RenderWorkout workout={workout} index={index} setWorkout={setWs} />)}
             </View>
         </ScrollView>
       );
     };
 
-export const RenderWorkout: React.FC<{workout: FinishWorkoutType, index: number}> = ({workout, index}) => {
+export const RenderWorkout: React.FC<{workout: FinishWorkoutType, index: number, setWorkout: React.Dispatch<React.SetStateAction<FinishWorkoutType[] | undefined>>}> = ({workout, index, setWorkout}) => {
   const newWorkoutToDay = new Date(workout.startTime).toDateString() === new Date().toDateString();
+  const deleteWorkout = async (id: string) => {
+    await databaseMethods.deleteWorkout(id);
+    setWorkout((prev) => {
+      if (!prev) return prev;
+      return prev.filter((w) => w.id !== id);
+    });
+  }
   return (
       <View key={index} style={[newWorkoutToDay ? stylesNew.cardContainer : styles.cardContainer]}>
           {newWorkoutToDay && <View style={{position: "absolute", backgroundColor: "#fb923c", padding: 8, borderRadius: 10, right: -6, top: -6}}><Text style={{color: "#431407", fontSize: 16}}>New</Text></View>}
@@ -58,7 +68,7 @@ export const RenderWorkout: React.FC<{workout: FinishWorkoutType, index: number}
               <Text style={[newWorkoutToDay ? stylesNew.durationText : styles.durationText]}>Goal Duration: {parseFloat(workout?.duration) * 60} Minutes</Text>
           </View>
       </View>
-      <Pressable onPress={() => databaseMethods.deleteWorkout(workout.id)} style={{padding: 12, display: "flex", alignItems: "center", justifyContent: "center"}}>
+      <Pressable onPress={() => deleteWorkout(workout.id)} style={{padding: 12, display: "flex", alignItems: "center", justifyContent: "center"}}>
         <FontAwesome name="trash-o" size={24} color={"#ef4444"}  />
       </Pressable>
       </View>
