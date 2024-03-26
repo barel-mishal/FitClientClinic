@@ -17,6 +17,7 @@ export type FinishWorkoutType = Required<FitnessProgramOutput> & {
   completedExercises: Array<string>;
   endTime: number;
   startTime: number;
+  saved: boolean
 };
 
 export type InitialProgramState = Required<FitnessProgramOutput> & {
@@ -51,6 +52,10 @@ export type ProgramActions = {
   type: "completedExercise";
   payload?: ProgramState["exercises"][number]["id"];
   message?: string;
+} | {
+  type: "saved";
+  payload: boolean;
+  message?: string;
 };
 
 const programActions = (state: ProgramState, action: ProgramActions): ProgramState => {
@@ -74,6 +79,13 @@ const programActions = (state: ProgramState, action: ProgramActions): ProgramSta
         workoutTime: action.payload ?? "0s",
         message: action.message ?? "Workout Finished",
         endTime: Date.now(),
+        saved: false
+      };
+    case "saved":
+      if (state.state !== "finish") return state;
+      return {
+        ...state,
+        saved: action.payload,
       };
     case "on":
       return {
@@ -109,7 +121,7 @@ const RenderProgramTrack: React.FC<{program: ProgramState, navigation: PropsClie
         <>
         {state.state === "start" && <StartWorkout program={state} dispatch={dispatch} />}
         {state.state === "on" && <OnWorkout program={state} dispatch={dispatch} />}
-        {state.state === "finish" && <FinishWorkout program={state} navigation={navigation} />}
+        {state.state === "finish" && <FinishWorkout program={state} navigation={navigation} dispatch={dispatch} />}
       </>
     )
 }
@@ -336,7 +348,7 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
   )
 };
 
-export const FinishWorkout: React.FC<{program: FinishWorkoutType, navigation: PropsClientWorkout["navigation"]}> = ({ program, navigation }) => {
+export const FinishWorkout: React.FC<{program: FinishWorkoutType, navigation: PropsClientWorkout["navigation"], dispatch: React.Dispatch<ProgramActions>}> = ({ program, navigation, dispatch }) => {
   const parentSize = { height: 400, width: Dimensions.get("window").width - 40 };
   const rotation = useAnimatedValue(30);
   const confettiRef = useRef<ConfettiCannon>(null);
@@ -352,7 +364,7 @@ export const FinishWorkout: React.FC<{program: FinishWorkoutType, navigation: Pr
       const interval = setInterval(() => setCountDown(count => count - 1), 1000);
       return () => clearInterval(interval);
     } else if (workoutUpdated) {
-      navigation.navigate("ClientWorkouts");
+      dispatch({type: "saved", payload: true});
     }
   }, [countDown, workoutUpdated, navigation]);
 

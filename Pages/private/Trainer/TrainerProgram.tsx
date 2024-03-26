@@ -14,14 +14,18 @@ const TrainerProgram: React.FC<Props> = ({ route: { params: { id }}, navigation 
     const p = auth.data.programs.filter((p) => p.id! === id);
     return <>
     {userId === "" 
-    ? <View><Text>choose a user</Text></View> 
+    ? <View>
+        <Text>choose a user</Text>
+        {auth.data.clients.map((c, index) => {
+            return <Text key={index} onPress={() => setUserId(c.userId!)}>{c.name}</Text>
+        })}
+    </View> 
     : <UserProgarmStart 
         navigation={navigation} 
         programId={id} 
         trainerId={auth.user.uid} 
         userId={userId} 
         key={userId + auth.user.uid}
-        
     />}
     </>
     // return <RenderProgram program={p[0] as FitnessProgramOutput} />;
