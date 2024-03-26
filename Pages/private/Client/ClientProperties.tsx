@@ -18,7 +18,6 @@ const SignupClient = ({ navigation }: Props) => {
 
 
   if (!a.user || a?.data?.role !== "client") return <Text>Not Authenticated</Text>;
-  const [message, setMessage] = useState<string | undefined>(undefined);
   const [form, setForm] = useState<Partial<InputClientProperties>>({
     name: a.data.name,
     email: a.data.email,
@@ -39,8 +38,10 @@ const SignupClient = ({ navigation }: Props) => {
     currentProgramId: a.data?.currentProgramId,
   });
   // Function to handle input change
-  const handleChange = (name: keyof typeof form, value: string | [string, string, string] | number) => {
+  const handleChange = (name: keyof typeof form, value: string | [string, string, string] | number, onChange?: () => void) => {
     setForm(prev => ({ ...(prev ?? {}), [name]: value }));
+    if (onChange)
+    onChange();
   };
 
   const handleSubmit = async () => {
@@ -88,8 +89,7 @@ const SignupClient = ({ navigation }: Props) => {
     handleChange('goals', updatedGoals);
   };
 
-  useEffect(() => {
-    if (form?.MedicalCertificate) {
+  const handleWhenAddedMedicalCert = () => {
       Toast.show({
         type: 'success',
         position: 'top',
@@ -98,11 +98,8 @@ const SignupClient = ({ navigation }: Props) => {
         visibilityTime: 4000,
         autoHide: true,
       });
-    }
+  }
 
-  }, [form.MedicalCertificate]);
-
-  console.log({form});
   
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -170,7 +167,7 @@ const SignupClient = ({ navigation }: Props) => {
           <Pressable onPress={() => navigation.navigate("TrainerCreateProgram")}>
             <Text style={styles.inputTitle}>Upload Your Medical Certificate</Text>
           </Pressable>
-          <MedicalCertificateUploader onHandleChange={(uri) => handleChange("MedicalCertificate", uri)} medicalCertificate={form?.MedicalCertificate} />
+          <MedicalCertificateUploader onHandleChange={(uri) => handleChange("MedicalCertificate", uri, handleWhenAddedMedicalCert)} medicalCertificate={form?.MedicalCertificate} />
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Training Experience</Text>
@@ -192,7 +189,6 @@ const SignupClient = ({ navigation }: Props) => {
           <Text style={styles.inputTitle}>Injuries</Text>
           <TextInput style={styles.input} placeholder="Injuries" onChangeText={text => handleChange('injuries', text)} value={form?.injuries}/>
         </View >
-        <Text style={styles.errorMessage}>{message}</Text>
 
         <Button title="Submit" onPress={handleSubmit} />
       </View>
