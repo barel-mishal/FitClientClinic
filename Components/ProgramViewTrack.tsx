@@ -25,17 +25,23 @@ export type InitialProgramState = Required<FitnessProgramOutput> & {
   startTime: number;
 };
 
-export type ProgramState = (Required<FitnessProgramOutput> 
-& InitialProgramState) & ({
-  state: "start";
-} | {
-  state: "stop";
-} | FinishWorkoutType 
-| {
-  state: "on",
-} | {
-  state: "exercise",
-});
+export type ProgramState = (
+  Required<FitnessProgramOutput> 
+  & InitialProgramState) 
+  & ({
+    state: "start";
+  } 
+  | {
+    state: "stop";
+  } 
+  | {
+    state: "on",
+  } 
+  | {
+    state: "exercise",
+  }
+  | FinishWorkoutType 
+);
 
 export type ProgramActions = {
   type: ProgramState["state"];
@@ -95,11 +101,6 @@ const programActions = (state: ProgramState, action: ProgramActions): ProgramSta
   }
 }
 
-/*
-  This component is used to render the program track
-  It will render the current exercise and the time left for the exercise
-  It will also allow the user to navigate between exercises
-*/
 const RenderProgramTrack: React.FC<{program: ProgramState, navigation: PropsClientWorkout["navigation"]}> = ({ program, navigation }) => {
     // useReducer to manage the state of the program
     const [state, dispatch] = useReducer(programActions, program);
