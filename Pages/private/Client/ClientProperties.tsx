@@ -50,7 +50,7 @@ const SignupClient = ({ navigation }: Props) => {
     
     if (parsed.success && parsed2.success) {
       const id = parsed2?.output?.trainerPhone 
-      ? await databaseMethods.validateTrainerPhoneAndGetId(parsed2?.output?.trainerPhone) 
+      ? await databaseMethods.validateTrainerPhoneAndGetId(parsed2?.output?.trainerPhone)
       : undefined;      
       databaseMethods.addOrUpdateClientFitnessInfo({...parsed.output, clientId: a.user.uid});
       const result = id 
@@ -99,7 +99,6 @@ const SignupClient = ({ navigation }: Props) => {
         autoHide: true,
       });
   }
-
   
   return (
     <ScrollView contentContainerStyle={styles.container}>
