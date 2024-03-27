@@ -3,7 +3,6 @@ import auth from '@react-native-firebase/auth';
 import { Dimensions, Text, View } from 'react-native';
 import { ReturnUserProerties, type UserSchema } from '../../types';
 import databaseMethods from '../../services/databaseMethods';
-import { set } from 'valibot';
 
 
 const AuthContext = createContext<UserSchema>({
