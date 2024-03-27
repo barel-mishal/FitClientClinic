@@ -26,8 +26,7 @@ const TrainerProgramCard: React.FC<Props> = ({ program, navigation, setPrograms 
     const handleSelect = (option: { label: string, value: string }) => {
         setVisible(false);
         if (option.value === "edit") {
-            // todo: implement edit program
-            // navigation.navigate("TrainerEditProgram", { id: program.id });
+            navigation.navigate("TrainerCreateProgram", { programId: program.id });
         } else if (option.value === "delete") {
             databaseMethods.deleteTrainerProgram(program.id);
             setPrograms((prev) => prev.filter((p) => p.id !== program.id));

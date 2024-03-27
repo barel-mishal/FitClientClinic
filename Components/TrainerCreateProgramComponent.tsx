@@ -124,6 +124,7 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation, trainer, use
   const [state, dispatch] = useReducer(reducer, initialState(user.uid));
   
   const clients = trainer.clients.filter(c => c.name || c.userId).map(c => ({label: c.name!, value: c.userId!}));
+  
   useEffect(() => {
     if (params?.programId) {
       databaseMethods.getTrainerProgram(trainerId, params.programId).then(program => {
