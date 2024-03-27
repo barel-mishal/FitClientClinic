@@ -7,6 +7,8 @@ import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 import TrainerProgramCard from "../../../Components/TrainerProgramCard";
 import { FitnessProgramOutput } from "../../../types";
+import databaseMethods, { COLLECTIONS } from "../../../services/databaseMethods";
+import { useQuery } from "react-query";
 
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerPrograms'>;
@@ -15,7 +17,17 @@ export type Program = Required<FitnessProgramOutput> & { trainerName: string }
 const TrainerPrograms: React.FC<Props> = ({ navigation }) => {
     const auth = useAuth()
     if (!auth.user || auth.data?.role !== "trainer") return <View></View>
-    const [programs, setPrograms] = useState<Program[]>(auth.data.programs as Program[]);
+    const { data: ps, error, isLoading } = useQuery<Program[]>(
+        [COLLECTIONS.FITNESS_PROGRAMS, COLLECTIONS.FITNESS_PROGRAMS], 
+        async () => (await databaseMethods.getAllTrainerPrograms(auth.user.uid)).map((p) => ({...p, trainerName: firstCharUpperCase(auth?.data?.name)})),
+        { refetchOnWindowFocus: true, refetchOnMount: true, cacheTime: 0, staleTime: 0 }
+    );
+    console.log("ps", ps)
+    const [programs, setPrograms] = useState<Program[]>(ps || []);
+
+    if (isLoading) return <View></View>
+
+    if (error && error instanceof Error) return <View><Text>An error occurred: {error.message}</Text></View>;
 
     return (
         <View>

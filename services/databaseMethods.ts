@@ -5,6 +5,13 @@ import { FinishWorkoutType } from '../Components/ProgramViewTrack';
 import { DocumentPickerResult } from 'expo-document-picker';
 import storage from '@react-native-firebase/storage';
 
+export const COLLECTIONS = {
+  PROFILE: 'profile',
+  CLIENT_FITNESS_INFO: 'ClientFitnessInfo',
+  FITNESS_PROGRAMS: 'FitnessPrograms',
+  FITNESS_WORKOUTS: 'FitnessWorkouts',
+};
+
 const databaseMethods = {
   login,
   register,

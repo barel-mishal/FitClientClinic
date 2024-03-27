@@ -4,7 +4,6 @@ import { Dimensions, Text, View } from 'react-native';
 import { ReturnUserProerties, type UserSchema } from '../../types';
 import databaseMethods from '../../services/databaseMethods';
 
-
 const AuthContext = createContext<UserSchema>({
     user: null
 });
