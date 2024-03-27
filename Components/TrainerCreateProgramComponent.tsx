@@ -1,9 +1,9 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import React, { useReducer, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import { View, Text, StyleSheet, TextInput, ScrollView, TouchableOpacity, Dimensions, ViewStyle, StyleProp, Button, Pressable } from 'react-native';
 import { RootStackParamList } from "../App";
 import ImageUpload from "./ImageUploadComponent";
-import { FitnessProgram, FitnessProgramSchema, ReturnTrainerProerties, User, makeIssue, uniqueId } from "../types";
+import { FitnessProgram, FitnessProgramOutput, FitnessProgramSchema, ReturnTrainerProerties, User, makeIssue, uniqueId } from "../types";
 import RadioButton from "./RadioComponent";
 import * as v from "valibot";
 import databaseMethods from "../services/databaseMethods";
@@ -65,6 +65,9 @@ type Actions = {
   } | {
       type: "UPDATE_EXERCISE";
       payload: {key: keyof Exercise, value: Exercise[keyof Exercise], index: number};
+} | {
+      type: "EDIT_PROGRAM";
+      payload: FitnessProgramOutput;
 }
 function reducer(state: ProgramState, action: Actions) {
   switch (action.type) {
@@ -95,15 +98,76 @@ function reducer(state: ProgramState, action: Actions) {
           ...state.program,
           exercises: state.updateExercises(newExercises, action.payload.key, action.payload.value, action.payload.index)
         }
-      }
+      };
+    case 'EDIT_PROGRAM':
+      const program: FitnessProgram = {
+        ...action.payload, 
+        exercises: action.payload.exercises.map(e => ({
+          ...e, 
+          reps: e?.reps?.toString(),
+          sets: e?.sets?.toString(),
+          weight: e?.weight?.toString()
+        }))
+      };
+      return {
+        ...state,
+        program,
+      };
     default:
       return state;
   }
 }
 
-const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation, trainer, user }) => {
+const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation, trainer, user, route: {params} }) => {
+  const {userId: trainerId} = trainer;
+  if (!trainerId) return <View></View>;
   const [state, dispatch] = useReducer(reducer, initialState(user.uid));
+  
+  const clients = trainer.clients.filter(c => c.name || c.userId).map(c => ({label: c.name!, value: c.userId!}));
+  useEffect(() => {
+    if (params?.programId) {
+      databaseMethods.getTrainerProgram(trainerId, params.programId).then(program => {
+        if (!program) return;
+        dispatch({type: "EDIT_PROGRAM", payload: program});
+      });
+    }
+  }, [params?.programId]);
+ 
+  return (<TrainerCreateFitnessProgramWrap state={state} dispatch={dispatch} clients={clients} navigation={navigation} />
+  );
+};
+
+type TrainerCreateFitnessProgramProps = {
+  state: ProgramState;
+  dispatch: React.Dispatch<Actions>;
+  clients: {label: string, value: string}[];
+  navigation: NativeStackScreenProps<RootStackParamList, 'TrainerCreateProgram'>["navigation"]
+}
+
+const TrainerCreateFitnessProgramWrap: React.FC<TrainerCreateFitnessProgramProps> = ({ state, dispatch, navigation, clients }) => {
   const [selected, setSelected] = useState<string[]>([]); 
+
+  const styleDuration = (duration: string) => {
+    return state.program.duration === duration ? styles.bigButtonSelected : styles.bigButton;
+  }; 
+  
+  const styleSet = (set: string, id: string): StyleProp<ViewStyle> => {
+    const exercise = state.program?.exercises?.find(e => e.id === id);
+    const squer: StyleProp<ViewStyle> = {width: 50, height: 50, justifyContent: "center", alignItems: "center"};
+    return exercise?.sets === set ? {...styles.bigButtonSelected, ...squer} : {...styles.bigButton, ...squer};
+  };
+  
+  const styleRep = (rep: string, id: string): StyleProp<ViewStyle> => {
+    const exercise = state.program?.exercises?.find(e => e.id === id);
+    const squer: StyleProp<ViewStyle> = {width: 50, height: 50, justifyContent: "center", alignItems: "center"};
+    return exercise?.reps === rep ? {...styles.bigButtonSelected, ...squer} : {...styles.bigButton, ...squer};
+  };
+
+  const styleTime = (time: string, id: string) => {
+    const exercise = state.program?.exercises?.find(e => e.id === id);
+    return exercise?.time === time ? styles.bigButtonSelected : styles.bigButton;
+  };
+
   const handleSubmit = async () => {
     const parsed = v.safeParse(FitnessProgramSchema, state.program);
     if (!parsed.success) {
@@ -142,28 +206,7 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation, trainer, use
     dispatch({type: "UPDATE_PROGRAM", payload: {key: "id", value: programId}});
     navigation.navigate('TrainerPrograms');
   };
-  const clients = trainer.clients.filter(c => c.name || c.userId).map(c => ({label: c.name!, value: c.userId!}));
-  
-  const styleDuration = (duration: string) => {
-    return state.program.duration === duration ? styles.bigButtonSelected : styles.bigButton;
-  } 
-  
-  const styleSet = (set: string, id: string): StyleProp<ViewStyle> => {
-    const exercise = state.program?.exercises?.find(e => e.id === id);
-    const squer: StyleProp<ViewStyle> = {width: 50, height: 50, justifyContent: "center", alignItems: "center"};
-    return exercise?.sets === set ? {...styles.bigButtonSelected, ...squer} : {...styles.bigButton, ...squer};
-  } 
-  
-  const styleRep = (rep: string, id: string): StyleProp<ViewStyle> => {
-    const exercise = state.program?.exercises?.find(e => e.id === id);
-    const squer: StyleProp<ViewStyle> = {width: 50, height: 50, justifyContent: "center", alignItems: "center"};
-    return exercise?.reps === rep ? {...styles.bigButtonSelected, ...squer} : {...styles.bigButton, ...squer};
-  } 
 
-  const styleTime = (time: string, id: string) => {
-    const exercise = state.program?.exercises?.find(e => e.id === id);
-    return exercise?.time === time ? styles.bigButtonSelected : styles.bigButton;
-  }
 
   return (
     <View style={styles.container}>
@@ -182,9 +225,10 @@ const TrainerCreateFitnessProgram: React.FC<Props> = ({ navigation, trainer, use
                     {clients.map((i) => {
                       return (
                         <TouchableOpacity  
-                        key={i.value} 
-                        style={{padding: 10, paddingHorizontal: 25, justifyContent: "center", alignItems: "center", borderColor: "#7dd3fc", borderWidth: 2, borderRadius: 20, margin: 10, backgroundColor: selected.includes(i.value) ? "#7dd3fc" : "#bae6fd"}}
-                        onPress={() => setSelected([i.value])}>
+                          key={i.value} 
+                          style={{padding: 10, paddingHorizontal: 25, justifyContent: "center", alignItems: "center", borderColor: "#7dd3fc", borderWidth: 2, borderRadius: 20, margin: 10, backgroundColor: selected.includes(i.value) ? "#7dd3fc" : "#bae6fd"}}
+                          onPress={() => setSelected([i.value])}
+                        >
                           <Text>{i.label.toString()}</Text>
                         </TouchableOpacity>
                       );
