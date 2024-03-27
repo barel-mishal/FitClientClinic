@@ -12,7 +12,7 @@ type Props = {
     program: Required<FitnessProgramOutput> & { trainerName: string };
     navigation: NativeStackNavigationProp<RootStackParamList, "TrainerPrograms" | "TrainerClients", undefined>;
     setPrograms: React.Dispatch<React.SetStateAction<Program[]>>
-}
+};
 
 const TrainerProgramCard: React.FC<Props> = ({ program, navigation, setPrograms }) => {
     const auth = useAuth();
