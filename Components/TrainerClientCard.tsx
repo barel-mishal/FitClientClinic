@@ -17,7 +17,6 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
   const auth = useAuth()
   // TODO: HOME PAGE DEISGN START WITHSOMETHING COOL 
   // TODO: CHANGE THE NAME TO MOVE
-  // TODO: EDIT PROGRAMS
   // todo: add search functionality for exercises
   // todo: exercise images upload and view
   // todo: add indication for submit in client properties
