@@ -22,8 +22,6 @@ const TrainerPrograms: React.FC<Props> = ({ navigation }) => {
         async () => (await databaseMethods.getAllTrainerPrograms(auth.user.uid)).map((p) => ({...p, trainerName: firstCharUpperCase(auth?.data?.name)})),
         { refetchOnWindowFocus: true, refetchOnMount: true, cacheTime: 0, staleTime: 0 }
     );
-    console.log("ps", ps)
-    const [programs, setPrograms] = useState<Program[]>(ps || []);
 
     if (isLoading) return <View></View>
 
@@ -33,16 +31,27 @@ const TrainerPrograms: React.FC<Props> = ({ navigation }) => {
         <View>
             <ScrollView> 
                 <View style={styles?.container}>
-                <TouchableOpacity onPress={() => {navigation.navigate("TrainerCreateProgram")}} style={{display: "flex", width: "100%" , flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center", padding: 7, marginTop: 14, borderRadius: 20, backgroundColor: "#7DD3FC", opacity: 50, }}>
-                    <Text style={{ fontSize: 16, fontWeight: "700", color: "#082F49" }}>Add Program</Text>
-                    <Ionicons name="add-circle" size={24} color="#082F49" />
-                </TouchableOpacity>
-                {programs?.map((m, index) => {
-                    const program = {...m, trainerName: firstCharUpperCase(auth?.data?.name)}
-                    return <TrainerProgramCard key={index} program={program} navigation={navigation} setPrograms={setPrograms} />
-                })}
+                    <ProgramsWrapper programs={ps} navigation={navigation} />
                 </View>
             </ScrollView>
+        </View>
+    );
+}
+
+interface PropsProgramsWrapper {programs: Program[] | undefined, navigation: NativeStackScreenProps<RootStackParamList, 'TrainerPrograms'>["navigation"]}
+
+const ProgramsWrapper: React.FC<PropsProgramsWrapper> = ({ programs: programsData, navigation }) => {
+    if (!programsData) return <View></View>
+    const [programs, setPrograms] = useState<Program[]>(programsData);
+    return (
+        <View style={styles?.container}>
+            <TouchableOpacity onPress={() => {navigation.navigate("TrainerCreateProgram")}} style={{display: "flex", width: "100%" , flexDirection: "row", gap: 4, justifyContent: "center", alignItems: "center", padding: 7, marginTop: 14, borderRadius: 20, backgroundColor: "#7DD3FC", opacity: 50, }}>
+                <Text style={{ fontSize: 16, fontWeight: "700", color: "#082F49" }}>Add Program</Text>
+                <Ionicons name="add-circle" size={24} color="#082F49" />
+            </TouchableOpacity>
+            {programs?.map((m, index) => {
+                return <TrainerProgramCard key={index} program={m} navigation={navigation} setPrograms={setPrograms} />
+            })}
         </View>
     );
 }
