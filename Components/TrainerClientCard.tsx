@@ -21,10 +21,7 @@ const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
   // todo: exercise images upload and view
   // todo: add indication for submit in client properties
   // todo: link to google site in create program
-  // todo: udpating the new program in the list of trianer after finish creating the program
   // todo: view trainer certificate and edit it user can view it also. 
-  // todo: TOFES CLOSE BUTTON FIX
-  // todo: when updating the properties of the client the currentProgram should be kept
   // todo: CLIENT PROPERTIES DEISGN BRITHDATE AND FILES UPLOADS
     return (
         <TouchableOpacity onPress={() => navigation.navigate("TrainerClient", {id: client?.userId ?? ""})}>
