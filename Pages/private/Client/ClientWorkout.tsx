@@ -16,10 +16,7 @@ const ClientWorkout: React.FC<PropsClientWorkout> = ({navigation, route: {params
     programId={programId} 
     trainerId={trainerId} 
     userId={u.user.uid} 
-    navigate={() => navigation.navigate("ClientWorkout", {
-        programId: programId,
-        trainerId: trainerId,
-    })}  />;
+    navigate={() => navigation.navigate("ClientHome")}  />;
 }
 
 

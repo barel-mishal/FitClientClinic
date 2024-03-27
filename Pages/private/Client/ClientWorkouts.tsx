@@ -7,6 +7,7 @@ import ViewWorkoutsComp from "../../../Components/ViewWorkoutsComp";
 import { Dimensions, Text, View } from "react-native";
 import { useQuery } from "react-query";
 import databaseMethods from "../../../services/databaseMethods";
+import Loading from "../../../Components/LoadingComp";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ClientWorkouts'>;
 
@@ -18,9 +19,12 @@ const ClientWorkouts: React.FC<Props> = () => {
         () => databaseMethods.getUserClientWorkouts(u.user.uid!), 
         { refetchOnWindowFocus: true, refetchOnMount: true, cacheTime: 0, staleTime: 0 }
     );
-    if (isLoading) return <View style={{padding: 16, display: "flex", gap: 24, backgroundColor: "#172554", height: Dimensions.get("window").height}}><Text>Loading...</Text></View>;
+    if (isLoading) return <View 
+    style={{justifyContent: "center", alignItems: "center", padding: 16, display: "flex", gap: 24, backgroundColor: "#f0f9ff", height: Dimensions.get("window").height}}>
+        <Loading />
+    </View>;
     if (error && error instanceof Error) return <View><Text>An error occurred: {error.message}</Text></View>;
-    return <ViewWorkoutsComp workouts={workouts} />;
+    return <ViewWorkoutsComp workouts={workouts} key={"ViewWorkoutsComp"} />;
 }
 
 export default ClientWorkouts;
