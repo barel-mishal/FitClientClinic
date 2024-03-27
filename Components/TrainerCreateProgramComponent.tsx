@@ -204,7 +204,7 @@ const TrainerCreateFitnessProgramWrap: React.FC<TrainerCreateFitnessProgramProps
     const programId = await databaseMethods.addOrUpdateFitnessProgram(parsed.output);
     await databaseMethods.assignProgramToClients(programId, selected);
     dispatch({type: "UPDATE_PROGRAM", payload: {key: "id", value: programId}});
-    navigation.navigate('TrainerPrograms');
+    navigation.navigate('TrainerHome');
   };
 
 
