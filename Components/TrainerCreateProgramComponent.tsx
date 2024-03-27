@@ -85,7 +85,6 @@ function reducer(state: ProgramState, action: Actions) {
             program: state.createNewExercise(state.program, newExercise)
         };
     case 'UPDATE_PROGRAM':
-      // TODO: Implement functionality to add a new exercise
       return {
         ...state,
         program: state.updateProgram(state.program , action.payload.key, action.payload.value)
