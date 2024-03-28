@@ -52,19 +52,21 @@ const TrainerProperties = ({ navigation }: Props) => {
       return 
     }
 
-    navigation.navigate('ClientHome');
+    navigation.navigate('TrainerHome');
   };
 
-  const handleWhenAddedMedicalCert = () => {
+  const handleWhenAddedCert = () => {
       Toast.show({
         type: 'success',
         position: 'top',
         text1: 'Success',
-        text2: 'Medical Certificate Uploaded',
+        text2: 'Certificate Uploaded',
         visibilityTime: 4000,
         autoHide: true,
       });
   }
+
+  console.log(form);
   
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -89,7 +91,7 @@ const TrainerProperties = ({ navigation }: Props) => {
           <Pressable onPress={() => navigation.navigate("TrainerCreateProgram")}>
             <Text style={styles.inputTitle}>Certification</Text>
           </Pressable>
-          <MedicalCertificateUploader onHandleChange={(uri) => handleChange("certification", uri, handleWhenAddedMedicalCert)} medicalCertificate={form?.certification} />
+          <MedicalCertificateUploader onHandleChange={(uri) => handleChange("certification", uri, handleWhenAddedCert)} medicalCertificate={form?.certification} />
         </View>
 
         <Button title="Submit" onPress={handleSubmit} />
