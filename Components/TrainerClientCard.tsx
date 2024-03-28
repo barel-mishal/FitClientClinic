@@ -15,9 +15,7 @@ type Props = {
 
 const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
   const auth = useAuth()
-  // TODO: HOME PAGE DEISGN START WITHSOMETHING COOL 
   // todo: add search functionality for exercises
-  // todo: exercise images upload and view
   // todo: view trainer certificate and edit it user can view it also. 
   // todo: CLIENT PROPERTIES DEISGN BRITHDATE AND FILES UPLOADS
     return (

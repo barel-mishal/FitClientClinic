@@ -14,6 +14,7 @@ export type RootStackTrainerParamList = {
   TrainerProgram: { id: string };
   TrainerCreateProgram: undefined | { programId: string };
   TrainerClient: { id: string };
+  TrainerProperties: undefined;
 };
 
 export type RootStackClientParamList = {

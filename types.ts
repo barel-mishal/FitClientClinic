@@ -399,6 +399,7 @@ export const TrainerProfile = v.merge([
 })]);
 
 export type TypeTrainerProfile = v.Input<typeof TrainerProfile>
+export type OutputTrainerProfile = v.Output<typeof TrainerProfile>
 
 export const TrainerRegisterData = v.merge([
     TrainerProfile,

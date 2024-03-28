@@ -14,6 +14,7 @@ import ClientProperties from "./private/Client/ClientProperties";
 import TrainerClients from "./private/Trainer/TrainerClients";
 import TrainerPrograms from "./private/Trainer/TrainerPrograms";
 import TrainerProgram from "./private/Trainer/TrainerProgram";
+import TrainerProperties from "./private/Trainer/TrainerProperties";
 import TrainerCreateFitnessProgram from "./private/Trainer/TrainerCreateProgram";
 import TrainerClient from "./private/Trainer/TrainerClient";
 import ClientWorkout from "./private/Client/ClientWorkout";
@@ -48,12 +49,13 @@ export const PrivateNavigator: React.FC<PrivateNavigatorProps> = ({ role })  =>{
     } else if (role === 'trainer') {
         return <Stack.Navigator>
             <Stack.Screen name={"TrainerHome"} component={TrainerHome} options={{headerTitle: "Home"}} />
-            <Stack.Screen name={"TrainerAppointments"} component={TrainerAppointment} options={{}} />
-            <Stack.Screen name={"TrainerClients"} component={TrainerClients} options={{}} />
-            <Stack.Screen name={"TrainerClient"} component={TrainerClient} options={{}} />
-            <Stack.Screen name={"TrainerPrograms"} component={TrainerPrograms} options={{}} />
-            <Stack.Screen name={"TrainerProgram"} component={TrainerProgram} options={{}} />
-            <Stack.Screen name={"TrainerCreateProgram"} component={TrainerCreateFitnessProgram} options={{}} />
+            <Stack.Screen name={"TrainerAppointments"} component={TrainerAppointment} options={{headerTitle: "Appointments"}} />
+            <Stack.Screen name={"TrainerClients"} component={TrainerClients} options={{headerTitle: "Clients"}} />
+            <Stack.Screen name={"TrainerClient"} component={TrainerClient} options={{headerTitle: "Client"}} />
+            <Stack.Screen name={"TrainerPrograms"} component={TrainerPrograms} options={{headerTitle: "Programs"}} />
+            <Stack.Screen name={"TrainerProgram"} component={TrainerProgram} options={{headerTitle: "Program"}} />
+            <Stack.Screen name={"TrainerCreateProgram"} component={TrainerCreateFitnessProgram} options={{headerTitle: "Create Program"}} />
+            <Stack.Screen name={"TrainerProperties"} component={TrainerProperties} options={{headerTitle: "Client Properties"}} />
         </Stack.Navigator>
     } 
 }

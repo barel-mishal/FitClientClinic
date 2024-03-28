@@ -1,4 +1,4 @@
-import { OutputClientRegister, OutputTrainerRegister, TypeClientPersonalFitnessInfo, TypeTrainerProfile, OutputCientProfile, ProfileSchemaOutput, ReturnUserProerties, FitnessProgram, FitnessProgramOutput, OutputClientPersonalFitnessInfo } from '../types';
+import { OutputClientRegister, OutputTrainerRegister, TypeClientPersonalFitnessInfo, TypeTrainerProfile, OutputCientProfile, ProfileSchemaOutput, ReturnUserProerties, FitnessProgram, FitnessProgramOutput, OutputClientPersonalFitnessInfo, OutputTrainerProfile } from '../types';
 import auth, { FirebaseAuthTypes } from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import { FinishWorkoutType } from '../Components/ProgramViewTrack';
@@ -36,6 +36,7 @@ const databaseMethods = {
   deleteTrainerProgram,
   deleteWorkout,
   uploadImageAndSaveLink,
+  updateTrainerProfile,
 }
 
 // Asynchronously uploads a file and saves its download link.
@@ -532,6 +533,25 @@ async function deleteWorkout(workoutId: string) {
   } catch (error) {
     console.error("Error deleting workout: ", error);
     throw error; 
+  }
+}
+
+async function updateTrainerProfile(form: Partial<OutputTrainerProfile>) {
+  const user = auth().currentUser;
+
+  if (!user) {
+    console.log('No authenticated user found');
+    return;
+  }
+
+  try {
+    await firestore().collection<Partial<OutputTrainerProfile> & { userId: string }>('profile').doc(user.uid).set({
+      ...form,
+      userId: user.uid,
+    });
+    console.log('Profile updated successfully');
+  } catch (error) {
+    console.error('Error updating profile:', error);
   }
 }
 
