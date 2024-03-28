@@ -50,6 +50,14 @@ const TrainerHome: React.FC<Props> = ({ navigation }) => {
                         </Text>
                     </TouchableOpacity>
                 </CardWrapper>
+                <CardWrapper styleOption={{}}>
+                    <TouchableOpacity style={styles.gap2} onPress={() => navigation.navigate('TrainerProperties')}>
+                        <Text style={styles.title2}>Your Profile</Text>
+                        <Text>
+                            View and update your profile information
+                        </Text>
+                    </TouchableOpacity>
+                </CardWrapper>
 
                 <CardWrapper styleOption={{justifyContent: "space-evenly", backgroundColor: "transparent"}}>
                     <TouchableOpacity style={styles.gap2} onPress={() => {
