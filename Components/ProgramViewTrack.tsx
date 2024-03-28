@@ -231,10 +231,10 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
       
       <View style={{...stylesOnWorkOut.content, justifyContent: "space-between"}}>
         <View>
-          <View style={{}}>
+          <View style={{display: "flex", flexDirection: "row", gap: 10}}>
             <Image source={{ uri: exercise?.imgUrl }} style={{ width: 60, height: 60, borderRadius: 10 }} />
             
-            <View>
+            <View style={{ flexGrow: 1}}>
               <View style={{ flexDirection: "row", alignItems: "baseline", justifyContent: "space-between" }}>
                 <Text style={[stylesOnWorkOut.mainTitle]}>{exercise?.name}</Text>
                 <TouchableOpacity onPress={() => setModalVisible(true)}>
