@@ -122,7 +122,7 @@ const LandingPage = ({ navigation }: PropsLandingPage) => {
       paddingHorizontal: 5,
       fontSize: 15,
       marginHorizontal: 10,
-      fontWeight: '200',
+      fontWeight: '300',
       color: '#082f49',
     },
     buttom: {

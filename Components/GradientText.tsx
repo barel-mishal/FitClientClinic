@@ -52,7 +52,7 @@ export function GradientText(props: { text: string, style: StyleProp<TextStyle> 
       <LinearGradient
         start={{ x: start, y: 0 }}
         end={{ x: end, y: 0,}}
-        colors={['#0c4a6e', '#38bdf8', "#15803d", '#fb7185', '#0369a1']}
+        colors={['#0c4a6e', '#38bdf8', "#15803d", '#0369a1']}
       >
         <Text style={[props.style, { opacity: 0 }]}>{props.text}</Text>
       </LinearGradient>
