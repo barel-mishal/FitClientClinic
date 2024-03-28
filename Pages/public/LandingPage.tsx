@@ -1,8 +1,7 @@
-import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, Button, ScrollView, Dimensions, TouchableOpacity, findNodeHandle, LayoutChangeEvent, Pressable } from 'react-native';
+import React, {} from 'react';
+import { View, Text, StyleSheet, ScrollView, Dimensions, Pressable, ImageBackground } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
-import { AccordionSelect } from '../../Components/AccordionSelect';
 import { RootStackParamList } from '../../App';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { GradientText } from '../../Components/GradientText';
@@ -52,7 +51,9 @@ export type PropsLandingPage = NativeStackScreenProps<RootStackParamList, 'FitCl
 const LandingPage = ({ navigation }: PropsLandingPage) => {
 
     return (
+        <ImageBackground source={require('../../assets/Intensity_Rise_X.png')} style={styles.backgroundImage}>
       <ScrollView style={styles.rootContainer} stickyHeaderIndices={[2]}>
+
           <StatusBar style="auto" />
           <View  style={{...styles.MainContentContainer}}>
             <View>
@@ -80,6 +81,7 @@ const LandingPage = ({ navigation }: PropsLandingPage) => {
             </ScrollView>
           ))} */}
       </ScrollView>
+        </ImageBackground>
 
     );
 
@@ -88,7 +90,7 @@ const LandingPage = ({ navigation }: PropsLandingPage) => {
   const styles = StyleSheet.create({
     rootContainer: {
       paddingTop: 0,
-      backgroundColor: '#e0f2fe',
+      backgroundColor: 'rgba(224, 242, 254, 0.9)',
     },
     container: {
       display: 'flex',
@@ -114,7 +116,7 @@ const LandingPage = ({ navigation }: PropsLandingPage) => {
     lightTitle: {
       paddingHorizontal: 10,
       fontSize: 50,
-      fontWeight: '200',
+      fontWeight: '300',
     },
     smallTtitle: {
       paddingHorizontal: 5,
@@ -140,7 +142,12 @@ const LandingPage = ({ navigation }: PropsLandingPage) => {
       fontSize: 20,
       fontWeight: '900',
       textAlign: 'center',
-    }
+    },
+    backgroundImage: {
+      flex: 1,
+      resizeMode: "cover",
+      justifyContent: "center"
+    },
   });
   
 
