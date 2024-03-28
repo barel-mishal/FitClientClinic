@@ -283,7 +283,9 @@ const TrainerCreateFitnessProgramWrap: React.FC<TrainerCreateFitnessProgramProps
                 <Text style={styles.inputTitle}>Description</Text>
                 <TextInput style={styles.input} placeholder="Description" onChangeText={text => dispatch({type: "UPDATE_EXERCISE", payload: {key: "description", value: text, index}})} value={exercise.description?.toString()}/>
                 <Text style={styles.inputTitle}>Image</Text>
-                <ImageUpload onFail={() => {}} onSuccess={(uri) => {}} /> 
+                <ImageUpload onFail={() => {}} onSuccess={(uri) => {
+                  dispatch({type: "UPDATE_EXERCISE", payload: {key: "imgUrl", value: uri, index}});
+                }} image={exercise?.imgUrl} /> 
                 <Text style={styles.inputTitle}>Sets</Text>
                 <ScrollView horizontal={true} >
                   {[1, 2, 3, 4, 5, 6, 7, 8].map((i) => {
