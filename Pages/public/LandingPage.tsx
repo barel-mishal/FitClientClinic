@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, Text, StyleSheet, Button, ScrollView, Dimensions, TouchableOpacity, findNodeHandle, LayoutChangeEvent } from 'react-native';
+import { View, Text, StyleSheet, Button, ScrollView, Dimensions, TouchableOpacity, findNodeHandle, LayoutChangeEvent, Pressable } from 'react-native';
 import { StatusBar } from 'expo-status-bar';
 
 import { AccordionSelect } from '../../Components/AccordionSelect';
@@ -45,7 +45,6 @@ const CONTENT_SECTIONS = [
     ]
   }
 ] as const; 
-type Section = typeof CONTENT_SECTIONS[number];
 
 export type PropsLandingPage = NativeStackScreenProps<RootStackParamList, 'FitClientClinic'>;
 
@@ -58,15 +57,15 @@ const LandingPage = ({ navigation }: PropsLandingPage) => {
           <View  style={{...styles.MainContentContainer}}>
             <View>
               <GradientText text="Connect with your ideal fitness coach through Move:" style={styles.lightTitle} />
+              <Text style={styles.title}>Where health goals meet expert guidance.</Text>
               
             </View>
-              <Text style={styles.title}>Where health goals meet expert guidance.</Text>
             <Text style={styles.smallTtitle}>
               Move connects you with personalized fitness coaching, making it easy to find the perfect trainer for your unique goals. Whether it's weight loss, muscle building, or general fitness, we're your platform for success with professional support. Start your journey to wellness with us today.
             </Text>
-            <View style={styles.buttom}>
-                <Button title={'Get Started'} onPress={() => navigation.navigate("GetStarted")} />
-            </View>
+            <Pressable onPress={() => navigation.navigate("GetStarted")} style={styles.buttom}>
+              <Text style={styles.textPress}>Get Started</Text>
+            </Pressable>
           </View>
           {/* <View style={styles.container} >
             <AccordionSelect options={CONTENT_SECTIONS.map(c => c.title)} onClick={() => {}} />
@@ -102,10 +101,9 @@ const LandingPage = ({ navigation }: PropsLandingPage) => {
     MainContentContainer: {
       paddingBottom: 30,
       paddingTop: 15,
-      borderStyle: 'solid',
       display: 'flex',
       flexDirection: 'column',
-      gap: 15
+      gap: 36
     },
     title: {
       paddingHorizontal: 10,
@@ -121,21 +119,28 @@ const LandingPage = ({ navigation }: PropsLandingPage) => {
     smallTtitle: {
       paddingHorizontal: 5,
       fontSize: 15,
+      marginHorizontal: 10,
       fontWeight: '200',
       color: '#082f49',
     },
     buttom: {
       paddingHorizontal: 8,
-      paddingVertical: 5,
+      paddingVertical: 16,
       fontSize: 15,
+      marginHorizontal: 10,
       fontWeight: '900',
-      backgroundColor: '#ecf0f1', 
-      borderRadius: 10,
-      width: 150,
+      backgroundColor: '#082f49', 
+      borderRadius: 30,
     },
     fullScreen: {
       height: Dimensions.get('window').height,
     },
+    textPress: {
+      color: '#fff',
+      fontSize: 20,
+      fontWeight: '900',
+      textAlign: 'center',
+    }
   });
   
 
