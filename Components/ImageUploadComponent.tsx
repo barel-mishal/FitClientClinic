@@ -3,7 +3,12 @@ import React from 'react';
 import { Button, View } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
 
-const ImageUpload = () => {
+interface ImageUploadProps {
+  onSuccess: (image: any) => void;
+  onFail: () => void;
+}
+
+const ImageUpload: React.FC<ImageUploadProps> = ({onSuccess, onFail}) => {
   const handleChoosePhoto = () => {
     const options = {
       noData: true,
@@ -17,18 +22,15 @@ const ImageUpload = () => {
     }, (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
+        onFail();
       } else if (response.didCancel) {
         console.log('ImagePicker Error: ', response.errorMessage);
+        onFail();
       } else {
         const source = { uri: response.assets?.at(0)?.uri };
-        uploadFile(source);
+        onSuccess(source);
       }
     });
-  };
-
-  const uploadFile = (source: any) => {
-    console.log('uploading', source);
-    // Implement file upload here
   };
 
   return (
