@@ -4,6 +4,7 @@ import firestore from '@react-native-firebase/firestore';
 import { FinishWorkoutType } from '../Components/ProgramViewTrack';
 import { DocumentPickerResult } from 'expo-document-picker';
 import storage from '@react-native-firebase/storage';
+import { Asset } from 'react-native-image-picker';
 
 export const COLLECTIONS = {
   PROFILE: 'profile',
@@ -34,6 +35,7 @@ const databaseMethods = {
   uploadFileAndSaveLink,
   deleteTrainerProgram,
   deleteWorkout,
+  uploadImageAndSaveLink,
 }
 
 // Asynchronously uploads a file and saves its download link.
@@ -71,6 +73,41 @@ async function uploadFileAndSaveLink(file: DocumentPickerResult | null)  {
     return null; 
   }
 };
+
+async function uploadImageAndSaveLink(image: Asset[] | undefined) {
+  if (!image) {
+    console.log('No image to upload.');
+    return null;
+  }
+
+  const { uri } = image[0];
+  if (!uri) {
+    console.log('No image URI to upload.');
+    return null;
+  }
+  const filename = uri.split('/').pop();
+  
+
+  const storageRef = storage().ref(`images/${filename}`);
+
+  try {
+    await storageRef.putFile(uri);
+
+    const url = await storageRef.getDownloadURL();
+
+    const linkRef = await firestore().collection('imageLinks').add({
+      filename,
+      url,
+      createdAt: firestore.FieldValue.serverTimestamp(),
+    });
+
+    console.log(`Image uploaded and URL stored in Firestore: ${linkRef.id}`);
+    return url;
+  } catch (error) {
+    console.error(error);
+    return null;
+  }
+}
 
 
 async function login(email: string, password: string) {

@@ -2,14 +2,15 @@ import { AntDesign } from '@expo/vector-icons';
 import React from 'react';
 import { Button, View } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
+import databaseMethods from '../services/databaseMethods';
 
 interface ImageUploadProps {
-  onSuccess: (image: any) => void;
+  onSuccess: (uri: string | undefined) => void;
   onFail: () => void;
 }
 
 const ImageUpload: React.FC<ImageUploadProps> = ({onSuccess, onFail}) => {
-  const handleChoosePhoto = () => {
+  const handleChoosePhoto = async () => {
     const options = {
       noData: true,
     };
@@ -19,7 +20,7 @@ const ImageUpload: React.FC<ImageUploadProps> = ({onSuccess, onFail}) => {
         includeBase64: false,
         maxHeight: 200,
         maxWidth: 200,
-    }, (response) => {
+    }, async (response) => {
       if (response.didCancel) {
         console.log('User cancelled image picker');
         onFail();
@@ -27,7 +28,11 @@ const ImageUpload: React.FC<ImageUploadProps> = ({onSuccess, onFail}) => {
         console.log('ImagePicker Error: ', response.errorMessage);
         onFail();
       } else {
-        const source = { uri: response.assets?.at(0)?.uri };
+        const source = await databaseMethods.uploadImageAndSaveLink(response.assets);
+        if (source === null) {
+          onFail();
+          return;
+        }
         onSuccess(source);
       }
     });
