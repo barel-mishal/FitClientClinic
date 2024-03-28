@@ -418,10 +418,10 @@
     "globalconfig": "/opt/homebrew/etc/npmrc",
     "userconfig": "/Users/barel/.npmrc",
     "init_module": "/Users/barel/.npm-init.js",
-    "npm_version": "10.4.0",
+    "npm_version": "10.5.0",
     "node_gyp": "/opt/homebrew/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js",
     "cache": "/Users/barel/.npm",
-    "user_agent": "npm/10.4.0 node/v21.6.2 darwin arm64 workspaces/false",
+    "user_agent": "npm/10.5.0 node/v21.6.2 darwin arm64 workspaces/false",
     "prefix": "/opt/homebrew"
   }
 }

@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { AccordionSelect } from '../../Components/AccordionSelect';
 import { RootStackParamList } from '../../App';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { GradientText } from '../../Components/GradientText';
 
 const CONTENT_SECTIONS = [
   {
@@ -54,23 +55,23 @@ const LandingPage = ({ navigation }: PropsLandingPage) => {
     return (
       <ScrollView style={styles.rootContainer} stickyHeaderIndices={[2]}>
           <StatusBar style="auto" />
-          <View  style={{...styles.MainContentContainer, ...styles.borderBottom}}>
+          <View  style={{...styles.MainContentContainer}}>
             <View>
-              <Text style={styles.lightTitle}>Connect with your ideal fitness coach through Move:</Text>
-              <Text style={styles.title}>where health goals meet expert guidance.</Text>
+              <GradientText text="Connect with your ideal fitness coach through Move:" style={styles.lightTitle} />
+              
             </View>
+              <Text style={styles.title}>Where health goals meet expert guidance.</Text>
             <Text style={styles.smallTtitle}>
-              At Move, we bridge the gap between you and personalized fitness coaching, ensuring your wellness journey is as unique as you are. Dive into a world where finding the perfect fitness trainer is not just easy, but tailored to fit your individual needs and aspirations. Whether you aim to lose weight, build muscle, or enhance your overall fitness, move is your go-to platform for achieving your health goals with the support of professional trainers. Embark on your fitness journey with us today and turn your wellness dreams into reality.
+              Move connects you with personalized fitness coaching, making it easy to find the perfect trainer for your unique goals. Whether it's weight loss, muscle building, or general fitness, we're your platform for success with professional support. Start your journey to wellness with us today.
             </Text>
             <View style={styles.buttom}>
                 <Button title={'Get Started'} onPress={() => navigation.navigate("GetStarted")} />
-                {/* Bring us to page for client or traniner q. then if trainer and or client there will be diffrent quetios */}
             </View>
           </View>
-          <View style={styles.container} >
+          {/* <View style={styles.container} >
             <AccordionSelect options={CONTENT_SECTIONS.map(c => c.title)} onClick={() => {}} />
-          </View>
-          {CONTENT_SECTIONS.map((section, index) => (
+          </View> */}
+          {/* {CONTENT_SECTIONS.map((section, index) => (
             <ScrollView style={{...styles.container, ...styles.fullScreen}} key={index} >
               <Text style={styles.title}>{section.title}</Text>
               <Text style={styles.smallTtitle}>{section.paragraph}</Text>
@@ -78,7 +79,7 @@ const LandingPage = ({ navigation }: PropsLandingPage) => {
                 <Button title={'Learn More'}  />
               </View>
             </ScrollView>
-          ))}
+          ))} */}
       </ScrollView>
 
     );
@@ -88,11 +89,7 @@ const LandingPage = ({ navigation }: PropsLandingPage) => {
   const styles = StyleSheet.create({
     rootContainer: {
       paddingTop: 0,
-      backgroundColor: '#fff',
-    },
-    borderBottom: {
-      borderBottomWidth: 1,
-      borderColor: 'black',
+      backgroundColor: '#e0f2fe',
     },
     container: {
       display: 'flex',
@@ -111,19 +108,21 @@ const LandingPage = ({ navigation }: PropsLandingPage) => {
       gap: 15
     },
     title: {
-      paddingHorizontal: 5,
-      fontSize: 30,
-      fontWeight: 'bold',
+      paddingHorizontal: 10,
+      fontSize: 24,
+      fontWeight: '700',
+      color: '#0369a1',
     },
     lightTitle: {
-      paddingHorizontal: 5,
-      fontSize: 30,
+      paddingHorizontal: 10,
+      fontSize: 50,
       fontWeight: '200',
     },
     smallTtitle: {
       paddingHorizontal: 5,
       fontSize: 15,
       fontWeight: '200',
+      color: '#082f49',
     },
     buttom: {
       paddingHorizontal: 8,

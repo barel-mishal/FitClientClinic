@@ -38,7 +38,9 @@
     "react-native-select-dropdown": "^3.4.0",
     "react-native-toast-message": "^2.2.0",
     "react-query": "^3.39.3",
-    "valibot": "^0.30.0"
+    "valibot": "^0.30.0",
+    "@react-native-masked-view/masked-view": "0.3.0",
+    "expo-linear-gradient": "~12.7.2"
   },
   "devDependencies": {
     "@babel/core": "^7.24.3",
