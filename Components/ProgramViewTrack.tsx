@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useRef, useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions, ScrollView, Pressable, Easing, useAnimatedValue } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, Animated, Dimensions, ScrollView, Pressable, Easing, useAnimatedValue, Image } from "react-native";
 import { RenderClock } from "./RenderClock";
 import { Duration, FitnessProgramOutput, formatClockDuration, formatTimerDuration } from "../types";
 import { AntDesign, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
@@ -231,14 +231,20 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
       
       <View style={{...stylesOnWorkOut.content, justifyContent: "space-between"}}>
         <View>
-
-        <View style={{display: "flex", flexDirection: "row", gap: 20, alignItems: "baseline", justifyContent: "space-between"}}>
-          <Text style={stylesOnWorkOut.mainTitle}>{exercise?.name}</Text>
-          <TouchableOpacity onPress={() => setModalVisible(true)}>
-            <Feather name="list" size={24} color="#082f49" />
-          </TouchableOpacity>
-        </View>
-        <Text style={stylesOnWorkOut.description}>{exercise?.description}</Text>
+          <View style={{}}>
+            <Image source={{ uri: exercise?.imgUrl }} style={{ width: 60, height: 60, borderRadius: 10 }} />
+            
+            <View>
+              <View style={{ flexDirection: "row", alignItems: "baseline", justifyContent: "space-between" }}>
+                <Text style={[stylesOnWorkOut.mainTitle]}>{exercise?.name}</Text>
+                <TouchableOpacity onPress={() => setModalVisible(true)}>
+                  <Feather name="list" size={24} color="#082f49" />
+                </TouchableOpacity>
+              </View>
+              <Text style={stylesOnWorkOut.description}>{exercise?.description}</Text>
+            </View>
+          </View>  
+        
         {
           exercise.repetitionType === "time" ?
           <View style={stylesOnWorkOut.timerContainer}>
@@ -340,7 +346,7 @@ export const OnWorkout: React.FC<{program: ProgramState, dispatch: React.Dispatc
                 </View>
               </View>
             </ScrollView>
-        </Modal>
+      </Modal>
 
     </View>
     </>
@@ -483,13 +489,13 @@ export const stylesOnWorkOut = StyleSheet.create({
   },
   content: {
     flex: 1,
-    padding: 20,
+    padding: 10,
   },
   mainTitle: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 10,
-    color: "#082f49"
+    color: "#082f49",
   },
   description: {
     fontSize: 18,

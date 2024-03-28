@@ -43,7 +43,7 @@ const UserProgarmStart: React.FC<UserProgramProps> = ({programId, trainerId, use
         .then((res) => {
             const ps: Partial<ProgramState> = {
                 ...res,
-                state: "start",
+                state: "on",
                 workoutTime: "1s",
                 completedExercises: [] as string[],
                 clientId: userId!,
