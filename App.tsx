@@ -25,7 +25,7 @@ export type RootStackClientParamList = {
 };
 
 export type RootStackPublicParamList = {
-  FitClientClinic: undefined;
+  Move: undefined;
   GetStarted: undefined;
   SignupClient: undefined;
   SignupTrainer: undefined;

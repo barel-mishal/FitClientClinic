@@ -25,7 +25,7 @@ const ClientWorkouts: React.FC<Props> = ({workouts}) => {
         <ScrollView style={{backgroundColor: "#f0f9ff", }}>
             <View style={{padding: 16, display: "flex", gap: 24}}>
             {ws?.map((workout, index) => 
-            <RenderWorkout workout={workout} index={index} setWorkout={setWs} />)}
+            <RenderWorkout workout={workout} index={index} setWorkout={setWs} key={`${index}-${workout.id}`} />)}
             </View>
         </ScrollView>
       );
@@ -45,7 +45,7 @@ export const RenderWorkout: React.FC<{workout: FinishWorkoutType, index: number,
   }
   return (
     <>
-      {loading ? <View style={[newWorkoutToDay ? stylesNew.cardContainer : styles.cardContainer]}><Loading /></View> : <View key={index} style={[newWorkoutToDay ? stylesNew.cardContainer : styles.cardContainer]}>
+      {loading ? <View key={""} style={[newWorkoutToDay ? stylesNew.cardContainer : styles.cardContainer]}><Loading /></View> : <View key={index} style={[newWorkoutToDay ? stylesNew.cardContainer : styles.cardContainer]}>
           {newWorkoutToDay && <View style={{position: "absolute", backgroundColor: "#fb923c", padding: 8, borderRadius: 10, right: -6, top: -6}}><Text style={{color: "#431407", fontSize: 16}}>New</Text></View>}
           <View style={[newWorkoutToDay ? stylesNew.timeContainer : styles.timeContainer]}>
               <Text style={styles.timeText}>{formatDateTimeRange(workout.startTime, workout.endTime)}</Text>

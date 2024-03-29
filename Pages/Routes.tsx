@@ -23,7 +23,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 export function PublicNavigator() {
   return <Stack.Navigator>
-    <Stack.Screen name={"FitClientClinic"} component={LandingPage} options={{
+    <Stack.Screen name={"Move"} component={LandingPage} options={{
       header: () => <Header />
     }} />
     <Stack.Screen name={"GetStarted"} component={OnBoarding} options={{headerTitle: "Move"}} />

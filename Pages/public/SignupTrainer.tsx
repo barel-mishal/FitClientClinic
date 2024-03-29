@@ -92,6 +92,7 @@ const SignupTrainer = ({navigation}: Props) => {
             onChangeText={(value) => handleChange('password', value)}
             cursorColor={"#0c4a6e"}
             selectionColor={"#0284c7"}
+            secureTextEntry={true} 
           />
         </View>
         <View style={{display: "flex", gap: 4}}>
