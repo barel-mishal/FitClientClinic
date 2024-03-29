@@ -56,9 +56,9 @@ const BirthdateSelector: React.FC<{initialBirthdate: Date}> = ({ initialBirthdat
           onPressArrowRight={(addMonth) => addMonth()}
           enableSwipeMonths={true}
           // Add a header for year selection
-          renderHeader={(date) => (
+          renderHeader={(date: Date) => (
             <TouchableOpacity onPress={() => setYearSelectionMode(true)}>
-              <Text>Select Year</Text>
+              <Text>{date.getFullYear()} Year</Text>
             </TouchableOpacity>
           )}
         />

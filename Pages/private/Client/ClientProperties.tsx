@@ -153,7 +153,6 @@ const SignupClient = ({ navigation }: Props) => {
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Brith Date</Text>
           <BirthdateSelector initialBirthdate={new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 18)}/>
-
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Height (cm)</Text>
