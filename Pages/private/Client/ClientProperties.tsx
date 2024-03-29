@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, TextInput, Button, ScrollView, Text, View, Pressable } from "react-native";
+import { StyleSheet, TextInput, Button, ScrollView, Text, View, Pressable, Modal } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../../App";
 import { makeIssue, GENDER_OPTIONS, ACTIVITY_LEVEL_OPTIONS, InputClientProperties, Client, ClientPersonalFitnessInfo, ClientProfile } from "../../../types";
@@ -11,6 +11,8 @@ import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 import MedicalCertificateUploader from "../../../Components/MedicalCertificateUploader";
 import Toast from "react-native-toast-message";
 import { useQuery } from "react-query";
+import MyPDFViewer from "../../../Components/MyPDFViewer";
+import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ClientProperties'>;
 
@@ -47,7 +49,6 @@ const SignupClient = ({ navigation }: Props) => {
     if (onChange)
     onChange();
   };
-  console.log(trainer)
   const handleSubmit = async () => {
     const parsed = v.safeParse(v.partial(ClientPersonalFitnessInfo), form);
     const parsed2 = v.safeParse(v.omit(ClientProfile, ["role"]), form);
@@ -104,6 +105,8 @@ const SignupClient = ({ navigation }: Props) => {
       });
   }
 
+  const [visible, setVisible] = useState(false);
+
   
   
   return (
@@ -123,7 +126,15 @@ const SignupClient = ({ navigation }: Props) => {
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Trainer Certified</Text>
-          <View><Text>{isloadingTrainer ? "Loading certificat" : (trainer?.role === "trainer" ? trainer.certification : "")}</Text></View>
+          <Pressable onPress={() => setVisible(true)}>
+            <Text style={styles.linkText}>View Trainer Certification</Text>
+          </Pressable>
+          <Modal visible={visible} animationType="slide" style={{position: "relative"}}>
+            <Pressable style={{position: "absolute", zIndex:1000, backgroundColor: "#075985", padding: 30, borderRadius: 80, margin: 10, bottom: 0}} onPress={() => setVisible(false)}>
+              <FontAwesome name="close" size={20} color="#fff" />
+            </Pressable>
+            <MyPDFViewer uri={isloadingTrainer ? "" : (trainer?.role === "trainer" ? trainer.certification : "")} />
+          </Modal>
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Trainer ID (Phone Number)</Text>
@@ -261,7 +272,16 @@ const styles = StyleSheet.create({
     display: 'flex',
     flexDirection: 'column',
     gap: 12,
-  }
+  },
+  linkText: {
+    color: '#0ea5e9',
+    fontSize: 16,
+    fontWeight: "600",
+    fontStyle: "italic",
+    textDecorationLine: "underline",
+    textAlign: "center",
+    marginVertical: 10,
+  },
 });
 
 const styles2 = StyleSheet.create({
@@ -290,7 +310,6 @@ const styles2 = StyleSheet.create({
     textAlign: "center",
     marginVertical: 10,
   },
-  // ... other styles remain unchanged
 });
 
 export default SignupClient;
