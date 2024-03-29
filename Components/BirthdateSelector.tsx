@@ -27,15 +27,7 @@ const BirthdateSelector: React.FC<{initialBirthdate: Date}> = ({ initialBirthdat
       years.push(i);
     }
 
-    return (
-      <View style={{ padding: 20 }}>
-        {years.map(year => (
-          <TouchableOpacity key={year} onPress={() => setYear(year)}>
-            <Text style={{ padding: 10 }}>{year}</Text>
-          </TouchableOpacity>
-        ))}
-      </View>
-    );
+    return <YearSelector years={years} setYear={setYear} />;
   };
 
   // Set the year and switch back to date selection mode
@@ -71,6 +63,61 @@ const BirthdateSelector: React.FC<{initialBirthdate: Date}> = ({ initialBirthdat
           )}
         />
       )}
+    </View>
+  );
+};
+
+
+
+const YearSelector: React.FC<{years: number[], setYear: (year: number) => void}> = ({ years, setYear }) => {
+  const [pageIndex, setPageIndex] = useState(0); // Current page index
+  const rowsPerPage = 4; // Number of rows per page
+  const yearsPerRow = 4; // Number of years per row
+
+  // Function to chunk the years array into sub-arrays
+  const chunkYears = (yearsArray: number[], chunkSize: number) => {
+    const chunks = [];
+    for (let i = 0; i < yearsArray.length; i += chunkSize) {
+      chunks.push(yearsArray.slice(i, i + chunkSize));
+    }
+    return chunks;
+  };
+
+  const yearChunks = chunkYears(years, yearsPerRow); // Split the years into chunks
+  const totalPages = Math.ceil(yearChunks.length / rowsPerPage); // Total number of pages
+
+  // Navigate to the previous page
+  const goPrevPage = () => {
+    setPageIndex(Math.max(pageIndex - 1, 0));
+  };
+
+  // Navigate to the next page
+  const goNextPage = () => {
+    setPageIndex(Math.min(pageIndex + 1, totalPages - 1));
+  };
+
+  // Get the chunks for the current page
+  const currentPageChunks = yearChunks.slice(pageIndex * rowsPerPage, (pageIndex + 1) * rowsPerPage);
+
+  return (
+    <View style={{ padding: 20 }}>
+      <TouchableOpacity onPress={goPrevPage} disabled={pageIndex === 0}>
+        <Text>{"< Prev"}</Text>
+      </TouchableOpacity>
+
+      {currentPageChunks.map((chunk, index) => (
+        <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
+          {chunk.map(year => (
+            <TouchableOpacity key={year} onPress={() => setYear(year)} style={{ flex: 1, marginHorizontal: 5 }}>
+              <Text style={{ padding: 10, textAlign: 'center' }}>{year}</Text>
+            </TouchableOpacity>
+          ))}
+        </View>
+      ))}
+
+      <TouchableOpacity onPress={goNextPage} disabled={pageIndex >= totalPages - 1}>
+        <Text>{"Next >"}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
