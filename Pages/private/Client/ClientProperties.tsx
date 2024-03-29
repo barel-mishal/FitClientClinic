@@ -10,19 +10,22 @@ import CustomSelectInput from "../../../Components/PickerComponent";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
 import MedicalCertificateUploader from "../../../Components/MedicalCertificateUploader";
 import Toast from "react-native-toast-message";
+import { useQuery } from "react-query";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ClientProperties'>;
 
 const SignupClient = ({ navigation }: Props) => {
   const a = useAuth();
-
-
   if (!a.user || a?.data?.role !== "client") return <Text>Not Authenticated</Text>;
   const [form, setForm] = useState<Partial<InputClientProperties>>({
     name: a.data.name,
     email: a.data.email,
     phone: a.data.phone?.toString(),
     trainerPhone: a.data?.trainerPhone?.toString(),
+    trainerId: a.data?.trainerId,
+    clientId: a.user.uid,
+    userId: a.user.uid,
+    role: a.data.role,
     weight: a.data?.weight,
     age: a.data?.age,
     height: a.data?.height,
@@ -37,13 +40,14 @@ const SignupClient = ({ navigation }: Props) => {
     injuries: a.data?.injuries,
     currentProgramId: a.data?.currentProgramId,
   });
+  const {data: trainer, isLoading: isloadingTrainer, error: errorTrainer } = useQuery(["trainer", form.trainerId], () => form?.trainerId ? databaseMethods.getUserProfile(form?.trainerId) : null);
   // Function to handle input change
   const handleChange = (name: keyof typeof form, value: string | [string, string, string] | number, onChange?: () => void) => {
     setForm(prev => ({ ...(prev ?? {}), [name]: value }));
     if (onChange)
     onChange();
   };
-
+  console.log(trainer)
   const handleSubmit = async () => {
     const parsed = v.safeParse(v.partial(ClientPersonalFitnessInfo), form);
     const parsed2 = v.safeParse(v.omit(ClientProfile, ["role"]), form);
@@ -99,6 +103,8 @@ const SignupClient = ({ navigation }: Props) => {
         autoHide: true,
       });
   }
+
+  
   
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -114,6 +120,10 @@ const SignupClient = ({ navigation }: Props) => {
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Phone</Text>
           <TextInput style={styles.input} placeholder="0509041212" onChangeText={text => handleChange('phone', text)} value={form?.phone}/>
+        </View>
+        <View style={styles.space2}>
+          <Text style={styles.inputTitle}>Trainer Certified</Text>
+          <View><Text>{isloadingTrainer ? "Loading certificat" : (trainer?.role === "trainer" ? trainer.certification : "")}</Text></View>
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Trainer ID (Phone Number)</Text>
