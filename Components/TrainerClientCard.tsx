@@ -17,9 +17,7 @@ type Props = {
 const TrainerClientCard: React.FC<Props> = ({ navigation, client }) => {
     const auth = useAuth()
     // todo: add search functionality for exercises
-    // todo: view trainer certificate and edit it user can view it also. 
     // todo: CLIENT PROPERTIES DEISGN BRITHDATE AND FILES UPLOADS
-    // todo: client password hide 
     return (
         <TouchableOpacity onPress={() => navigation.navigate("TrainerClient", {id: client?.userId ?? ""})}>
             <View style={styles.programCard}>
@@ -189,5 +187,4 @@ const COLORS = {
   });
   
 export default TrainerClientCard;
-
 
