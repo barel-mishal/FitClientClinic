@@ -43,10 +43,11 @@ const SignupClient = ({ navigation }: Props) => {
     idealTrainingTime: a.data?.idealTrainingTime,
     injuries: a.data?.injuries,
     currentProgramId: a.data?.currentProgramId,
+    birthdate: a.data?.birthdate,
   });
   const {data: trainer, isLoading: isloadingTrainer, error: errorTrainer } = useQuery(["trainer", form.trainerId], () => form?.trainerId ? databaseMethods.getUserProfile(form?.trainerId) : null);
   // Function to handle input change
-  const handleChange = (name: keyof typeof form, value: string | [string, string, string] | number, onChange?: () => void) => {
+  const handleChange = (name: keyof typeof form, value: string | [string, string, string] | number | Date, onChange?: () => void) => {
     setForm(prev => ({ ...(prev ?? {}), [name]: value }));
     if (onChange)
     onChange();
@@ -109,7 +110,7 @@ const SignupClient = ({ navigation }: Props) => {
 
   const [visible, setVisible] = useState(false);
 
-  
+  const defaultDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 18);
   
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -151,8 +152,8 @@ const SignupClient = ({ navigation }: Props) => {
           <TextInput style={styles.input} placeholder="24" onChangeText={text => handleChange('age', parseFloat(text))} keyboardType="numeric" value={form?.age?.toString()}/>
         </View>
         <View style={styles.space2}>
-          <Text style={styles.inputTitle}>Brith Date</Text>
-          <BirthdateSelector initialBirthdate={new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 18)}/>
+          <Text style={styles.inputTitle}>Birth Date</Text>
+          <BirthdateSelector initialBirthdate={form.birthdate} defaultDate={new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 18)} onBirthdateChange={(date) => handleChange('birthdate', date)} />
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Height (cm)</Text>

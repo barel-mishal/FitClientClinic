@@ -376,6 +376,7 @@ export const ClientPersonalFitnessInfo = v.object({
     injuries: v.string(),
     currentProgramId: v.optional(v.string()),
     clientId: v.optional(v.string()),
+    birthdate: v.optional(v.date()),
 });
 
 export type TypeClientPersonalFitnessInfo = v.Input<typeof ClientPersonalFitnessInfo>;

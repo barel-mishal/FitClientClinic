@@ -3,11 +3,17 @@ import { Calendar, DateData } from 'react-native-calendars';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 
-const BirthdateSelector: React.FC<{initialBirthdate: Date}> = ({ initialBirthdate }) => {
+
+interface BirthdateSelectorProps {
+  initialBirthdate: Date | undefined;
+  onBirthdateChange: (birthdate: Date) => void;
+  defaultDate: Date;
+}
+
+const BirthdateSelector: React.FC<BirthdateSelectorProps> = ({ initialBirthdate, defaultDate, onBirthdateChange,   }) => {
   // Calculate default date 18 years ago if no initial birthdate is provided
-  const defaultDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 18);
   // State to manage selected date and year selection mode
-  const [selectedDate, setSelectedDate] = useState(initialBirthdate || defaultDate);
+  
   const [dateShowing, setDateShowing] = useState(initialBirthdate || defaultDate);
   
 
@@ -15,8 +21,7 @@ const BirthdateSelector: React.FC<{initialBirthdate: Date}> = ({ initialBirthdat
 
   // Handler for day selection
   const handleDayPress = (day: DateData) => {
-    console.log('selected day', day);
-    setSelectedDate(new Date(day.dateString));
+    onBirthdateChange(new Date(day.dateString));
     setYearSelectionMode(false); // Exit year selection mode upon date selection
   };
 
@@ -34,8 +39,8 @@ const BirthdateSelector: React.FC<{initialBirthdate: Date}> = ({ initialBirthdat
 
   // Set the year and switch back to date selection mode
   const setYear = (year: number) => {
-    const newDate = new Date(selectedDate.setFullYear(year));
-    setSelectedDate(newDate);
+    const newDate = new Date(initialBirthdate?.setFullYear(year) || defaultDate?.setFullYear(year));
+    onBirthdateChange(newDate);
     setYearSelectionMode(false);
   };
 
@@ -45,7 +50,7 @@ const BirthdateSelector: React.FC<{initialBirthdate: Date}> = ({ initialBirthdat
         renderYearSelector()
       ) : (
         <Calendar
-          initialDate={selectedDate.toISOString()}
+          initialDate={initialBirthdate?.toISOString() || defaultDate?.toISOString()}
           minDate={new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 100).toISOString()}
           maxDate={new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 8).toISOString()}
           onDayPress={handleDayPress}
@@ -53,12 +58,12 @@ const BirthdateSelector: React.FC<{initialBirthdate: Date}> = ({ initialBirthdat
           renderArrow={(direction) => <FontAwesome5 name={`arrow-${direction}`} size={20} color="#075985" />}
           hideExtraDays={true}
           firstDay={1}
-          markedDates={{[selectedDate.toISOString().split('T')[0]]: {selected: true, selectedColor: '#075985'}}}
+          markedDates={{[initialBirthdate?.toISOString().split('T')[0] || defaultDate.toISOString().split("T")[0]]: {selected: true, selectedColor: '#075985'}}}
           showWeekNumbers={true}
           onPressArrowLeft={(subtractMonth) => subtractMonth()}
           onPressArrowRight={(addMonth) => addMonth()}
           enableSwipeMonths={true}
-          current={selectedDate.toISOString()}
+          current={initialBirthdate?.toISOString() || defaultDate.toISOString()}
           onVisibleMonthsChange={(months) => setDateShowing(new Date(months[0].dateString))}
           // Add a header for year selection
           renderHeader={(date: Date) => {
