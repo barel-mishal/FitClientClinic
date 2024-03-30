@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, TextInput, Button, ScrollView, Text, View, Pressable, Modal } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../../App";
-import { makeIssue, GENDER_OPTIONS, ACTIVITY_LEVEL_OPTIONS, InputClientProperties, Client, ClientPersonalFitnessInfo, ClientProfile, calcAge } from "../../../types";
+import { makeIssue, GENDER_OPTIONS, ACTIVITY_LEVEL_OPTIONS, InputClientProperties, Client, ClientPersonalFitnessInfo, ClientProfile, calcAge, parseFirebaseTimestamp } from "../../../types";
 import databaseMethods from "../../../services/databaseMethods";
 import * as v from "valibot";
 import RadioButton from "../../../Components/RadioComponent";
@@ -21,6 +21,7 @@ type Props = NativeStackScreenProps<RootStackParamList, 'ClientProperties'>;
 const SignupClient = ({ navigation }: Props) => {
   const a = useAuth();
   if (!a.user || a?.data?.role !== "client") return <Text>Not Authenticated</Text>;
+
   const [form, setForm] = useState<Partial<InputClientProperties>>({
     name: a.data.name,
     email: a.data.email,
@@ -43,8 +44,9 @@ const SignupClient = ({ navigation }: Props) => {
     idealTrainingTime: a.data?.idealTrainingTime,
     injuries: a.data?.injuries,
     currentProgramId: a.data?.currentProgramId,
-    birthdate: a.data?.birthdate,
+    birthdate: parseFirebaseTimestamp(a.data?.birthdate as unknown as { seconds: number } ),
   });
+
   const {data: trainer, isLoading: isloadingTrainer, error: errorTrainer } = useQuery(["trainer", form.trainerId], () => form?.trainerId ? databaseMethods.getUserProfile(form?.trainerId) : null);
   // Function to handle input change
   const handleChange = (name: keyof typeof form, value: string | [string, string, string] | number | Date, onChange?: () => void) => {
@@ -112,8 +114,6 @@ const SignupClient = ({ navigation }: Props) => {
   }
 
   const [visible, setVisible] = useState(false);
-
-  const defaultDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 18);
   
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -153,13 +153,13 @@ const SignupClient = ({ navigation }: Props) => {
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Age</Text>
           <Text style={styles.inputTitle}>
-            {calcAge(form.birthdate ?? new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 18))}
+            {form?.birthdate ? calcAge(form.birthdate) : form?.age}
           </Text>
 
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Birth Date</Text>
-          <BirthdateSelector initialBirthdate={form.birthdate} defaultDate={new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 18)} onBirthdateChange={(date) => handleChange('birthdate', date)} />
+          <BirthdateSelector initialBirthdate={form.birthdate} onBirthdateChange={(date) => handleChange('birthdate', date)} />
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Height (cm)</Text>

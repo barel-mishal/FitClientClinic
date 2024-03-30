@@ -1,48 +1,49 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Calendar, DateData } from 'react-native-calendars';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
 
 
+
 interface BirthdateSelectorProps {
   initialBirthdate: Date | undefined;
   onBirthdateChange: (birthdate: Date) => void;
-  defaultDate: Date;
 }
 
-const BirthdateSelector: React.FC<BirthdateSelectorProps> = ({ initialBirthdate, defaultDate, onBirthdateChange,   }) => {
-  // Calculate default date 18 years ago if no initial birthdate is provided
-  // State to manage selected date and year selection mode
-  
-  const [dateShowing, setDateShowing] = useState(initialBirthdate || defaultDate);
-  
-
+const BirthdateSelector: React.FC<BirthdateSelectorProps> = ({ initialBirthdate, onBirthdateChange }) => {
+  const [dateShowing, setDateShowing] = useState<Date | undefined>(initialBirthdate);
   const [isYearSelectionMode, setYearSelectionMode] = useState(false);
 
-  // Handler for day selection
-  const handleDayPress = (day: DateData) => {
-    onBirthdateChange(new Date(day.dateString));
-    setYearSelectionMode(false); // Exit year selection mode upon date selection
+  const handleDayPress = (day: { dateString: string }) => {
+    const newDate = new Date(day.dateString);
+    setDateShowing(newDate); // Update local state
+    onBirthdateChange(newDate); // Propagate changes to the parent component
+    setYearSelectionMode(false);
   };
 
-  // Render year selection view
   const renderYearSelector = () => {
-    // Generate a list of years for selection
     let years = [];
     const currentYear = new Date().getFullYear();
-    for (let i = currentYear - 100; i <= currentYear - 8; i++) {
+    for (let i = currentYear - 100; i <= currentYear; i++) {
       years.push(i);
     }
-
     return <YearSelector years={years} setYear={setYear} />;
   };
 
-  // Set the year and switch back to date selection mode
   const setYear = (year: number) => {
-    const newDate = new Date(initialBirthdate?.setFullYear(year) || defaultDate?.setFullYear(year));
+
+    const newDate = new Date(dateShowing || new Date());
+    newDate.setFullYear(year);
     onBirthdateChange(newDate);
+    setDateShowing(newDate);
     setYearSelectionMode(false);
   };
+
+  useEffect(() => {
+    setDateShowing(initialBirthdate);
+  }, [initialBirthdate]);
+
+
 
   return (
     <View>
@@ -50,34 +51,31 @@ const BirthdateSelector: React.FC<BirthdateSelectorProps> = ({ initialBirthdate,
         renderYearSelector()
       ) : (
         <Calendar
-          initialDate={initialBirthdate?.toISOString() || defaultDate?.toISOString()}
+          initialDate={dateShowing ? dateShowing.toISOString() : undefined}
           minDate={new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 100).toISOString()}
-          maxDate={new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 8).toISOString()}
+          maxDate={new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 18).toISOString()}
           onDayPress={handleDayPress}
           monthFormat={'yyyy MM'}
           renderArrow={(direction) => <FontAwesome5 name={`arrow-${direction}`} size={20} color="#075985" />}
-          hideExtraDays={true}
+          hideExtraDays
           firstDay={1}
-          markedDates={{[initialBirthdate?.toISOString().split('T')[0] || defaultDate.toISOString().split("T")[0]]: {selected: true, selectedColor: '#075985'}}}
-          showWeekNumbers={true}
+          markedDates={dateShowing ? { [dateShowing?.toISOString().split('T')[0]]: { selected: true, selectedColor: '#075985' } }: {}}
+          showWeekNumbers
           onPressArrowLeft={(subtractMonth) => subtractMonth()}
           onPressArrowRight={(addMonth) => addMonth()}
-          enableSwipeMonths={true}
-          current={initialBirthdate?.toISOString() || defaultDate.toISOString()}
+          enableSwipeMonths
+          current={dateShowing?.toISOString()}
           onVisibleMonthsChange={(months) => setDateShowing(new Date(months[0].dateString))}
-          // Add a header for year selection
-          renderHeader={(date: Date) => {
-            return <TouchableOpacity onPress={() => setYearSelectionMode(true)}>
-              <Text>{dateShowing.getDate()}/{dateShowing.getMonth()+1}/{dateShowing.getFullYear()}</Text>
+          renderHeader={(date) => (
+            <TouchableOpacity onPress={() => setYearSelectionMode(true)}>
+              {dateShowing ? <Text>{dateShowing?.getDate()}/{dateShowing?.getMonth() + 1}/{dateShowing?.getFullYear()}</Text> : "Select a date"}
             </TouchableOpacity>
-          }}
+          )}
         />
       )}
     </View>
   );
 };
-
-
 
 
 

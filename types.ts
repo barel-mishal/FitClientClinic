@@ -186,10 +186,22 @@ export const maybeString = <T,>(value: T) => {
     return value ? value : '';
 }
 
+export function parseFirebaseTimestamp(timestamp: { seconds: number } | null | undefined) {
+    if (timestamp && typeof timestamp.seconds === 'number') {
+      // Create a new date object using seconds multiplied by 1000 to convert to milliseconds
+      return new Date(timestamp.seconds * 1000);
+    } else {
+      // Handle invalid timestamp object
+      console.error('Invalid timestamp object:', timestamp);
+      return undefined;
+    }
+  }
+  
+
 export const calcAge = (birthdate: Date) => {
-    const ageDiffMs = Date.now() - birthdate.getTime();
+    const ageDiffMs = Date.now() - birthdate?.getTime();
     const ageDate = new Date(ageDiffMs);
-    return Math.abs(ageDate.getUTCFullYear() - 1970);
+    return Math.abs(ageDate?.getUTCFullYear() - 1970);
 }
 
 export const maybeNumber = (value: string) => {
