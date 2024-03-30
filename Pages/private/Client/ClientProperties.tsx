@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, TextInput, Button, ScrollView, Text, View, Pressable, Modal } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../../App";
@@ -12,8 +12,7 @@ import MedicalCertificateUploader from "../../../Components/MedicalCertificateUp
 import Toast from "react-native-toast-message";
 import { useQuery } from "react-query";
 import MyPDFViewer from "../../../Components/MyPDFViewer";
-import { FontAwesome, FontAwesome5 } from "@expo/vector-icons";
-import { Calendar } from "react-native-calendars";
+import { FontAwesome } from "@expo/vector-icons";
 import BirthdateSelector from "../../../Components/BirthdateSelector";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'ClientProperties'>;
