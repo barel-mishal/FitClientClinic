@@ -163,7 +163,7 @@ const SignupClient = ({ navigation }: Props) => {
           <Pressable style={{backgroundColor:  "#075985", padding: 3, borderRadius: 4}} onPress={() => setBirthdayVisible(true)}><Text style={{color: "white"}}>{form.birthdate?.toISOString().split("T")[0] ?? "Click to add a birthday"}</Text></Pressable>
         </View>
         {birthdayVisible && <BirthdateSelector initialBirthdate={form.birthdate} onBirthdateChange={(date) => handleChange('birthdate', date)} />}
-          <Pressable style={{backgroundColor:  "#059669", padding: 3, borderRadius: 4}} onPress={() => setBirthdayVisible(false)}><Text style={{color: "white", textAlign: "center", fontWeight: "bold"}}>Close and Save Calender Selectore</Text></Pressable>
+         {birthdayVisible && <Pressable style={{backgroundColor:  "#059669", padding: 3, borderRadius: 4}} onPress={() => setBirthdayVisible(false)}><Text style={{color: "white", textAlign: "center", fontWeight: "bold"}}>Close and Save Calender Selectore</Text></Pressable>}
 
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Height (cm)</Text>
