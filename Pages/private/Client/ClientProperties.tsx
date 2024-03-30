@@ -149,7 +149,10 @@ const SignupClient = ({ navigation }: Props) => {
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Age</Text>
-          <TextInput style={styles.input} placeholder="24" onChangeText={text => handleChange('age', parseFloat(text))} keyboardType="numeric" value={form?.age?.toString()}/>
+          <Text style={styles.inputTitle}>
+            {form.birthdate ? Math.floor((new Date().getTime() - new Date(form.birthdate).getTime()) / (1000 * 60 * 60 * 24 * 365)) : ""}
+          </Text>
+
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Birth Date</Text>
