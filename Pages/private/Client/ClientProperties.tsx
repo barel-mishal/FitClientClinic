@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, TextInput, Button, ScrollView, Text, View, Pressable, Modal } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../../App";
-import { makeIssue, GENDER_OPTIONS, ACTIVITY_LEVEL_OPTIONS, InputClientProperties, Client, ClientPersonalFitnessInfo, ClientProfile } from "../../../types";
+import { makeIssue, GENDER_OPTIONS, ACTIVITY_LEVEL_OPTIONS, InputClientProperties, Client, ClientPersonalFitnessInfo, ClientProfile, calcAge } from "../../../types";
 import databaseMethods from "../../../services/databaseMethods";
 import * as v from "valibot";
 import RadioButton from "../../../Components/RadioComponent";
@@ -150,7 +150,7 @@ const SignupClient = ({ navigation }: Props) => {
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Age</Text>
           <Text style={styles.inputTitle}>
-            {form.birthdate ? Math.floor((new Date().getTime() - new Date(form.birthdate).getTime()) / (1000 * 60 * 60 * 24 * 365)) : ""}
+            {calcAge(form.birthdate ?? new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 18))}
           </Text>
 
         </View>

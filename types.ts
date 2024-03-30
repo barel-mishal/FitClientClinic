@@ -186,6 +186,12 @@ export const maybeString = <T,>(value: T) => {
     return value ? value : '';
 }
 
+export const calcAge = (birthdate: Date) => {
+    const ageDiffMs = Date.now() - birthdate.getTime();
+    const ageDate = new Date(ageDiffMs);
+    return Math.abs(ageDate.getUTCFullYear() - 1970);
+}
+
 export const maybeNumber = (value: string) => {
     return value ? parseInt(value) : 0;
 }
