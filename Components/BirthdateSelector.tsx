@@ -6,9 +6,11 @@ import { FontAwesome5 } from '@expo/vector-icons';
 const BirthdateSelector: React.FC<{initialBirthdate: Date}> = ({ initialBirthdate }) => {
   // Calculate default date 18 years ago if no initial birthdate is provided
   const defaultDate = new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 18);
-
   // State to manage selected date and year selection mode
   const [selectedDate, setSelectedDate] = useState(initialBirthdate || defaultDate);
+  const [dateShowing, setDateShowing] = useState(initialBirthdate || defaultDate);
+  
+
   const [isYearSelectionMode, setYearSelectionMode] = useState(false);
 
   // Handler for day selection
@@ -51,21 +53,26 @@ const BirthdateSelector: React.FC<{initialBirthdate: Date}> = ({ initialBirthdat
           renderArrow={(direction) => <FontAwesome5 name={`arrow-${direction}`} size={20} color="#075985" />}
           hideExtraDays={true}
           firstDay={1}
+          markedDates={{[selectedDate.toISOString().split('T')[0]]: {selected: true, selectedColor: '#075985'}}}
           showWeekNumbers={true}
           onPressArrowLeft={(subtractMonth) => subtractMonth()}
           onPressArrowRight={(addMonth) => addMonth()}
           enableSwipeMonths={true}
+          current={selectedDate.toISOString()}
+          onVisibleMonthsChange={(months) => setDateShowing(new Date(months[0].dateString))}
           // Add a header for year selection
-          renderHeader={(date: Date) => (
-            <TouchableOpacity onPress={() => setYearSelectionMode(true)}>
-              <Text>{date.getFullYear()} Year</Text>
+          renderHeader={(date: Date) => {
+            return <TouchableOpacity onPress={() => setYearSelectionMode(true)}>
+              <Text>{dateShowing.getDate()}/{dateShowing.getMonth()+1}/{dateShowing.getFullYear()}</Text>
             </TouchableOpacity>
-          )}
+          }}
         />
       )}
     </View>
   );
 };
+
+
 
 
 
