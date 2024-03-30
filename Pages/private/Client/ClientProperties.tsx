@@ -57,13 +57,16 @@ const SignupClient = ({ navigation }: Props) => {
     const parsed2 = v.safeParse(v.omit(ClientProfile, ["role"]), form);
     
     if (parsed.success && parsed2.success) {
+      const age = parsed.output.birthdate ? calcAge(parsed.output.birthdate) : undefined;
       const id = parsed2?.output?.trainerPhone 
       ? await databaseMethods.validateTrainerPhoneAndGetId(parsed2?.output?.trainerPhone)
       : undefined;      
-      databaseMethods.addOrUpdateClientFitnessInfo({...parsed.output, clientId: a.user.uid});
+      databaseMethods.addOrUpdateClientFitnessInfo({...parsed.output, clientId: a.user.uid, age});
       const result = id 
       ? {...parsed2.output, role: "client" as Client, trainerId: id} 
-      : {...parsed2.output, role: "client" as Client};
+      : {...parsed2.output, role: "client" as Client, trainerId: undefined};
+
+
       databaseMethods.updateClientProfile(a.user, result);
       
     } else if (!parsed.success) {
