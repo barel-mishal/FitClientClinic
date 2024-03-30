@@ -114,6 +114,7 @@ const SignupClient = ({ navigation }: Props) => {
   }
 
   const [visible, setVisible] = useState(false);
+  const [birthdayVisible, setBirthdayVisible] = useState(false);
   
   return (
     <ScrollView contentContainerStyle={styles.container}>
@@ -157,10 +158,13 @@ const SignupClient = ({ navigation }: Props) => {
           </Text>
 
         </View>
-        <View style={styles.space2}>
-          <Text style={styles.inputTitle}>Birth Date</Text>
-          <BirthdateSelector initialBirthdate={form.birthdate} onBirthdateChange={(date) => handleChange('birthdate', date)} />
+        <View style={{display: "flex", flexDirection: "row", gap: 3}}>
+          <Text style={styles.inputTitle}>Birthday: </Text>
+          <Pressable style={{backgroundColor:  "#075985", padding: 3, borderRadius: 4}} onPress={() => setBirthdayVisible(true)}><Text style={{color: "white"}}>{form.birthdate?.toISOString().split("T")[0] ?? "Click to add a birthday"}</Text></Pressable>
         </View>
+        {birthdayVisible && <BirthdateSelector initialBirthdate={form.birthdate} onBirthdateChange={(date) => handleChange('birthdate', date)} />}
+          <Pressable style={{backgroundColor:  "#059669", padding: 3, borderRadius: 4}} onPress={() => setBirthdayVisible(false)}><Text style={{color: "white", textAlign: "center", fontWeight: "bold"}}>Close and Save Calender Selectore</Text></Pressable>
+
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Height (cm)</Text>
           <TextInput style={styles.input} placeholder="170" onChangeText={text => handleChange('height', parseFloat(text))} keyboardType="numeric" value={form?.height?.toString()}/>
