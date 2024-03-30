@@ -99,11 +99,19 @@ const YearSelector: React.FC<{years: number[], setYear: (year: number) => void}>
   // Get the chunks for the current page
   const currentPageChunks = yearChunks.slice(pageIndex * rowsPerPage, (pageIndex + 1) * rowsPerPage);
 
+  const isPrevDisabled = pageIndex === 0;
+  const isNextDisabled = pageIndex >= totalPages - 1;
+
   return (
-    <View style={{ padding: 20 }}>
-      <TouchableOpacity onPress={goPrevPage} disabled={pageIndex === 0}>
-        <Text>{"< Prev"}</Text>
-      </TouchableOpacity>
+    <View style={{ padding: 20, backgroundColor: "white" }}>
+      <View style={{display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+        <TouchableOpacity onPress={goPrevPage} disabled={isPrevDisabled}>
+          <FontAwesome5 name="arrow-left" size={20} color={isPrevDisabled ? "rgba(8, 47, 73, 0.5)" : "#082f49"} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={goNextPage} disabled={isNextDisabled}>
+          <FontAwesome5 name="arrow-right" size={20} color={isNextDisabled ? "rgba(8, 47, 73, 0.5)" : "#082f49"} />
+        </TouchableOpacity>
+      </View>
 
       {currentPageChunks.map((chunk, index) => (
         <View key={index} style={{ flexDirection: 'row', justifyContent: 'space-between', marginBottom: 10 }}>
@@ -115,9 +123,6 @@ const YearSelector: React.FC<{years: number[], setYear: (year: number) => void}>
         </View>
       ))}
 
-      <TouchableOpacity onPress={goNextPage} disabled={pageIndex >= totalPages - 1}>
-        <Text>{"Next >"}</Text>
-      </TouchableOpacity>
     </View>
   );
 };
