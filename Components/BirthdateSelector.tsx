@@ -12,13 +12,13 @@ interface BirthdateSelectorProps {
 
 const BirthdateSelector: React.FC<BirthdateSelectorProps> = ({ initialBirthdate, onBirthdateChange }) => {
   const [dateShowing, setDateShowing] = useState<Date | undefined>(initialBirthdate);
-  const [isYearSelectionMode, setYearSelectionMode] = useState(false);
+  const [isYearSelectionMode, setYearSelectionMode] = useState<"years" | "days" | "months">("days");
 
   const handleDayPress = (day: { dateString: string }) => {
     const newDate = new Date(day.dateString);
     setDateShowing(newDate); // Update local state
     onBirthdateChange(newDate); // Propagate changes to the parent component
-    setYearSelectionMode(false);
+    setYearSelectionMode("days");
   };
 
   const renderYearSelector = () => {
@@ -30,13 +30,34 @@ const BirthdateSelector: React.FC<BirthdateSelectorProps> = ({ initialBirthdate,
     return <YearSelector years={years} setYear={setYear} />;
   };
 
+  const setMonth = (monthIndex: number) => {
+    const newDate = new Date(dateShowing || new Date());
+    newDate.setMonth(monthIndex);
+    setDateShowing(newDate); // Update local state
+    onBirthdateChange(newDate); // Propagate changes to the parent component
+    setYearSelectionMode("days"); // Optionally transition to "days" mode
+  };
+
+  const renderMonthSelector = () => {
+    const months = Array.from({ length: 12 }, (e, i) => new Date(0, i).toLocaleString('default', { month: 'long' }));
+    return (
+      <View style={{ padding: 20, backgroundColor: "white", flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
+        {months.map((month, index) => (
+          <TouchableOpacity key={month} onPress={() => setMonth(index)} style={{ width: "30%", margin: 5 }}>
+            <Text style={{ padding: 10, textAlign: 'center' }}>{month}</Text>
+          </TouchableOpacity>
+        ))}
+      </View>
+    );
+  };
+
   const setYear = (year: number) => {
 
     const newDate = new Date(dateShowing || new Date());
     newDate.setFullYear(year);
     onBirthdateChange(newDate);
     setDateShowing(newDate);
-    setYearSelectionMode(false);
+    setYearSelectionMode("months");
   };
 
   useEffect(() => {
@@ -47,9 +68,7 @@ const BirthdateSelector: React.FC<BirthdateSelectorProps> = ({ initialBirthdate,
 
   return (
     <View>
-      {isYearSelectionMode ? (
-        renderYearSelector()
-      ) : (
+      {isYearSelectionMode === "days" && (
         <Calendar
           initialDate={dateShowing ? dateShowing.toISOString() : undefined}
           minDate={new Date(Date.now() - 1000 * 60 * 60 * 24 * 365 * 100).toISOString()}
@@ -67,12 +86,15 @@ const BirthdateSelector: React.FC<BirthdateSelectorProps> = ({ initialBirthdate,
           current={dateShowing?.toISOString()}
           onVisibleMonthsChange={(months) => setDateShowing(new Date(months[0].dateString))}
           renderHeader={(date) => (
-            <TouchableOpacity onPress={() => setYearSelectionMode(true)}>
+            <TouchableOpacity onPress={() => setYearSelectionMode("years")}>
               {dateShowing ? <Text>{dateShowing?.getDate()}/{dateShowing?.getMonth() + 1}/{dateShowing?.getFullYear()}</Text> : "Select a date"}
             </TouchableOpacity>
           )}
         />
       )}
+      {isYearSelectionMode === "years" && renderYearSelector()}
+      {isYearSelectionMode === "months" && renderMonthSelector()}
+
     </View>
   );
 };
