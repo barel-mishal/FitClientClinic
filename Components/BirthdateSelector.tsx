@@ -41,9 +41,9 @@ const BirthdateSelector: React.FC<BirthdateSelectorProps> = ({ initialBirthdate,
   const renderMonthSelector = () => {
     const months = Array.from({ length: 12 }, (e, i) => new Date(0, i).toLocaleString('default', { month: 'long' }));
     return (
-      <View style={{ padding: 20, backgroundColor: "white", flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
+      <View key={`months-${months.length}`} style={{ padding: 20, backgroundColor: "white", flexDirection: "row", flexWrap: "wrap", justifyContent: "space-between" }}>
         {months.map((month, index) => (
-          <TouchableOpacity key={month} onPress={() => setMonth(index)} style={{ width: "30%", margin: 5 }}>
+          <TouchableOpacity key={`${index}-${month}`} onPress={() => setMonth(index)} style={{ width: "30%", margin: 5 }}>
             <Text style={{ padding: 10, textAlign: 'center' }}>{month}</Text>
           </TouchableOpacity>
         ))}
