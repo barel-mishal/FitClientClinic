@@ -35,7 +35,6 @@ const MedicalCertificateUploader: React.FC<Props> = ({onHandleChange, medicalCer
   return (
     <View style={styles.container}>
       <FileUpload style={styles.uploadButton} onFileUpload={(file) => {
-        console.log(JSON.stringify(file, null, 2));
         setFile(file);
       }} >
             <FontAwesome name="upload" size={20} color="#fff" />
