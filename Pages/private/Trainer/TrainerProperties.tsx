@@ -1,15 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { StyleSheet, TextInput, Button, ScrollView, Text, View, Pressable } from "react-native";
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { RootStackParamList } from "../../../App";
-import { makeIssue, GENDER_OPTIONS, ACTIVITY_LEVEL_OPTIONS, Client, ClientPersonalFitnessInfo, ClientProfile, InputTrainerRegister, TypeTrainerProperties, TrainerProfile, TypeTrainerProfile } from "../../../types";
+import { makeIssue, TrainerProfile, TypeTrainerProfile } from "../../../types";
 import databaseMethods from "../../../services/databaseMethods";
 import * as v from "valibot";
-import RadioButton from "../../../Components/RadioComponent";
-import CustomSelectInput from "../../../Components/PickerComponent";
 import { useAuth } from "../../../Components/ContextComopnents/AuthContext";
-import MedicalCertificateUploader from "../../../Components/MedicalCertificateUploader";
 import Toast from "react-native-toast-message";
+import TrainerCertificateUploader from "../../../Components/TrainerCertificateUploader";
 
 type Props = NativeStackScreenProps<RootStackParamList, 'TrainerProperties'>;
 
@@ -91,7 +89,7 @@ const TrainerProperties = ({ navigation }: Props) => {
           <Pressable onPress={() => navigation.navigate("TrainerCreateProgram")}>
             <Text style={styles.inputTitle}>Certification</Text>
           </Pressable>
-          <MedicalCertificateUploader onHandleChange={(uri) => handleChange("certification", uri, handleWhenAddedCert)} medicalCertificate={form?.certification} />
+          <TrainerCertificateUploader  onUpload={(uri) => handleChange("certification", uri, handleWhenAddedCert)} certificateUrl={form?.certification} />
         </View>
 
         <Button title="Submit" onPress={handleSubmit} />
