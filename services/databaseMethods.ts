@@ -41,6 +41,7 @@ const databaseMethods = {
 
 // Asynchronously uploads a file and saves its download link.
 async function uploadFileAndSaveLink(file: DocumentPickerResult | null)  {
+  console.log('Uploading file...', file);
   // Check if there's no file or if the operation was canceled.
   if (!file || file.canceled) {
     console.log('No file to upload.');
@@ -55,6 +56,7 @@ async function uploadFileAndSaveLink(file: DocumentPickerResult | null)  {
 
   try {
     // Upload the file to Firebase Storage.
+    console.log('Uploading file to Firebase Storage...', uri);
     await storageRef.putFile(uri);
 
     // Retrieve the download URL.
