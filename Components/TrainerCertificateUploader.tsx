@@ -39,7 +39,7 @@ return (
           <FontAwesome name="upload" size={20} color="#fff" />
           <Text style={styles.uploadButtonText}>Choose File to Upload</Text>
     </FileUpload>
-    <Pressable onPress={() => setVisible(true)}>
+    <Pressable onPress={() => setVisible(true)} >
       <Text style={styles.fileName}>{getFileName()}</Text>
     </Pressable>
     
@@ -98,6 +98,9 @@ const styles = StyleSheet.create({
   fileName: {
     fontSize: 20,
     color: "#082f49",
+    textAlign: 'center',
+    justifyContent: 'center',
+    marginBottom: 15,
   },
   linkButton: {
     flexDirection: 'row',
