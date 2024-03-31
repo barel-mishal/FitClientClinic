@@ -87,7 +87,7 @@ const BirthdateSelector: React.FC<BirthdateSelectorProps> = ({ initialBirthdate,
           onVisibleMonthsChange={(months) => setDateShowing(new Date(months[0].dateString))}
           renderHeader={(date) => (
             <TouchableOpacity onPress={() => setYearSelectionMode("years")}>
-              {dateShowing ? <Text>{dateShowing?.getDate()}/{dateShowing?.getMonth() + 1}/{dateShowing?.getFullYear()}</Text> : "Select a date"}
+              {dateShowing ? <Text>{dateShowing?.getDate()}/{dateShowing?.getMonth() + 1}/{dateShowing?.getFullYear()}</Text> : <Text>"Select a date"</Text>}
             </TouchableOpacity>
           )}
         />

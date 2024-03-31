@@ -1,0 +1,86 @@
+{
+    "programs": [
+      {
+        "id": "strength-001",
+        "name": "Strength Training",
+        "description": "A program focused on improving muscle strength and endurance.",
+        "duration": "45m",
+        "exercises": [
+          {
+            "id": "exercise-001",
+            "name": "Push-Ups",
+            "description": "Standard push-ups for chest, shoulders, and triceps.",
+            "sets": 3,
+            "estimatedDuration": "5m",
+            "reps": 12,
+            "repetitionType": "reps"
+          },
+          {
+            "id": "exercise-002",
+            "name": "Squats",
+            "description": "Bodyweight squats to target the lower body.",
+            "sets": 3,
+            "estimatedDuration": "5m",
+            "reps": 15,
+            "repetitionType": "reps"
+          }
+        ],
+        "trainerId": "trainer-123"
+      },
+      {
+        "id": "cardio-001",
+        "name": "Cardiovascular Endurance",
+        "description": "A cardio-focused program to improve heart health and endurance.",
+        "duration": "30m",
+        "exercises": [
+          {
+            "id": "exercise-101",
+            "name": "Running",
+            "description": "Steady pace running to improve cardiovascular health.",
+            "sets": 1,
+            "estimatedDuration": "30m",
+            "time": "30m",
+            "repetitionType": "time"
+          }
+        ],
+        "trainerId": "trainer-124"
+      },
+      {
+        "id": "flexibility-001",
+        "name": "Flexibility and Stretching",
+        "description": "Program focused on improving flexibility and reducing muscle tension.",
+        "duration": "20m",
+        "exercises": [
+          {
+            "id": "exercise-201",
+            "name": "Hamstring Stretch",
+            "description": "Seated stretch focusing on the hamstrings.",
+            "sets": 2,
+            "estimatedDuration": "5m",
+            "time": "2m",
+            "repetitionType": "time"
+          }
+        ],
+        "trainerId": "trainer-125"
+      },
+      {
+        "id": "balance-001",
+        "name": "Balance and Stability",
+        "description": "Exercises designed to improve balance and core stability.",
+        "duration": "20m",
+        "exercises": [
+          {
+            "id": "exercise-301",
+            "name": "One-Leg Stand",
+            "description": "Standing on one leg to improve balance and core strength.",
+            "sets": 3,
+            "estimatedDuration": "5m",
+            "time": "1m",
+            "repetitionType": "time"
+          }
+        ],
+        "trainerId": "trainer-126"
+      }
+    ]
+  }
+  

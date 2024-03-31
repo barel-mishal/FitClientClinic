@@ -187,13 +187,10 @@ export const maybeString = <T,>(value: T) => {
 }
 
 export function parseFirebaseTimestamp(timestamp: { seconds: number } | null | undefined) {
-    if (timestamp && typeof timestamp.seconds === 'number') {
+    if (!timestamp) return undefined;
+    if (typeof timestamp.seconds === 'number') {
       // Create a new date object using seconds multiplied by 1000 to convert to milliseconds
       return new Date(timestamp.seconds * 1000);
-    } else {
-      // Handle invalid timestamp object
-      console.error('Invalid timestamp object:', timestamp);
-      return undefined;
     }
   }
   

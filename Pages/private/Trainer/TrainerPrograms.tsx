@@ -15,11 +15,12 @@ type Props = NativeStackScreenProps<RootStackParamList, 'TrainerPrograms'>;
 export type Program = Required<FitnessProgramOutput> & { trainerName: string }
 
 const TrainerPrograms: React.FC<Props> = ({ navigation }) => {
-    const auth = useAuth()
+    const auth = useAuth();
     if (!auth.user || auth.data?.role !== "trainer") return <View></View>
     const { data: ps, error, isLoading } = useQuery<Program[]>(
         [COLLECTIONS.FITNESS_PROGRAMS, COLLECTIONS.FITNESS_PROGRAMS], 
-        async () => (await databaseMethods.getAllTrainerPrograms(auth.user.uid)).map((p) => ({...p, trainerName: firstCharUpperCase(auth?.data?.name)})),
+        async () => (await databaseMethods.getAllTrainerPrograms(auth.user.uid))
+        .map((p) => ({...p, trainerName: firstCharUpperCase(auth?.data?.name)})),
         { refetchOnWindowFocus: true, refetchOnMount: true, cacheTime: 0, staleTime: 0 }
     );
 

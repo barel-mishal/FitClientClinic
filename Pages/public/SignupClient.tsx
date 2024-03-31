@@ -11,7 +11,14 @@ import Toast from 'react-native-toast-message'
 type Props = NativeStackScreenProps<RootStackParamList, 'SignupClient'>;
 
 const SignupClient = ({ navigation }: Props) => {
-  const [form, setForm] = useState<Partial<InputClientRegister>>();
+  const [form, setForm] = useState<Partial<InputClientRegister>>({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+    trainerId: "",
+    role: "client",
+  });
 
   // Function to handle input change
   const handleChange = (name: string, value: string | [string, string, string] | number) => {
@@ -78,6 +85,7 @@ const SignupClient = ({ navigation }: Props) => {
             onChangeText={(value) => handleChange('password', value)}
             cursorColor={"#0c4a6e"}
             selectionColor={"#0284c7"}
+            secureTextEntry={true}
           />
       </View>
       <View style={{display: "flex", gap: 4}}>

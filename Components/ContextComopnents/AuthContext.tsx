@@ -18,7 +18,7 @@ const AuthProvider: React.FC<PropsWithChildren> = ({ children }) => {
     useEffect(() => {
         const unsubscribe = auth().onAuthStateChanged((user) => {
             if (user) databaseMethods
-                .getUserProperties(user.uid)
+                .getUserProperties(user?.uid)
                 .then((profile) => {
                     setProfile(profile);
                     setCurrentUser(user);

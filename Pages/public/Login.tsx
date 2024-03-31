@@ -10,7 +10,7 @@ const init = [{
         password: "123456",
     },
     client: {
-        email: "barel.client@mail.com",
+        email: "Barel.client@mail.com",
         password: "123456",
     }
 },
@@ -42,6 +42,7 @@ const Login: React.FC = () => {
     const [password, setPassword] = useState<string>("");
     const isExampleClient = init[0].client.email === email;
     const login = async () => {
+        console.log(email, password)
         const message = await databaseMethods.login(email, password);
         if (message.includes("successfully")) {
             Toast.show({

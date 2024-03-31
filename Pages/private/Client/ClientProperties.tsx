@@ -43,7 +43,7 @@ const SignupClient = ({ navigation }: Props) => {
     idealTrainingTime: a.data?.idealTrainingTime,
     injuries: a.data?.injuries,
     currentProgramId: a.data?.currentProgramId,
-    birthdate: parseFirebaseTimestamp(a.data?.birthdate as unknown as { seconds: number } ),
+    birthdate: parseFirebaseTimestamp(a.data?.birthdate as unknown as { seconds: number } | undefined),
   });
 
   const {data: trainer, isLoading: isloadingTrainer, error: errorTrainer } = useQuery(["trainer", form.trainerId], () => form?.trainerId ? databaseMethods.getUserProfile(form?.trainerId) : null);
@@ -61,11 +61,13 @@ const SignupClient = ({ navigation }: Props) => {
       const age = parsed.output.birthdate ? calcAge(parsed.output.birthdate) : undefined;
       const id = parsed2?.output?.trainerPhone 
       ? await databaseMethods.validateTrainerPhoneAndGetId(parsed2?.output?.trainerPhone)
-      : undefined;      
-      databaseMethods.addOrUpdateClientFitnessInfo({...parsed.output, clientId: a.user.uid, age});
+      : undefined;   
+      
+      console.log("\n\n\n\n\n", parsed2.output, id)
+      databaseMethods.addOrUpdateClientFitnessInfo({...parsed?.output, clientId: a?.user?.uid, age});
       const result = id 
-      ? {...parsed2.output, role: "client" as Client, trainerId: id} 
-      : {...parsed2.output, role: "client" as Client, trainerId: undefined};
+      ? {...parsed2?.output, role: "client" as Client, trainerId: id} 
+      : {...parsed2?.output, role: "client" as Client, trainerId: undefined};
 
 
       databaseMethods.updateClientProfile(a.user, result);
@@ -148,7 +150,7 @@ const SignupClient = ({ navigation }: Props) => {
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Weight (kg)</Text>
-          <TextInput style={styles.input} placeholder="78" onChangeText={text => handleChange('weight', parseFloat(text))} keyboardType="numeric" value={form?.weight?.toString()}/>
+          <TextInput style={styles.input} placeholder="78" onChangeText={text => handleChange('weight', parseFloat(text))} keyboardType="numeric" value={renderNumberAsString(form?.weight)}/>
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Age</Text>
@@ -166,7 +168,7 @@ const SignupClient = ({ navigation }: Props) => {
 
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Height (cm)</Text>
-          <TextInput style={styles.input} placeholder="170" onChangeText={text => handleChange('height', parseFloat(text))} keyboardType="numeric" value={form?.height?.toString()}/>
+          <TextInput style={styles.input} placeholder="170" onChangeText={text => handleChange('height', parseFloat(text))} keyboardType="numeric" value={renderNumberAsString(form?.height)}/>
         </View>
         <View style={styles.space2}>
           <Text style={styles.inputTitle}>Define Your Goals</Text>
@@ -231,6 +233,14 @@ const SignupClient = ({ navigation }: Props) => {
     </ScrollView>
   );
 };
+
+function renderNumberAsString(num: number | undefined) {
+  if (!num) return "";
+  const numStr = num?.toString();
+  if (!numStr) return "";
+  if (isNaN(num)) return "";
+  return numStr 
+}
 
 const styles = StyleSheet.create({
   container: {

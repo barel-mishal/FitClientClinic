@@ -269,28 +269,40 @@ async function getUserProfile(uid: FirebaseAuthTypes.User["uid"]): Promise<Profi
   }
 }
 
-
-// Function to add/update client fitness information
-async function addOrUpdateClientFitnessInfo(fitnessInfo:Partial<TypeClientPersonalFitnessInfo>) {
+async function addOrUpdateClientFitnessInfo(fitnessInfo: Partial<TypeClientPersonalFitnessInfo>) {
   const user = auth().currentUser;
 
-  if (!user) {
-    console.log('No authenticated user found');
+  if (!user || !user.uid) {
+    console.log('No authenticated user found.');
     return;
   }
 
+  console.log('Adding or updating fitness info:', fitnessInfo, 'for user:', user.uid);
+
+  // Remove properties with undefined values
+  const sanitizedFitnessInfo = Object.entries(fitnessInfo).reduce((acc, [key, value]) => {
+    if (value !== undefined) {
+      acc[key] = value;
+    }
+    return acc;
+  }, {});
+
+
+
   try {
-    // Use the user's UID as the document ID to ensure one fitness profile per user
+    console.log('Adding or updating fitness info:', JSON.stringify(sanitizedFitnessInfo, null, 2), 'for user:', user.uid);
     await firestore()
       .collection('ClientFitnessInfo')
       .doc(user.uid)
-      .set(fitnessInfo);
+      .set(sanitizedFitnessInfo, { merge: true });
       
-    console.log('Fitness info added/updated successfully');
+    console.log('Fitness info added or updated successfully.');
   } catch (error) {
-    console.error('Error adding/updating fitness info:', error);
+    console.error('Error adding or updating fitness info:', error);
   }
 };
+
+
 
 async function getAllTrainerClientsWithFitnessInfo(trainerId: string) {
   try {
@@ -341,6 +353,8 @@ async function getAllTrainerClients(trainerId: string) {
 
 async function getUserProperties(id: FirebaseAuthTypes.User["uid"]): Promise<ReturnUserProerties | undefined>  {
   const profile = await getUserProfile(id);
+
+  console.log({profile, id})
   const isClient = profile?.role === "client";
   const fitness = isClient ? await getUserClientFitnessInfo(id) : {};
   const clients = !isClient ? await getAllTrainerClientsWithFitnessInfo(id) : [];
