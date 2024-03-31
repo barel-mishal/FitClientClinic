@@ -4,21 +4,43 @@ import databaseMethods from "../../services/databaseMethods";
 import { AntDesign } from "@expo/vector-icons";
 import Toast from 'react-native-toast-message'
 
-const init = {
+const init = [{
     trainer: {
         email: "barel.trianer@mail.com",
-        password: "Google",
+        password: "123456",
     },
     client: {
-        email: "mishal.barel@mail.com",
-        password: "google",
+        email: "barel.client@mail.com",
+        password: "123456",
     }
+},
+{
+    trainer: {
+        email: "omri.trainer@mail.com",
+        password: "123456",
+    },
+    client: {
+        email: "shahar.client@mail.com",
+        password: "123456",
+    },
+},
+{
+    trainer: {
+        email: "eli.trainer@mail.com",
+        password: "123456",
+    },
+    client: {
+        email: "sagi.client",
+        password: "123456",
+    },
 }
+
+]
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState<string>("");
     const [password, setPassword] = useState<string>("");
-    const isExampleClient = init.client.email === email;
+    const isExampleClient = init[0].client.email === email;
     const login = async () => {
         const message = await databaseMethods.login(email, password);
         if (message.includes("successfully")) {
@@ -41,7 +63,7 @@ const Login: React.FC = () => {
             });
         }
     };
-    const isExampleTrainer = init.trainer.email === email;
+    const isExampleTrainer = init[0].trainer.email === email;
     const onSelectedClientExampleStyle = isExampleClient ? {...styles.buttonLight, borderWidth: 0} : styles.button;
     const onSelectedClientExampleTextStyle = isExampleClient ? styles.buttonTextLight : styles.buttonText;
     const onSelectedTrainerExampleStyle = isExampleTrainer ? {...styles.buttonLight, borderWidth: 0} : styles.button;
@@ -54,8 +76,8 @@ const Login: React.FC = () => {
             </View>
             <View style={styles.stackHorizontal}>
                 <TouchableOpacity style={onSelectedTrainerExampleStyle} onPress={async () => {
-                    setEmail(init.trainer.email);
-                    setPassword(init.trainer.password);
+                    setEmail(init[0].trainer.email);
+                    setPassword(init[0].trainer.password);
                 } }>
                     <View style={styles.horizantlView}>
                         <Text style={onSelectedTrainerExampleTextStyle}>Trainer Example</Text>
@@ -63,8 +85,8 @@ const Login: React.FC = () => {
                     </View>
                 </TouchableOpacity>
                 <TouchableOpacity style={onSelectedClientExampleStyle} onPress={async () => {
-                    setEmail(init.client.email);
-                    setPassword(init.client.password);
+                    setEmail(init[0].client.email);
+                    setPassword(init[0].client.password);
                 } }>
                     <View style={styles.horizantlView}>
                         <Text style={onSelectedClientExampleTextStyle}>Client Example</Text>
