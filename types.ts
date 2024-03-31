@@ -412,7 +412,7 @@ export const TrainerProfile = v.merge([
     profileSchema,
     v.object({
     role: v.literal('trainer'),
-    certification: v.string([v.minLength(1)]),
+    certification: v.optional(v.string([v.minLength(1)])),
     yearsOfExperience: NumberSchema,
     userId: v.optional(v.string()),
 })]);

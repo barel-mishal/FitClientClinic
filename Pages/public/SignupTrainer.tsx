@@ -8,7 +8,6 @@ import { RootStackParamList } from "../../App";
 import { TrainerRegisterData, InputTrainerRegister, makeIssue } from "../../types";
 import databaseMethods from "../../services/databaseMethods";
 import * as v from "valibot";
-import TrainerCertificateUploader from "../../Components/TrainerCertificateUploader copy";
 import Toast from 'react-native-toast-message'
 
 
@@ -22,7 +21,7 @@ const SignupTrainer = ({navigation}: Props) => {
     phone: '',
     password: '',
     role: 'trainer',
-    certification: '',
+    certification: undefined,
     yearsOfExperience: "",
   });
 
@@ -93,12 +92,6 @@ const SignupTrainer = ({navigation}: Props) => {
             cursorColor={"#0c4a6e"}
             selectionColor={"#0284c7"}
             secureTextEntry={true} 
-          />
-        </View>
-        <View style={{display: "flex", gap: 4}}>
-          <Text style={{fontSize: 16, color: "#0284c7", fontWeight: "500"}}>Certifications</Text>
-          <TrainerCertificateUploader
-            onUpload={(url) => handleChange('certification', url)}
           />
         </View>
         <View style={{display: "flex", gap: 4}}>

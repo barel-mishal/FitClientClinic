@@ -31,7 +31,6 @@ const TrainerCertificateUploader: React.FC<Props> = ({onUpload}) => {
       <FileUpload 
       style={styles.uploadButton} 
       onFileUpload={(file) => {
-        console.log(JSON.stringify(file, null, 2));
         setFile(file);
       }} 
       >
